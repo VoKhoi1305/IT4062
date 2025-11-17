@@ -1,0 +1,4 @@
+1|admin|adminpass|1
+2|alice|pass123|0
+3|bob|pass456|0
+4|khoiva|123|0
