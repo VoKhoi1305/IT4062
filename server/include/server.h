@@ -1,7 +1,3 @@
-/*
- * server.h
- */
-
 #ifndef SERVER_H
 #define SERVER_H
 
@@ -18,18 +14,21 @@
 #define MAX_CLIENTS 30
 #define BUFFER_SIZE 4096
 #define MAX_USERNAME 50
-#define STARTING_USER_ID 1 // ID bắt đầu (ID mới sẽ là 101)
+#define STARTING_USER_ID 1
 
 typedef struct {
     int socket_fd;
     char read_buffer[BUFFER_SIZE];
     int buffer_pos;
     
-    // Trạng thái
+    // Trạng thái xác thực
     int is_logged_in; // 0 = false, 1 = true
-    int user_id;      // <-- THÊM DÒNG NÀY (0 = chua xac thuc)
+    int user_id;      // 0 = chưa xác thực
     char username[MAX_USERNAME];
     int role;         // 0 = User, 1 = Admin
+    
+    // Trạng thái phòng đấu giá
+    int current_room_id; // 0 = không ở phòng nào, >0 = ID phòng hiện tại
     
 } Client;
 

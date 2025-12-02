@@ -1,4 +1,10 @@
-1|admin|adminpass|1
-2|alice|pass123|0
-3|bob|pass456|0
-4|khoiva|123|0
+1|admin|admin|1
+2|user1|pass1|0
+3|user2|pass2|0
+4|alice|alice123|0
+5|bob|bob123|0
+6|charlie|charlie123|0
+7|david|david123|0
+8|emma|emma123|0
+9|frank|frank123|0
+10|grace|grace123|0

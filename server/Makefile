@@ -1,25 +1,51 @@
-# Makefile (Nằm trong thư mục server/)
+# 1. Khai báo trình biên dịch và cờ (Flags)
 CC = gcc
-CFLAGS = -Wall -g -Iinclude
-LDFLAGS = 
-TARGET_NAME = server
-TARGET = bin/$(TARGET_NAME)
+# -Iinclude: Chỉ định thư mục chứa file header (.h)
+# -Wall: Bật cảnh báo (warning) để dễ debug
+# -g: Thêm thông tin debug (để dùng gdb nếu cần)
+# -pthread: Thường server socket cần đa luồng, mình thêm sẵn vào đây
+CFLAGS = -Wall -g -Iinclude -pthread
+
+# 2. Định nghĩa các thư mục
 SRC_DIR = src
 OBJ_DIR = obj
+BIN_DIR = bin
+INC_DIR = include
+
+# 3. Tên file chạy đầu ra (Executable)
+TARGET = $(BIN_DIR)/server_app
+
+# 4. Tự động tìm tất cả file .c trong src và chuyển đổi tên thành file .o tương ứng
 SRCS = $(wildcard $(SRC_DIR)/*.c)
 OBJS = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))
 
+# 5. Rule mặc định (gõ 'make' sẽ chạy cái này)
 all: $(TARGET)
 
-$(TARGET): $(OBJS)
-	@mkdir -p bin
-	$(CC) $(CFLAGS) -o $(TARGET) $(OBJS) $(LDFLAGS)
-	@echo "Bien dich SERVER thanh cong! File thuc thi la: $(TARGET)"
+# 6. Link: Tạo file chạy từ các file object
+$(TARGET): $(OBJS) | $(BIN_DIR)
+	@echo "Dang lien ket (Linking)..."
+	$(CC) $(CFLAGS) $(OBJS) -o $@
+	@echo "Build thanh cong! File chay nam tai: $@"
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	@mkdir -p obj
+# 7. Compile: Tạo file object .o từ file source .c
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
+	@echo "Dang bien dich (Compiling) $<..."
 	$(CC) $(CFLAGS) -c $< -o $@
 
+# 8. Tạo thư mục bin và obj nếu chưa tồn tại
+$(BIN_DIR):
+	mkdir -p $(BIN_DIR)
+
+$(OBJ_DIR):
+	mkdir -p $(OBJ_DIR)
+
 clean:
-	rm -rf $(TARGET) $(OBJ_DIR) bin
-	@echo "Da don dep server."
+	@echo "Dang don dep..."
+	rm -rf $(OBJ_DIR)/*.o $(TARGET)
+	@echo "Da xoa file build va object."
+
+run: all
+	./$(TARGET)
+
+.PHONY: all clean run

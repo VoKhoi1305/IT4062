@@ -1,5 +1,5 @@
 /*
- * src/client_handler.c
+ * src/client_handler.c (Updated)
  */
 
 #include "client_handler.h"
@@ -16,9 +16,10 @@ void add_client(int socket_fd) {
             Client* new_client = (Client*)malloc(sizeof(Client));
             new_client->socket_fd = socket_fd;
             new_client->buffer_pos = 0;
-            new_client->is_logged_in = 0; // Status 0 (Offline)
-            new_client->user_id = 0;      // 0 = Chua xac thuc
-            new_client->role = 0;         // Role 0 (User)
+            new_client->is_logged_in = 0;
+            new_client->user_id = 0;
+            new_client->role = 0;
+            new_client->current_room_id = 0; // THÊM: Khởi tạo room ID
             memset(new_client->username, 0, MAX_USERNAME);
             
             g_clients[i] = new_client;
@@ -35,8 +36,14 @@ void remove_client(int i) {
     Client* client = g_clients[i];
     if (client == NULL) return;
     
-    printf("Client (fd=%d, id=%d, user=%s, role=%d) da ngat ket noi.\n", 
-           client->socket_fd, client->user_id, client->username, client->role); // Sửa log
+    printf("Client (fd=%d, id=%d, user=%s, role=%d, room=%d) da ngat ket noi.\n", 
+           client->socket_fd, client->user_id, client->username, 
+           client->role, client->current_room_id);
+    
+    // TODO: Xử lý rời phòng nếu đang ở trong phòng
+    if (client->current_room_id > 0) {
+        // Broadcast thông báo user rời phòng
+    }
     
     close(client->socket_fd);
     free(client);

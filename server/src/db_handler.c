@@ -5,16 +5,16 @@
 #include "server.h"
 #include "db_handler.h"
 
-// Hàm này đọc file DB và tìm USER ID lớn nhất
+
 static int get_last_user_id() {
     FILE* file = fopen(DB_FILE, "r");
     if (file == NULL) {
-        // Nếu file không tồn tại,bắt đầu từ ID 
+        
         return STARTING_USER_ID; 
     }
     
     char line[256];
-    int max_id = STARTING_USER_ID; // Bắt đầu từ ID cơ sở
+    int max_id = STARTING_USER_ID; 
 
     while (fgets(line, sizeof(line), file)) {
         line[strcspn(line, "\n")] = 0;
