@@ -1,14 +1,19 @@
+
 // /*
-//  * src/server.c (File main)
+//  * src/server.c - Main với Timer Integration
 //  */
 
 // #include "server.h"
 // #include "client_handler.h"
 // #include "command_handler.h"
+// #include "timer_handler.h"
 
 // int main() {
 //     int listening_socket;
 //     struct sockaddr_in server_addr;
+
+//     // Khởi tạo timer system
+//     init_timer_system();
 
 //     listening_socket = socket(AF_INET, SOCK_STREAM, 0);
 //     int opt = 1;
@@ -20,15 +25,17 @@
 //     server_addr.sin_port = htons(PORT);
 
 //     if (bind(listening_socket, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0) {
-//         perror("bind() failed"); exit(EXIT_FAILURE);
+//         perror("bind() failed"); 
+//         exit(EXIT_FAILURE);
 //     }
 //     if (listen(listening_socket, 5) < 0) {
-//         perror("listen() failed"); exit(EXIT_FAILURE);
+//         perror("listen() failed"); 
+//         exit(EXIT_FAILURE);
 //     }
-//     printf("dang lang nghe tren cong %d...\n", PORT);
 
 //     fd_set read_fds;
 //     int max_fd;
+//     struct timeval timeout;
 
 //     while (1) {
 //         FD_ZERO(&read_fds);
@@ -44,11 +51,25 @@
 //             }
 //         }
         
-//         int activity = select(max_fd + 1, &read_fds, NULL, NULL, NULL); 
+//         // Set timeout 1 giây để xử lý timer
+//         timeout.tv_sec = 1;
+//         timeout.tv_usec = 0;
+        
+//         int activity = select(max_fd + 1, &read_fds, NULL, NULL, &timeout); 
 
 //         if (activity < 0 && errno != EINTR) {
 //             perror("select() error");
+//             continue;
 //         }
+        
+//         // Xử lý timer mỗi vòng lặp
+//         process_timers();
+
+//         if (activity == 0) {
+//             // Timeout - chỉ xử lý timer
+//             continue;
+//         }
+
 
 //         if (FD_ISSET(listening_socket, &read_fds)) {
 //             int new_socket = accept(listening_socket, NULL, NULL);
@@ -59,6 +80,7 @@
 //             }
 //         }
 
+//         // Xử lý dữ liệu từ clients
 //         for (int i = 0; i < MAX_CLIENTS; i++) {
 //             if (g_clients[i] && FD_ISSET(g_clients[i]->socket_fd, &read_fds)) {
 //                 Client* client = g_clients[i];
@@ -68,24 +90,27 @@
 //                 if (bytes_recvd <= 0) {
 //                     remove_client(i);
 //                 } else {
+//                     printf("[RECV from %d]: %.*s\n", 
+//                     client->socket_fd, 
+//                     bytes_recvd, 
+//                     client->read_buffer + client->buffer_pos);
 //                     client->buffer_pos += bytes_recvd;
 //                     process_command_buffer(client);
 //                 }
 //             }
 //         }
 //     }
+    
+//     cleanup_timer_system();
 //     close(listening_socket);
 //     return 0;
 // }
-
-/*
- * src/server.c - Main với Timer Integration
- */
 
 #include "server.h"
 #include "client_handler.h"
 #include "command_handler.h"
 #include "timer_handler.h"
+#include "room_handler.h"
 
 int main() {
     int listening_socket;
@@ -141,15 +166,15 @@ int main() {
             continue;
         }
         
-        // Xử lý timer mỗi vòng lặp
+
         process_timers();
+        check_and_update_room_statuses();
 
         if (activity == 0) {
-            // Timeout - chỉ xử lý timer
             continue;
         }
 
-        // Xử lý kết nối mới
+      
         if (FD_ISSET(listening_socket, &read_fds)) {
             int new_socket = accept(listening_socket, NULL, NULL);
             if (new_socket < 0) {
@@ -159,7 +184,7 @@ int main() {
             }
         }
 
-        // Xử lý dữ liệu từ clients
+      
         for (int i = 0; i < MAX_CLIENTS; i++) {
             if (g_clients[i] && FD_ISSET(g_clients[i]->socket_fd, &read_fds)) {
                 Client* client = g_clients[i];
@@ -169,6 +194,10 @@ int main() {
                 if (bytes_recvd <= 0) {
                     remove_client(i);
                 } else {
+                    printf("[RECV from %d]: %.*s\n", 
+                    client->socket_fd, 
+                    bytes_recvd, 
+                    client->read_buffer + client->buffer_pos);
                     client->buffer_pos += bytes_recvd;
                     process_command_buffer(client);
                 }

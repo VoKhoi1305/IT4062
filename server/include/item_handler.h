@@ -29,6 +29,8 @@ typedef struct {
     char auction_start[30];
     char auction_end[30];
     int extend_count;
+    int duration;           
+    char created_at[30];    
     char bid_history[2048];
 } Item;
 
