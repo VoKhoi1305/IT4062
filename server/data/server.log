@@ -445,3 +445,803 @@
 [2025-12-02 19:52:46] [SEND] fd=5 user=user1: ROOM_DETAIL|11|phong moi 4|ACTIVE|2025-12-02 00:00:00|2025-12-05 00:00:00|19|san pham moi gi day|SOLD|10000000|11000000|40000000;20|san pham moi gi day 2|ACTIVE|100000|140000|600000;
 [2025-12-02 19:52:46] [RECV] fd=6 user=user2: GET_ROOM_DETAIL|11
 [2025-12-02 19:52:46] [SEND] fd=6 user=user2: ROOM_DETAIL|11|phong moi 4|ACTIVE|2025-12-02 00:00:00|2025-12-05 00:00:00|19|san pham moi gi day|SOLD|10000000|11000000|40000000;20|san pham moi gi day 2|ACTIVE|100000|140000|600000;
+[2025-12-16 23:51:23] [SEND] fd=4 user=(not_logged_in): Chao mung den voi dau gia
+[2025-12-16 23:51:23] [RECV] fd=4 user=(not_logged_in): GET / HTTP/1.1
+[2025-12-16 23:51:23] [SEND] fd=4 user=(not_logged_in): ERROR|Ban phai dang nhap truoc
+[2025-12-16 23:51:23] [RECV] fd=4 user=(not_logged_in): Host: localhost:8080
+[2025-12-16 23:51:23] [SEND] fd=4 user=(not_logged_in): ERROR|Ban phai dang nhap truoc
+[2025-12-16 23:51:23] [RECV] fd=4 user=(not_logged_in): Connection: keep-alive
+[2025-12-16 23:51:23] [SEND] fd=4 user=(not_logged_in): ERROR|Ban phai dang nhap truoc
+[2025-12-16 23:51:23] [RECV] fd=4 user=(not_logged_in): sec-ch-ua: "Microsoft Edge";v="143", "Chromium";v="143", "Not A(Brand";v="24"
+[2025-12-16 23:51:23] [SEND] fd=4 user=(not_logged_in): ERROR|Ban phai dang nhap truoc
+[2025-12-16 23:51:23] [RECV] fd=4 user=(not_logged_in): sec-ch-ua-mobile: ?0
+[2025-12-16 23:51:23] [SEND] fd=4 user=(not_logged_in): ERROR|Ban phai dang nhap truoc
+[2025-12-16 23:51:23] [RECV] fd=4 user=(not_logged_in): sec-ch-ua-platform: "Windows"
+[2025-12-16 23:51:23] [SEND] fd=4 user=(not_logged_in): ERROR|Ban phai dang nhap truoc
+[2025-12-16 23:51:23] [RECV] fd=4 user=(not_logged_in): DNT: 1
+[2025-12-16 23:51:23] [SEND] fd=4 user=(not_logged_in): ERROR|Ban phai dang nhap truoc
+[2025-12-16 23:51:23] [RECV] fd=4 user=(not_logged_in): Upgrade-Insecure-Requests: 1
+[2025-12-16 23:51:23] [SEND] fd=4 user=(not_logged_in): ERROR|Ban phai dang nhap truoc
+[2025-12-16 23:51:23] [RECV] fd=4 user=(not_logged_in): User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 Edg/143.0.0.0
+[2025-12-17 00:30:39] [SEND] fd=4 user=(not_logged_in): Chao mung den voi dau gia
+[2025-12-17 00:30:50] [SEND] fd=5 user=(not_logged_in): Chao mung den voi dau gia
+[2025-12-17 00:30:50] [RECV] fd=5 user=(not_logged_in): GET / HTTP/1.1
+[2025-12-17 00:30:50] [SEND] fd=5 user=(not_logged_in): ERROR|Ban phai dang nhap truoc
+[2025-12-17 00:30:50] [RECV] fd=5 user=(not_logged_in): Host: localhost:8080
+[2025-12-17 00:30:50] [SEND] fd=5 user=(not_logged_in): ERROR|Ban phai dang nhap truoc
+[2025-12-17 00:30:50] [RECV] fd=5 user=(not_logged_in): Connection: keep-alive
+[2025-12-17 00:30:50] [SEND] fd=5 user=(not_logged_in): ERROR|Ban phai dang nhap truoc
+[2025-12-17 00:30:50] [RECV] fd=5 user=(not_logged_in): sec-ch-ua: "Microsoft Edge";v="143", "Chromium";v="143", "Not A(Brand";v="24"
+[2025-12-17 00:30:50] [SEND] fd=5 user=(not_logged_in): ERROR|Ban phai dang nhap truoc
+[2025-12-17 00:30:50] [RECV] fd=5 user=(not_logged_in): sec-ch-ua-mobile: ?0
+[2025-12-17 00:36:34] [SEND] fd=4 user=(not_logged_in): Chao mung den voi dau gia
+[2025-12-17 00:36:36] [SEND] fd=5 user=(not_logged_in): Chao mung den voi dau gia
+[2025-12-17 00:38:44] [RECV] fd=4 user=(not_logged_in): LOGIN|user1|pass1
+[2025-12-17 00:38:44] [SEND] fd=4 user=user1: LOGIN_SUCCESS|dang nhap thanh cong|user1|0
+[2025-12-17 00:48:45] [RECV] fd=4 user=user1: CREATE_ROOM|phong dau gia test|2025-12-17 00:51:26|2025-12-17 01:08:42
+[2025-12-17 00:48:45] [SEND] fd=4 user=user1: CREATE_ROOM_SUCCESS|Tao phong thanh cong|12
+[2025-12-17 00:50:08] [RECV] fd=4 user=user1: JOIN_ROOM|12
+[2025-12-17 00:50:08] [SEND] fd=4 user=user1: JOIN_ROOM_FAIL|Phong chua bat dau
+[2025-12-17 00:52:08] [RECV] fd=4 user=user1: JOIN_ROOM|12
+[2025-12-17 00:52:08] [SEND] fd=4 user=user1: JOIN_ROOM_SUCCESS|Chao mung Chu phong|12|phong dau gia test
+[2025-12-17 00:52:08] [SEND] fd=4 user=user1: JOIN_ROOM_SUCCESS|Da tham gia phong|12|phong dau gia test
+[2025-12-17 00:52:09] [RECV] fd=4 user=user1: GET_ROOM_DETAIL|12
+[2025-12-17 00:52:09] [SEND] fd=4 user=user1: ROOM_DETAIL|12|phong dau gia test|ACTIVE|2025-12-17 00:51:26|2025-12-17 01:08:42|
+[2025-12-17 00:53:44] [RECV] fd=4 user=user1: CREATE_ITEM|12|vatpham1|12000|10|200000|sau 1 ph√|∫t
+[2025-12-17 00:53:44] [SEND] fd=4 user=user1: CREATE_ITEM_FAIL|Khung gio khong hop le (dinh dang HH:MM)
+[2025-12-17 00:53:50] [RECV] fd=4 user=user1: GET_ROOM_DETAIL|12
+[2025-12-17 00:53:50] [SEND] fd=4 user=user1: ROOM_DETAIL|12|phong dau gia test|ACTIVE|2025-12-17 00:51:26|2025-12-17 01:08:42|
+[2025-12-17 00:54:31] [RECV] fd=4 user=user1: CREATE_ITEM|12|vatpham1|12000|10|200000|2025-12-1|7 00:55:2
+[2025-12-17 00:54:31] [SEND] fd=4 user=user1: CREATE_ITEM_FAIL|Khung gio khong hop le (dinh dang HH:MM)
+[2025-12-17 00:54:40] [RECV] fd=4 user=user1: DELETE_ITEM|0
+[2025-12-17 00:54:40] [SEND] fd=4 user=user1: DELETE_ITEM_FAIL|Vat pham khong ton tai
+[2025-12-17 00:54:42] [RECV] fd=4 user=user1: GET_ROOM_DETAIL|12
+[2025-12-17 00:54:42] [SEND] fd=4 user=user1: ROOM_DETAIL|12|phong dau gia test|ACTIVE|2025-12-17 00:51:26|2025-12-17 01:08:42|
+[2025-12-17 00:55:34] [RECV] fd=4 user=user1: CREATE_ITEM|12|vatpham1|12000|5|200000|00:56|00:05
+[2025-12-17 00:55:34] [SEND] fd=4 user=user1: CREATE_ITEM_FAIL|Gio bat dau phai truoc gio ket thuc
+[2025-12-17 00:55:39] [RECV] fd=4 user=user1: GET_ROOM_DETAIL|12
+[2025-12-17 00:55:39] [SEND] fd=4 user=user1: ROOM_DETAIL|12|phong dau gia test|ACTIVE|2025-12-17 00:51:26|2025-12-17 01:08:42|
+[2025-12-17 00:56:15] [RECV] fd=4 user=user1: CREATE_ITEM|12|vp1|12000|4|200000|00:57|01:05
+[2025-12-17 00:56:15] [SEND] fd=4 user=user1: CREATE_ITEM_SUCCESS|Tao vat pham thanh cong (khung 00:57-01:05)|21
+[2025-12-17 00:56:15] [RECV] fd=4 user=user1: GET_ROOM_DETAIL|12
+[2025-12-17 00:56:15] [SEND] fd=4 user=user1: ROOM_DETAIL|12|phong dau gia test|ACTIVE|2025-12-17 00:51:26|2025-12-17 01:08:42|21|vp1|PENDING|12000|12000|200000;
+[2025-12-17 00:57:39] [RECV] fd=4 user=user1: PLACE_BID|21|22000
+[2025-12-17 00:57:39] [SEND] fd=4 user=user1: BID_FAIL|Vat pham da dong
+[2025-12-17 00:59:05] [RECV] fd=4 user=user1: GET_ROOM_DETAIL|12
+[2025-12-17 00:59:05] [SEND] fd=4 user=user1: ROOM_DETAIL|12|phong dau gia test|ACTIVE|2025-12-17 00:51:26|2025-12-17 01:08:42|21|vp1|ACTIVE|12000|12000|200000;
+[2025-12-17 00:59:11] [RECV] fd=4 user=user1: PLACE_BID|12|22000
+[2025-12-17 00:59:11] [SEND] fd=4 user=user1: BID_FAIL|Vat pham khong ton tai
+[2025-12-17 00:59:17] [RECV] fd=4 user=user1: GET_ROOM_DETAIL|12
+[2025-12-17 00:59:17] [SEND] fd=4 user=user1: ROOM_DETAIL|12|phong dau gia test|ACTIVE|2025-12-17 00:51:26|2025-12-17 01:08:42|21|vp1|ACTIVE|12000|12000|200000;
+[2025-12-17 00:59:23] [RECV] fd=4 user=user1: PLACE_BID|21|22000
+[2025-12-17 00:59:23] [SEND] fd=4 user=user1: BID_SUCCESS|Dat gia thanh cong|22000
+[2025-12-17 00:59:23] [SEND] fd=4 user=user1: NEW_BID|21|vp1|user1|22000|2025-12-17 00:59:23
+[2025-12-17 00:59:23] [RECV] fd=4 user=user1: GET_ROOM_DETAIL|12
+[2025-12-17 00:59:23] [SEND] fd=4 user=user1: ROOM_DETAIL|12|phong dau gia test|ACTIVE|2025-12-17 00:51:26|2025-12-17 01:08:42|21|vp1|ACTIVE|12000|22000|200000;
+[2025-12-17 00:59:23] [RECV] fd=4 user=user1: GET_ROOM_DETAIL|12
+[2025-12-17 00:59:23] [SEND] fd=4 user=user1: ROOM_DETAIL|12|phong dau gia test|ACTIVE|2025-12-17 00:51:26|2025-12-17 01:08:42|21|vp1|ACTIVE|12000|22000|200000;
+[2025-12-17 00:59:47] [RECV] fd=5 user=(not_logged_in): LOGIN|user2|pass2
+[2025-12-17 00:59:47] [SEND] fd=5 user=user2: LOGIN_SUCCESS|dang nhap thanh cong|user2|0
+[2025-12-17 00:59:52] [RECV] fd=5 user=user2: GET_ROOM_LIST|ALL|1|50
+[2025-12-17 00:59:52] [SEND] fd=5 user=user2: ROOM_LIST|12|1|Phong Dau Gia Do Co|admin|CLOSED|4|0|2024-12-01 08:00:00|2024-12-31 20:00:00;2|Phong Nghe Thuat|alice|CLOSED|2|0|2024-12-01 09:00:00|2024-12-31 21:00:00;3|Phong Trang Suc|admin|CLOSED|3|0|2024-12-01 10:00:00|2024-12-31 22:00:00;4|Phong Do Dien Tu|bob|CLOSED|2|0|2024-12-15 08:00:00|2024-12-31 20:00:00;5|Phong Sach Hiem|charlie|CLOSED|2|0|2024-11-01 08:00:00|2024-11-30 20:00:00;6|Phong Do Go My Nghe|admin|CLOSED|2|0|2024-12-01 08:00:00|2024-12-31 23:59:59;7|hong dau gia da quy|admin|CLOSED|0|0|2024-12-30 10:00:00|2025-01-16 23:59:59;8|phong gi do|user1|CLOSED|0|0|2025-01-01 00:00:00|2025-01-02 01:00:00;9|phong moi 1|admin|CLOSED|3|0|2025-12-03 00:00:00|2025-12-05 00:00:00;10|phong moi 2|admin|ACTIVE|0|0|2025-12-02 00:00:00|2025-12-04;11|phong moi 4|admin|CLOSED|2|0|2025-12-02 00:00:00|2025-12-05 00:00:00;12|phong dau gia test|user1|ACTIVE|1|1|2025-12-17 00:51:26|2025-12-17 01:08:42;
+[2025-12-17 01:00:02] [RECV] fd=5 user=user2: JOIN_ROOM|12
+[2025-12-17 01:00:02] [SEND] fd=5 user=user2: JOIN_ROOM_SUCCESS|Da tham gia phong|12|phong dau gia test
+[2025-12-17 01:00:02] [SEND] fd=4 user=user1: USER_JOINED|user2|vua tham gia phong
+[2025-12-17 01:00:03] [RECV] fd=5 user=user2: GET_ROOM_DETAIL|12
+[2025-12-17 01:00:03] [SEND] fd=5 user=user2: ROOM_DETAIL|12|phong dau gia test|ACTIVE|2025-12-17 00:51:26|2025-12-17 01:08:42|21|vp1|ACTIVE|12000|22000|200000;
+[2025-12-17 01:00:16] [RECV] fd=5 user=user2: PLACE_BID|21|25000
+[2025-12-17 01:00:16] [SEND] fd=5 user=user2: BID_FAIL|Gia phai lon hon gia hien tai it nhat 10.000d
+[2025-12-17 01:00:18] [RECV] fd=5 user=user2: GET_ROOM_DETAIL|12
+[2025-12-17 01:00:18] [SEND] fd=5 user=user2: ROOM_DETAIL|12|phong dau gia test|ACTIVE|2025-12-17 00:51:26|2025-12-17 01:08:42|21|vp1|ACTIVE|12000|22000|200000;
+[2025-12-17 01:00:23] [RECV] fd=5 user=user2: GET_ROOM_DETAIL|12
+[2025-12-17 01:00:23] [SEND] fd=5 user=user2: ROOM_DETAIL|12|phong dau gia test|ACTIVE|2025-12-17 00:51:26|2025-12-17 01:08:42|21|vp1|ACTIVE|12000|22000|200000;
+[2025-12-17 01:00:35] [RECV] fd=5 user=user2: PLACE_BID|21|35000
+[2025-12-17 01:00:35] [SEND] fd=5 user=user2: BID_SUCCESS|Dat gia thanh cong|35000
+[2025-12-17 01:00:35] [SEND] fd=4 user=user1: NEW_BID|21|vp1|user2|35000|2025-12-17 01:00:35
+[2025-12-17 01:00:35] [SEND] fd=5 user=user2: NEW_BID|21|vp1|user2|35000|2025-12-17 01:00:35
+[2025-12-17 01:00:35] [RECV] fd=5 user=user2: GET_ROOM_DETAIL|12
+[2025-12-17 01:00:35] [SEND] fd=5 user=user2: ROOM_DETAIL|12|phong dau gia test|ACTIVE|2025-12-17 00:51:26|2025-12-17 01:08:42|21|vp1|ACTIVE|12000|35000|200000;
+[2025-12-17 01:00:35] [RECV] fd=4 user=user1: GET_ROOM_DETAIL|12
+[2025-12-17 01:00:35] [SEND] fd=4 user=user1: ROOM_DETAIL|12|phong dau gia test|ACTIVE|2025-12-17 00:51:26|2025-12-17 01:08:42|21|vp1|ACTIVE|12000|35000|200000;
+[2025-12-17 01:00:35] [RECV] fd=5 user=user2: GET_ROOM_DETAIL|12
+[2025-12-17 01:00:35] [SEND] fd=5 user=user2: ROOM_DETAIL|12|phong dau gia test|ACTIVE|2025-12-17 00:51:26|2025-12-17 01:08:42|21|vp1|ACTIVE|12000|35000|200000;
+[2025-12-17 01:01:17] [RECV] fd=4 user=user1: PLACE_BID|21|44000
+[2025-12-17 01:01:17] [SEND] fd=4 user=user1: BID_FAIL|Gia phai lon hon gia hien tai it nhat 10.000d
+[2025-12-17 01:01:18] [RECV] fd=4 user=user1: GET_ROOM_DETAIL|12
+[2025-12-17 01:01:18] [SEND] fd=4 user=user1: ROOM_DETAIL|12|phong dau gia test|ACTIVE|2025-12-17 00:51:26|2025-12-17 01:08:42|21|vp1|ACTIVE|12000|35000|200000;
+[2025-12-17 01:01:33] [RECV] fd=4 user=user1: PLACE_BID|21|45000
+[2025-12-17 01:01:33] [SEND] fd=4 user=user1: BID_SUCCESS|Dat gia thanh cong|45000
+[2025-12-17 01:01:33] [SEND] fd=4 user=user1: NEW_BID|21|vp1|user1|45000|2025-12-17 01:01:33
+[2025-12-17 01:01:33] [SEND] fd=5 user=user2: NEW_BID|21|vp1|user1|45000|2025-12-17 01:01:33
+[2025-12-17 01:01:33] [RECV] fd=4 user=user1: GET_ROOM_DETAIL|12
+[2025-12-17 01:01:33] [SEND] fd=4 user=user1: ROOM_DETAIL|12|phong dau gia test|ACTIVE|2025-12-17 00:51:26|2025-12-17 01:08:42|21|vp1|ACTIVE|12000|45000|200000;
+[2025-12-17 01:01:33] [RECV] fd=5 user=user2: GET_ROOM_DETAIL|12
+[2025-12-17 01:01:33] [SEND] fd=5 user=user2: ROOM_DETAIL|12|phong dau gia test|ACTIVE|2025-12-17 00:51:26|2025-12-17 01:08:42|21|vp1|ACTIVE|12000|45000|200000;
+[2025-12-17 01:01:33] [RECV] fd=4 user=user1: GET_ROOM_DETAIL|12
+[2025-12-17 01:01:33] [SEND] fd=4 user=user1: ROOM_DETAIL|12|phong dau gia test|ACTIVE|2025-12-17 00:51:26|2025-12-17 01:08:42|21|vp1|ACTIVE|12000|45000|200000;
+[2025-12-17 01:04:22] [RECV] fd=5 user=user2: PLACE_BID|21|65000
+[2025-12-17 01:04:22] [SEND] fd=5 user=user2: BID_SUCCESS|Dat gia thanh cong|65000
+[2025-12-17 01:04:22] [SEND] fd=4 user=user1: NEW_BID|21|vp1|user2|65000|2025-12-17 01:04:22
+[2025-12-17 01:04:22] [SEND] fd=5 user=user2: NEW_BID|21|vp1|user2|65000|2025-12-17 01:04:22
+[2025-12-17 01:04:22] [RECV] fd=5 user=user2: GET_ROOM_DETAIL|12
+[2025-12-17 01:04:22] [SEND] fd=5 user=user2: ROOM_DETAIL|12|phong dau gia test|ACTIVE|2025-12-17 00:51:26|2025-12-17 01:08:42|21|vp1|ACTIVE|12000|65000|200000;
+[2025-12-17 01:04:22] [RECV] fd=4 user=user1: GET_ROOM_DETAIL|12
+[2025-12-17 01:04:22] [SEND] fd=4 user=user1: ROOM_DETAIL|12|phong dau gia test|ACTIVE|2025-12-17 00:51:26|2025-12-17 01:08:42|21|vp1|ACTIVE|12000|65000|200000;
+[2025-12-17 01:04:22] [RECV] fd=5 user=user2: GET_ROOM_DETAIL|12
+[2025-12-17 01:04:22] [SEND] fd=5 user=user2: ROOM_DETAIL|12|phong dau gia test|ACTIVE|2025-12-17 00:51:26|2025-12-17 01:08:42|21|vp1|ACTIVE|12000|65000|200000;
+[2025-12-17 01:04:51] [RECV] fd=4 user=user1: PLACE_BID|21|75000
+[2025-12-17 01:04:51] [SEND] fd=4 user=user1: BID_SUCCESS|Dat gia thanh cong|75000
+[2025-12-17 01:04:51] [SEND] fd=4 user=user1: NEW_BID|21|vp1|user1|75000|2025-12-17 01:04:51
+[2025-12-17 01:04:51] [SEND] fd=5 user=user2: NEW_BID|21|vp1|user1|75000|2025-12-17 01:04:51
+[2025-12-17 01:04:51] [RECV] fd=4 user=user1: GET_ROOM_DETAIL|12
+[2025-12-17 01:04:51] [SEND] fd=4 user=user1: ROOM_DETAIL|12|phong dau gia test|ACTIVE|2025-12-17 00:51:26|2025-12-17 01:08:42|21|vp1|ACTIVE|12000|75000|200000;
+[2025-12-17 01:04:51] [RECV] fd=5 user=user2: GET_ROOM_DETAIL|12
+[2025-12-17 01:04:51] [SEND] fd=5 user=user2: ROOM_DETAIL|12|phong dau gia test|ACTIVE|2025-12-17 00:51:26|2025-12-17 01:08:42|21|vp1|ACTIVE|12000|75000|200000;
+[2025-12-17 01:04:51] [RECV] fd=4 user=user1: GET_ROOM_DETAIL|12
+[2025-12-17 01:04:51] [SEND] fd=4 user=user1: ROOM_DETAIL|12|phong dau gia test|ACTIVE|2025-12-17 00:51:26|2025-12-17 01:08:42|21|vp1|ACTIVE|12000|75000|200000;
+[2025-12-17 01:05:13] [RECV] fd=4 user=user1: PLACE_BID|21|85000
+[2025-12-17 01:05:13] [SEND] fd=4 user=user1: BID_FAIL|Ban dang la nguoi dat gia cao nhat
+[2025-12-17 01:05:22] [RECV] fd=5 user=user2: PLACE_BID|21|85000
+[2025-12-17 01:05:22] [SEND] fd=5 user=user2: BID_SUCCESS|Dat gia thanh cong|85000
+[2025-12-17 01:05:22] [SEND] fd=4 user=user1: NEW_BID|21|vp1|user2|85000|2025-12-17 01:05:22
+[2025-12-17 01:05:22] [SEND] fd=5 user=user2: NEW_BID|21|vp1|user2|85000|2025-12-17 01:05:22
+[2025-12-17 01:05:22] [RECV] fd=4 user=user1: GET_ROOM_DETAIL|12
+[2025-12-17 01:05:22] [SEND] fd=4 user=user1: ROOM_DETAIL|12|phong dau gia test|ACTIVE|2025-12-17 00:51:26|2025-12-17 01:08:42|21|vp1|ACTIVE|12000|85000|200000;
+[2025-12-17 01:05:22] [RECV] fd=5 user=user2: GET_ROOM_DETAIL|12
+[2025-12-17 01:05:22] [SEND] fd=5 user=user2: ROOM_DETAIL|12|phong dau gia test|ACTIVE|2025-12-17 00:51:26|2025-12-17 01:08:42|21|vp1|ACTIVE|12000|85000|200000;
+[2025-12-17 01:05:22] [RECV] fd=5 user=user2: GET_ROOM_DETAIL|12
+[2025-12-17 01:05:22] [SEND] fd=5 user=user2: ROOM_DETAIL|12|phong dau gia test|ACTIVE|2025-12-17 00:51:26|2025-12-17 01:08:42|21|vp1|ACTIVE|12000|85000|200000;
+[2025-12-17 01:05:44] [RECV] fd=4 user=user1: PLACE_BID|21|95000
+[2025-12-17 01:05:44] [SEND] fd=4 user=user1: BID_SUCCESS|Dat gia thanh cong|95000
+[2025-12-17 01:05:44] [SEND] fd=4 user=user1: NEW_BID|21|vp1|user1|95000|2025-12-17 01:05:44
+[2025-12-17 01:05:44] [SEND] fd=5 user=user2: NEW_BID|21|vp1|user1|95000|2025-12-17 01:05:44
+[2025-12-17 01:05:44] [RECV] fd=4 user=user1: GET_ROOM_DETAIL|12
+[2025-12-17 01:05:44] [SEND] fd=4 user=user1: ROOM_DETAIL|12|phong dau gia test|ACTIVE|2025-12-17 00:51:26|2025-12-17 01:08:42|21|vp1|ACTIVE|12000|95000|200000;
+[2025-12-17 01:05:44] [RECV] fd=5 user=user2: GET_ROOM_DETAIL|12
+[2025-12-17 01:05:44] [SEND] fd=5 user=user2: ROOM_DETAIL|12|phong dau gia test|ACTIVE|2025-12-17 00:51:26|2025-12-17 01:08:42|21|vp1|ACTIVE|12000|95000|200000;
+[2025-12-17 01:05:44] [RECV] fd=4 user=user1: GET_ROOM_DETAIL|12
+[2025-12-17 01:05:44] [SEND] fd=4 user=user1: ROOM_DETAIL|12|phong dau gia test|ACTIVE|2025-12-17 00:51:26|2025-12-17 01:08:42|21|vp1|ACTIVE|12000|95000|200000;
+[2025-12-17 01:06:15] [RECV] fd=4 user=user1: PLACE_BID|21|105000
+[2025-12-17 01:06:15] [SEND] fd=4 user=user1: BID_FAIL|Ban dang la nguoi dat gia cao nhat
+[2025-12-17 01:06:22] [RECV] fd=5 user=user2: PLACE_BID|21|105000
+[2025-12-17 01:06:22] [SEND] fd=5 user=user2: BID_SUCCESS|Dat gia thanh cong|105000
+[2025-12-17 01:06:22] [SEND] fd=4 user=user1: NEW_BID|21|vp1|user2|105000|2025-12-17 01:06:22
+[2025-12-17 01:06:22] [SEND] fd=5 user=user2: NEW_BID|21|vp1|user2|105000|2025-12-17 01:06:22
+[2025-12-17 01:06:22] [RECV] fd=5 user=user2: GET_ROOM_DETAIL|12
+[2025-12-17 01:06:22] [SEND] fd=5 user=user2: ROOM_DETAIL|12|phong dau gia test|ACTIVE|2025-12-17 00:51:26|2025-12-17 01:08:42|21|vp1|ACTIVE|12000|105000|200000;
+[2025-12-17 01:06:22] [RECV] fd=4 user=user1: GET_ROOM_DETAIL|12
+[2025-12-17 01:06:22] [SEND] fd=4 user=user1: ROOM_DETAIL|12|phong dau gia test|ACTIVE|2025-12-17 00:51:26|2025-12-17 01:08:42|21|vp1|ACTIVE|12000|105000|200000;
+[2025-12-17 01:06:22] [RECV] fd=5 user=user2: GET_ROOM_DETAIL|12
+[2025-12-17 01:06:22] [SEND] fd=5 user=user2: ROOM_DETAIL|12|phong dau gia test|ACTIVE|2025-12-17 00:51:26|2025-12-17 01:08:42|21|vp1|ACTIVE|12000|105000|200000;
+[2025-12-17 01:07:44] [RECV] fd=4 user=user1: PLACE_BID|21|130000
+[2025-12-17 01:07:44] [SEND] fd=4 user=user1: BID_SUCCESS|Dat gia thanh cong|130000
+[2025-12-17 01:07:44] [SEND] fd=4 user=user1: NEW_BID|21|vp1|user1|130000|2025-12-17 01:07:44
+[2025-12-17 01:07:44] [SEND] fd=5 user=user2: NEW_BID|21|vp1|user1|130000|2025-12-17 01:07:44
+[2025-12-17 01:07:44] [RECV] fd=4 user=user1: GET_ROOM_DETAIL|12
+[2025-12-17 01:07:44] [SEND] fd=4 user=user1: ROOM_DETAIL|12|phong dau gia test|ACTIVE|2025-12-17 00:51:26|2025-12-17 01:08:42|21|vp1|ACTIVE|12000|130000|200000;
+[2025-12-17 01:07:44] [RECV] fd=5 user=user2: GET_ROOM_DETAIL|12
+[2025-12-17 01:07:44] [SEND] fd=5 user=user2: ROOM_DETAIL|12|phong dau gia test|ACTIVE|2025-12-17 00:51:26|2025-12-17 01:08:42|21|vp1|ACTIVE|12000|130000|200000;
+[2025-12-17 01:07:44] [RECV] fd=4 user=user1: GET_ROOM_DETAIL|12
+[2025-12-17 01:07:44] [SEND] fd=4 user=user1: ROOM_DETAIL|12|phong dau gia test|ACTIVE|2025-12-17 00:51:26|2025-12-17 01:08:42|21|vp1|ACTIVE|12000|130000|200000;
+[2025-12-17 01:08:42] [SEND] fd=4 user=user1: ROOM_STATUS_CHANGED|12|CLOSED
+[2025-12-17 01:08:42] [SEND] fd=5 user=user2: ROOM_STATUS_CHANGED|12|CLOSED
+[2025-12-17 01:55:40] [SEND] fd=4 user=(not_logged_in): Chao mung den voi dau gia
+[2025-12-17 01:56:00] [RECV] fd=4 user=(not_logged_in): LOGIN|user1|passs1
+[2025-12-17 01:56:00] [SEND] fd=4 user=(not_logged_in): LOGIN_FAIL_WRONG_PASS|sai mat khau hoac tai khoan
+[2025-12-17 01:58:06] [SEND] fd=4 user=(not_logged_in): Chao mung den voi dau gia
+[2025-12-17 01:58:15] [RECV] fd=4 user=(not_logged_in): LOGIN|user1|pass1
+[2025-12-17 01:58:15] [SEND] fd=4 user=user1: LOGIN_SUCCESS|dang nhap thanh cong|user1|0
+[2025-12-17 01:58:15] [RECV] fd=4 user=user1: GET_ROOM_LIST|ALL|1|50
+[2025-12-17 01:58:15] [SEND] fd=4 user=user1: ROOM_LIST|12|1|Phong Dau Gia Do Co|admin|CLOSED|4|0|2024-12-01 08:00:00|2024-12-31 20:00:00;2|Phong Nghe Thuat|alice|CLOSED|2|0|2024-12-01 09:00:00|2024-12-31 21:00:00;3|Phong Trang Suc|admin|CLOSED|3|0|2024-12-01 10:00:00|2024-12-31 22:00:00;4|Phong Do Dien Tu|bob|CLOSED|2|0|2024-12-15 08:00:00|2024-12-31 20:00:00;5|Phong Sach Hiem|charlie|CLOSED|2|0|2024-11-01 08:00:00|2024-11-30 20:00:00;6|Phong Do Go My Nghe|admin|CLOSED|2|0|2024-12-01 08:00:00|2024-12-31 23:59:59;7|hong dau gia da quy|admin|CLOSED|0|0|2024-12-30 10:00:00|2025-01-16 23:59:59;8|phong gi do|user1|CLOSED|0|0|2025-01-01 00:00:00|2025-01-02 01:00:00;9|phong moi 1|admin|CLOSED|3|0|2025-12-03 00:00:00|2025-12-05 00:00:00;10|phong moi 2|admin|ACTIVE|0|0|2025-12-02 00:00:00|2025-12-04;11|phong moi 4|admin|CLOSED|2|0|2025-12-02 00:00:00|2025-12-05 00:00:00;12|phong dau gia test|user1|CLOSED|1|0|2025-12-17 00:51:26|2025-12-17 01:08:42;
+[2025-12-17 02:04:17] [RECV] fd=4 user=user1: CREATE_ROOM|test|2025-12-17 02:06:54|2025-12-17 02:03:54
+[2025-12-17 02:04:17] [SEND] fd=4 user=user1: CREATE_ROOM_SUCCESS|Tao phong thanh cong|13
+[2025-12-17 02:54:42] [SEND] fd=4 user=(not_logged_in): Chao mung den voi dau gia
+[2025-12-17 02:57:05] [RECV] fd=4 user=(not_logged_in): LOGIN|user1|pass1
+[2025-12-17 02:57:05] [SEND] fd=4 user=user1: LOGIN_SUCCESS|dang nhap thanh cong|user1|0
+[2025-12-17 02:59:24] [RECV] fd=4 user=user1: GET_ROOM_LIST|ALL|1|50
+[2025-12-17 02:59:24] [SEND] fd=4 user=user1: ROOM_LIST|13|1|Phong Dau Gia Do Co|admin|CLOSED|4|0|2024-12-01 08:00:00|2024-12-31 20:00:00;2|Phong Nghe Thuat|alice|CLOSED|2|0|2024-12-01 09:00:00|2024-12-31 21:00:00;3|Phong Trang Suc|admin|CLOSED|3|0|2024-12-01 10:00:00|2024-12-31 22:00:00;4|Phong Do Dien Tu|bob|CLOSED|2|0|2024-12-15 08:00:00|2024-12-31 20:00:00;5|Phong Sach Hiem|charlie|CLOSED|2|0|2024-11-01 08:00:00|2024-11-30 20:00:00;6|Phong Do Go My Nghe|admin|CLOSED|2|0|2024-12-01 08:00:00|2024-12-31 23:59:59;7|hong dau gia da quy|admin|CLOSED|0|0|2024-12-30 10:00:00|2025-01-16 23:59:59;8|phong gi do|user1|CLOSED|0|0|2025-01-01 00:00:00|2025-01-02 01:00:00;9|phong moi 1|admin|CLOSED|3|0|2025-12-03 00:00:00|2025-12-05 00:00:00;10|phong moi 2|admin|ACTIVE|0|0|2025-12-02 00:00:00|2025-12-04;11|phong moi 4|admin|CLOSED|2|0|2025-12-02 00:00:00|2025-12-05 00:00:00;12|phong dau gia test|user1|CLOSED|1|0|2025-12-17 00:51:26|2025-12-17 01:08:42;13|test|user1|CLOSED|0|0|2025-12-17 02:06:54|2025-12-17 02:03:54;
+[2025-12-17 03:01:37] [RECV] fd=4 user=user1: SEARCH_ITEMS|NAME|moi||
+[2025-12-17 03:01:37] [SEND] fd=4 user=user1: SEARCH_RESULT|2|18|9|phong moi 1|vat pham moi 3|1000000|2000000|ACTIVE||;20|11|phong moi 4|san pham moi gi day 2|100000|140000|ACTIVE||;
+[2025-12-17 03:03:00] [RECV] fd=4 user=user1: GET_MY_AUCTION_HISTORY|ALL|1|20
+[2025-12-17 03:03:00] [SEND] fd=4 user=user1: AUCTION_HISTORY|3|1|Phong Dau Gia Do Co|Binh gom Bat Trang|5010000|0|None|BIDDING|2024-12-02 11:00:00;5|Phong Nghe Thuat|Tuong Phat go tram|7100000|10000000|admin|LOST|2025-12-02 12:03:26;11|Phong Sach Hiem|Truyen Kieu ban co|60000000|62000000|user2|LOST|2024-11-15 15:30:00;
+[2025-12-17 03:04:24] [RECV] fd=4 user=user1: GET_ROOM_LIST|ALL|1|50
+[2025-12-17 03:04:24] [SEND] fd=4 user=user1: ROOM_LIST|13|1|Phong Dau Gia Do Co|admin|CLOSED|4|0|2024-12-01 08:00:00|2024-12-31 20:00:00;2|Phong Nghe Thuat|alice|CLOSED|2|0|2024-12-01 09:00:00|2024-12-31 21:00:00;3|Phong Trang Suc|admin|CLOSED|3|0|2024-12-01 10:00:00|2024-12-31 22:00:00;4|Phong Do Dien Tu|bob|CLOSED|2|0|2024-12-15 08:00:00|2024-12-31 20:00:00;5|Phong Sach Hiem|charlie|CLOSED|2|0|2024-11-01 08:00:00|2024-11-30 20:00:00;6|Phong Do Go My Nghe|admin|CLOSED|2|0|2024-12-01 08:00:00|2024-12-31 23:59:59;7|hong dau gia da quy|admin|CLOSED|0|0|2024-12-30 10:00:00|2025-01-16 23:59:59;8|phong gi do|user1|CLOSED|0|0|2025-01-01 00:00:00|2025-01-02 01:00:00;9|phong moi 1|admin|CLOSED|3|0|2025-12-03 00:00:00|2025-12-05 00:00:00;10|phong moi 2|admin|ACTIVE|0|0|2025-12-02 00:00:00|2025-12-04;11|phong moi 4|admin|CLOSED|2|0|2025-12-02 00:00:00|2025-12-05 00:00:00;12|phong dau gia test|user1|CLOSED|1|0|2025-12-17 00:51:26|2025-12-17 01:08:42;13|test|user1|CLOSED|0|0|2025-12-17 02:06:54|2025-12-17 02:03:54;
+[2025-12-17 03:04:42] [RECV] fd=4 user=user1: JOIN_ROOM|12
+[2025-12-17 03:04:42] [SEND] fd=4 user=user1: JOIN_ROOM_SUCCESS|Chao mung Chu phong|12|phong dau gia test
+[2025-12-17 03:04:43] [RECV] fd=4 user=user1: GET_ROOM_DETAIL|12
+[2025-12-17 03:04:43] [SEND] fd=4 user=user1: ROOM_DETAIL|12|phong dau gia test|CLOSED|2025-12-17 00:51:26|2025-12-17 01:08:42|21|vp1|ACTIVE|12000|130000|200000;
+[2025-12-17 03:10:47] [RECV] fd=4 user=user1: GET_ROOM_DETAIL|12
+[2025-12-17 03:10:47] [SEND] fd=4 user=user1: ROOM_DETAIL|12|phong dau gia test|CLOSED|2025-12-17 00:51:26|2025-12-17 01:08:42|21|vp1|ACTIVE|12000|130000|200000;
+[2025-12-17 03:12:00] [RECV] fd=4 user=user1: CREATE_ROOM|phong test 2|2025-12-17 03:14:45|2025-12-17 03:31:57
+[2025-12-17 03:12:00] [SEND] fd=4 user=user1: CREATE_ROOM_SUCCESS|Tao phong thanh cong|14
+[2025-12-17 03:12:38] [RECV] fd=4 user=user1: JOIN_ROOM|14
+[2025-12-17 03:12:38] [SEND] fd=4 user=user1: JOIN_ROOM_FAIL|Ban dang o phong khac. Moi nguoi chi duoc tham gia 1 phong
+[2025-12-17 03:12:47] [RECV] fd=4 user=user1: GET_ROOM_DETAIL|12
+[2025-12-17 03:12:47] [SEND] fd=4 user=user1: ROOM_DETAIL|12|phong dau gia test|CLOSED|2025-12-17 00:51:26|2025-12-17 01:08:42|21|vp1|ACTIVE|12000|130000|200000;
+[2025-12-17 03:12:52] [RECV] fd=4 user=user1: LEAVE_ROOM
+[2025-12-17 03:12:52] [SEND] fd=4 user=user1: LEAVE_ROOM_SUCCESS|Da roi phong
+[2025-12-17 03:13:04] [RECV] fd=4 user=user1: JOIN_ROOM|14
+[2025-12-17 03:13:04] [SEND] fd=4 user=user1: JOIN_ROOM_SUCCESS|Chao mung Chu phong|14|phong test 2
+[2025-12-17 03:13:05] [RECV] fd=4 user=user1: GET_ROOM_DETAIL|14
+[2025-12-17 03:13:05] [SEND] fd=4 user=user1: ROOM_DETAIL|14|phong test 2|PENDING|2025-12-17 03:14:45|2025-12-17 03:31:57|
+[2025-12-17 03:13:28] [SEND] fd=5 user=(not_logged_in): Chao mung den voi dau gia
+[2025-12-17 03:13:37] [RECV] fd=5 user=(not_logged_in): LOGIN|user2|pass2
+[2025-12-17 03:13:37] [SEND] fd=5 user=user2: LOGIN_SUCCESS|dang nhap thanh cong|user2|0
+[2025-12-17 03:14:06] [RECV] fd=5 user=user2: JOIN_ROOM|14
+[2025-12-17 03:14:06] [SEND] fd=5 user=user2: JOIN_ROOM_FAIL|Phong chua bat dau
+[2025-12-17 03:14:45] [SEND] fd=4 user=user1: ROOM_STATUS_CHANGED|14|ACTIVE
+[2025-12-17 03:17:23] [RECV] fd=5 user=user2: JOIN_ROOM|14
+[2025-12-17 03:17:23] [SEND] fd=5 user=user2: JOIN_ROOM_SUCCESS|Da tham gia phong|14|phong test 2
+[2025-12-17 03:17:23] [SEND] fd=4 user=user1: USER_JOINED|user2|vua tham gia phong
+[2025-12-17 03:17:24] [RECV] fd=5 user=user2: GET_ROOM_DETAIL|14
+[2025-12-17 03:17:24] [SEND] fd=5 user=user2: ROOM_DETAIL|14|phong test 2|ACTIVE|2025-12-17 03:14:45|2025-12-17 03:31:57|
+[2025-12-17 03:18:44] [RECV] fd=4 user=user1: CREATE_ITEM|14|vp2|12000|10|200000|03:20|03:30
+[2025-12-17 03:18:44] [SEND] fd=4 user=user1: CREATE_ITEM_SUCCESS|Tao vat pham thanh cong (khung 03:20-03:30)|22
+[2025-12-17 03:18:44] [RECV] fd=4 user=user1: GET_ROOM_DETAIL|14
+[2025-12-17 03:18:44] [SEND] fd=4 user=user1: ROOM_DETAIL|14|phong test 2|ACTIVE|2025-12-17 03:14:45|2025-12-17 03:31:57|22|vp2|PENDING|12000|12000|200000;
+[2025-12-17 03:19:07] [RECV] fd=5 user=user2: PLACE_BID|22|22000
+[2025-12-17 03:19:07] [SEND] fd=5 user=user2: BID_FAIL|Vat pham da dong
+[2025-12-17 03:19:10] [RECV] fd=5 user=user2: GET_ROOM_DETAIL|14
+[2025-12-17 03:19:10] [SEND] fd=5 user=user2: ROOM_DETAIL|14|phong test 2|ACTIVE|2025-12-17 03:14:45|2025-12-17 03:31:57|22|vp2|PENDING|12000|12000|200000;
+[2025-12-17 03:31:57] [SEND] fd=4 user=user1: ROOM_CLOSED|14|Phong da dong
+[2025-12-17 03:31:57] [SEND] fd=5 user=user2: ROOM_CLOSED|14|Phong da dong
+[2025-12-17 03:31:57] [SEND] fd=5 user=user2: KICKED|Ban da bi kick khoi phong (phong dong)
+[2025-12-17 03:38:02] [SEND] fd=4 user=(not_logged_in): Chao mung den voi dau gia
+[2025-12-17 03:38:09] [SEND] fd=5 user=(not_logged_in): Chao mung den voi dau gia
+[2025-12-17 03:46:11] [RECV] fd=4 user=(not_logged_in): LOGIN|user1|pass1
+[2025-12-17 03:46:11] [SEND] fd=4 user=user1: LOGIN_SUCCESS|dang nhap thanh cong|user1|0
+[2025-12-17 03:46:18] [RECV] fd=5 user=(not_logged_in): LOGIN|user|s
+[2025-12-17 03:46:18] [SEND] fd=5 user=(not_logged_in): LOGIN_FAIL_WRONG_PASS|sai mat khau hoac tai khoan
+[2025-12-17 03:46:23] [RECV] fd=5 user=(not_logged_in): LOGIN|user1|pass1
+[2025-12-17 03:46:23] [SEND] fd=5 user=(not_logged_in): LOGIN_FAIL_LOGGED_IN|nguoi dung da dang nhap
+[2025-12-17 03:46:29] [RECV] fd=5 user=(not_logged_in): LOGIN|user2|pass2
+[2025-12-17 03:46:29] [SEND] fd=5 user=user2: LOGIN_SUCCESS|dang nhap thanh cong|user2|0
+[2025-12-17 03:46:42] [RECV] fd=4 user=user1: SEARCH_ITEMS|NAME|||
+[2025-12-17 03:46:42] [SEND] fd=4 user=user1: SEARCH_RESULT|15|1|1|Phong Dau Gia Do Co|Binh gom Bat Trang|5000000|5230000|ACTIVE|2024-12-02 10:00:00|2024-12-02 11:00:00;2|1|Phong Dau Gia Do Co|Den dau hoang dong|3000000|3000000|PENDING||;3|1|Phong Dau Gia Do Co|Ban ghe go gu|8000000|8000000|PENDING||;6|3|Phong Trang Suc|Day chuyen vang 24k|85000000|87500000|ACTIVE|2024-12-02 08:00:00|2024-12-02 09:00:00;7|3|Phong Trang Suc|Nhan kim cuong|120000000|120000000|PENDING||;8|3|Phong Trang Suc|Dong ho Rolex Submariner|200000000|200000000|PENDING||;9|4|Phong Do Dien Tu|iPhone 15 Pro Max|35000000|35000000|PENDING||;10|4|Phong Do Dien Tu|MacBook Pro M3 Max|80000000|80000000|PENDING||;13|6|Phong Do Go My Nghe|Bat huong go tram|4000000|4000000|PENDING||;14|6|Phong Do Go My Nghe|Tuong Kuan Am go mu|12000000|12000000|PENDING||;15|1|Phong Dau Gia Do Co|Chau hoa Chu Dau|25000000|25000000|PENDING||;18|9|phong moi 1|vat pham moi 3|1000000|2000000|ACTIVE||;20|11|phong moi 4|san pham moi gi day 2|100000|140000|ACTIVE||;21|12|phong dau gia test|vp1|12000|130000|ACTIVE||;22|14|phong test 2|vp2|12000|12000|PENDING||;
+[2025-12-17 03:51:10] [RECV] fd=4 user=user1: GET_ROOM_LIST|ALL|1|50
+[2025-12-17 03:51:10] [SEND] fd=4 user=user1: ROOM_LIST|14|1|Phong Dau Gia Do Co|admin|CLOSED|4|0|2024-12-01 08:00:00|2024-12-31 20:00:00;2|Phong Nghe Thuat|alice|CLOSED|2|0|2024-12-01 09:00:00|2024-12-31 21:00:00;3|Phong Trang Suc|admin|CLOSED|3|0|2024-12-01 10:00:00|2024-12-31 22:00:00;4|Phong Do Dien Tu|bob|CLOSED|2|0|2024-12-15 08:00:00|2024-12-31 20:00:00;5|Phong Sach Hiem|charlie|CLOSED|2|0|2024-11-01 08:00:00|2024-11-30 20:00:00;6|Phong Do Go My Nghe|admin|CLOSED|2|0|2024-12-01 08:00:00|2024-12-31 23:59:59;7|hong dau gia da quy|admin|CLOSED|0|0|2024-12-30 10:00:00|2025-01-16 23:59:59;8|phong gi do|user1|CLOSED|0|0|2025-01-01 00:00:00|2025-01-02 01:00:00;9|phong moi 1|admin|CLOSED|3|0|2025-12-03 00:00:00|2025-12-05 00:00:00;10|phong moi 2|admin|ACTIVE|0|0|2025-12-02 00:00:00|2025-12-04;11|phong moi 4|admin|CLOSED|2|0|2025-12-02 00:00:00|2025-12-05 00:00:00;12|phong dau gia test|user1|CLOSED|1|0|2025-12-17 00:51:26|2025-12-17 01:08:42;13|test|user1|CLOSED|0|0|2025-12-17 02:06:54|2025-12-17 02:03:54;14|phong test 2|user1|CLOSED|1|0|2025-12-17 03:14:45|2025-12-17 03:31:57;
+[2025-12-17 03:52:54] [RECV] fd=4 user=user1: CREATE_ROOM|test phong moi |2025-12-17 03:54:39|2025-12-17 04:12:53
+[2025-12-17 03:52:54] [SEND] fd=4 user=user1: CREATE_ROOM_SUCCESS|Tao phong thanh cong|15
+[2025-12-17 03:53:15] [RECV] fd=4 user=user1: JOIN_ROOM|15
+[2025-12-17 03:53:15] [SEND] fd=4 user=user1: JOIN_ROOM_SUCCESS|Chao mung Chu phong|15|test phong moi 
+[2025-12-17 03:53:16] [RECV] fd=4 user=user1: GET_ROOM_DETAIL|15
+[2025-12-17 03:53:16] [SEND] fd=4 user=user1: ROOM_DETAIL|15|test phong moi |PENDING|2025-12-17 03:54:39|2025-12-17 04:12:53|
+[2025-12-17 03:53:41] [RECV] fd=5 user=user2: CREATE_ROOM|15|x|
+[2025-12-17 03:53:41] [SEND] fd=5 user=user2: CREATE_ROOM_FAIL|Thoi gian khong hop le
+[2025-12-17 03:53:47] [RECV] fd=5 user=user2: JOIN_ROOM|15
+[2025-12-17 03:53:47] [SEND] fd=5 user=user2: JOIN_ROOM_FAIL|Phong chua bat dau
+[2025-12-17 03:54:37] [RECV] fd=4 user=user1: CREATE_ITEM|15|vp moi|12000|10|200000|2025-12-1|7 03:55:3
+[2025-12-17 03:54:37] [SEND] fd=4 user=user1: CREATE_ITEM_FAIL|Khung gio khong hop le (dinh dang HH:MM)
+[2025-12-17 03:54:39] [SEND] fd=4 user=user1: ROOM_STATUS_CHANGED|15|ACTIVE
+[2025-12-17 04:04:13] [SEND] fd=4 user=(not_logged_in): Chao mung den voi dau gia
+[2025-12-17 04:04:27] [RECV] fd=4 user=(not_logged_in): LOGIN|user1|pass1
+[2025-12-17 04:04:27] [SEND] fd=4 user=user1: LOGIN_SUCCESS|dang nhap thanh cong|user1|0
+[2025-12-17 04:04:34] [SEND] fd=5 user=(not_logged_in): Chao mung den voi dau gia
+[2025-12-17 04:04:37] [RECV] fd=5 user=(not_logged_in): LOGIN|user2|pass2
+[2025-12-17 04:04:37] [SEND] fd=5 user=user2: LOGIN_SUCCESS|dang nhap thanh cong|user2|0
+[2025-12-17 04:05:13] [RECV] fd=4 user=user1: CREATE_ROOM|room1|2025-12-17 03:57:31|cc
+[2025-12-17 04:05:13] [SEND] fd=4 user=user1: CREATE_ROOM_SUCCESS|Tao phong thanh cong|16
+[2025-12-17 04:06:34] [RECV] fd=4 user=user1: CREATE_ROOM|room2|2025-12-17 04:09:28|2025-12-17 04:26:28
+[2025-12-17 04:06:34] [SEND] fd=4 user=user1: CREATE_ROOM_SUCCESS|Tao phong thanh cong|17
+[2025-12-17 04:06:45] [RECV] fd=5 user=user2: JOIN_ROOM|17
+[2025-12-17 04:06:45] [SEND] fd=5 user=user2: JOIN_ROOM_FAIL|Phong chua bat dau
+[2025-12-17 04:06:50] [RECV] fd=4 user=user1: JOIN_ROOM|17
+[2025-12-17 04:06:50] [SEND] fd=4 user=user1: JOIN_ROOM_SUCCESS|Chao mung Chu phong|17|room2
+[2025-12-17 04:06:51] [RECV] fd=4 user=user1: GET_ROOM_DETAIL|17
+[2025-12-17 04:06:51] [SEND] fd=4 user=user1: ROOM_DETAIL|17|room2|PENDING|2025-12-17 04:09:28|2025-12-17 04:26:28|
+[2025-12-17 04:07:20] [RECV] fd=4 user=user1: CREATE_ITEM|17|vp_room2|12000|10|200000|2025-12-17 04:10:15|2025-12-17 04:20:15
+[2025-12-17 04:07:20] [SEND] fd=4 user=user1: CREATE_ITEM_FAIL|Khung gio khong hop le (dinh dang HH:MM)
+[2025-12-17 04:09:28] [SEND] fd=4 user=user1: ROOM_STATUS_CHANGED|17|ACTIVE
+[2025-12-17 04:18:43] [SEND] fd=4 user=(not_logged_in): Chao mung den voi dau gia
+[2025-12-17 04:18:45] [SEND] fd=5 user=(not_logged_in): Chao mung den voi dau gia
+[2025-12-17 04:20:05] [RECV] fd=4 user=(not_logged_in): LOGIN|user1|pass1
+[2025-12-17 04:20:05] [SEND] fd=4 user=user1: LOGIN_SUCCESS|dang nhap thanh cong|user1|0
+[2025-12-17 04:20:14] [SEND] fd=5 user=(not_logged_in): Chao mung den voi dau gia
+[2025-12-17 04:20:20] [RECV] fd=5 user=(not_logged_in): LOGIN|user2|pass2
+[2025-12-17 04:20:20] [SEND] fd=5 user=user2: LOGIN_SUCCESS|dang nhap thanh cong|user2|0
+[2025-12-17 04:20:54] [RECV] fd=4 user=user1: CREATE_ROOM|r1|2025-12-17 04:23:46|2025-12-17 04:40:46
+[2025-12-17 04:20:54] [SEND] fd=4 user=user1: CREATE_ROOM_SUCCESS|Tao phong thanh cong|18
+[2025-12-17 04:21:04] [RECV] fd=4 user=user1: JOIN_ROOM|18
+[2025-12-17 04:21:04] [SEND] fd=4 user=user1: JOIN_ROOM_SUCCESS|Chao mung Chu phong|18|r1
+[2025-12-17 04:21:05] [RECV] fd=4 user=user1: GET_ROOM_DETAIL|18
+[2025-12-17 04:21:05] [SEND] fd=4 user=user1: ROOM_DETAIL|18|r1|PENDING|2025-12-17 04:23:46|2025-12-17 04:40:46|
+[2025-12-17 04:21:10] [RECV] fd=5 user=user2: JOIN_ROOM|18
+[2025-12-17 04:21:10] [SEND] fd=5 user=user2: JOIN_ROOM_FAIL|Phong chua bat dau
+[2025-12-17 04:22:44] [RECV] fd=4 user=user1: CREATE_ITEM|18|vp|12000|10|200000|2025-12-17 04:25:26|2025-12-17 04:37:26
+[2025-12-17 04:22:44] [SEND] fd=4 user=user1: CREATE_ITEM_SUCCESS|Tao vat pham thanh cong (khung 2025-12-17 04:25:26-2025-12-17 04:37:26)|23
+[2025-12-17 04:22:44] [RECV] fd=4 user=user1: GET_ROOM_DETAIL|18
+[2025-12-17 04:22:44] [SEND] fd=4 user=user1: ROOM_DETAIL|18|r1|PENDING|2025-12-17 04:23:46|2025-12-17 04:40:46|23|vp|PENDING|12000|12000|200000;
+[2025-12-17 04:22:54] [RECV] fd=5 user=user2: JOIN_ROOM|18
+[2025-12-17 04:22:54] [SEND] fd=5 user=user2: JOIN_ROOM_FAIL|Phong chua bat dau
+[2025-12-17 04:23:44] [RECV] fd=4 user=user1: CREATE_ITEM|18|vp02|45000|0|500000||
+[2025-12-17 04:23:44] [SEND] fd=4 user=user1: CREATE_ITEM_FAIL|Thoi gian dau gia khong hop le
+[2025-12-17 04:23:45] [RECV] fd=4 user=user1: GET_ROOM_DETAIL|18
+[2025-12-17 04:23:45] [SEND] fd=4 user=user1: ROOM_DETAIL|18|r1|PENDING|2025-12-17 04:23:46|2025-12-17 04:40:46|23|vp|PENDING|12000|12000|200000;
+[2025-12-17 04:23:46] [SEND] fd=4 user=user1: ROOM_STATUS_CHANGED|18|ACTIVE
+[2025-12-17 04:23:53] [RECV] fd=5 user=user2: JOIN_ROOM|18
+[2025-12-17 04:23:53] [SEND] fd=5 user=user2: JOIN_ROOM_SUCCESS|Da tham gia phong|18|r1
+[2025-12-17 04:23:53] [SEND] fd=4 user=user1: USER_JOINED|user2|vua tham gia phong
+[2025-12-17 04:23:54] [RECV] fd=5 user=user2: GET_ROOM_DETAIL|18
+[2025-12-17 04:23:54] [SEND] fd=5 user=user2: ROOM_DETAIL|18|r1|ACTIVE|2025-12-17 04:23:46|2025-12-17 04:40:46|23|vp|PENDING|12000|12000|200000;
+[2025-12-17 04:31:20] [SEND] fd=4 user=(not_logged_in): Chao mung den voi dau gia
+[2025-12-17 04:31:24] [SEND] fd=5 user=(not_logged_in): Chao mung den voi dau gia
+[2025-12-17 04:31:36] [RECV] fd=4 user=(not_logged_in): LOGIN|user1|pass1
+[2025-12-17 04:31:36] [SEND] fd=4 user=user1: LOGIN_SUCCESS|dang nhap thanh cong|user1|0
+[2025-12-17 04:31:42] [SEND] fd=5 user=(not_logged_in): Chao mung den voi dau gia
+[2025-12-17 04:32:28] [RECV] fd=5 user=(not_logged_in): LOGIN|user2|pass2
+[2025-12-17 04:32:28] [SEND] fd=5 user=user2: LOGIN_SUCCESS|dang nhap thanh cong|user2|0
+[2025-12-17 04:33:22] [RECV] fd=4 user=user1: CREATE_ROOM|longroom|2025-12-17 04:35:49|
+[2025-12-17 04:33:22] [SEND] fd=4 user=user1: CREATE_ROOM_FAIL|Thoi gian khong hop le
+[2025-12-17 04:33:42] [RECV] fd=4 user=user1: CREATE_ROOM|longroom|2025-12-17 04:36:20|2025-12-17 05:33:20
+[2025-12-17 04:33:42] [SEND] fd=4 user=user1: CREATE_ROOM_SUCCESS|Tao phong thanh cong|19
+[2025-12-17 04:33:56] [RECV] fd=4 user=user1: JOIN_ROOM|19
+[2025-12-17 04:33:56] [SEND] fd=4 user=user1: JOIN_ROOM_SUCCESS|Chao mung Chu phong|19|longroom
+[2025-12-17 04:33:57] [RECV] fd=4 user=user1: GET_ROOM_DETAIL|19
+[2025-12-17 04:33:57] [SEND] fd=4 user=user1: ROOM_DETAIL|19|longroom|PENDING|2025-12-17 04:36:20|2025-12-17 05:33:20|
+[2025-12-17 04:36:20] [SEND] fd=4 user=user1: ROOM_STATUS_CHANGED|19|ACTIVE
+[2025-12-17 04:38:51] [RECV] fd=4 user=user1: CREATE_ITEM|19|vpmoi|12000|5|200000|2025-12-17 04:39:37|2025-12-17 04:48:37
+[2025-12-17 04:38:51] [SEND] fd=4 user=user1: CREATE_ITEM_SUCCESS|Tao vat pham thanh cong (khung 2025-12-17 04:39:37-2025-12-17 04:48:37)|24
+[2025-12-17 04:38:51] [RECV] fd=4 user=user1: GET_ROOM_DETAIL|19
+[2025-12-17 04:38:51] [SEND] fd=4 user=user1: ROOM_DETAIL|19|longroom|ACTIVE|2025-12-17 04:36:20|2025-12-17 05:33:20|24|vpmoi|PENDING|12000|12000|200000|||2025-12-17 04:39:37|2025-12-17 04:48:37|5;
+[2025-12-17 04:39:05] [RECV] fd=5 user=user2: JOIN_ROOM|19
+[2025-12-17 04:39:05] [SEND] fd=5 user=user2: JOIN_ROOM_SUCCESS|Da tham gia phong|19|longroom
+[2025-12-17 04:39:05] [SEND] fd=4 user=user1: USER_JOINED|user2|vua tham gia phong
+[2025-12-17 04:39:06] [RECV] fd=5 user=user2: GET_ROOM_DETAIL|19
+[2025-12-17 04:39:06] [SEND] fd=5 user=user2: ROOM_DETAIL|19|longroom|ACTIVE|2025-12-17 04:36:20|2025-12-17 05:33:20|24|vpmoi|PENDING|12000|12000|200000|||2025-12-17 04:39:37|2025-12-17 04:48:37|5;
+[2025-12-17 04:39:49] [RECV] fd=5 user=user2: PLACE_BID|24|30000
+[2025-12-17 04:39:49] [SEND] fd=5 user=user2: BID_FAIL|Vat pham da dong
+[2025-12-17 04:54:45] [SEND] fd=4 user=(not_logged_in): Chao mung den voi dau gia
+[2025-12-17 04:54:58] [RECV] fd=4 user=(not_logged_in): LOGIN|user1|pass1
+[2025-12-17 04:54:58] [SEND] fd=4 user=user1: LOGIN_SUCCESS|dang nhap thanh cong|user1|0
+[2025-12-17 04:55:05] [RECV] fd=4 user=user1: JOIN_ROOM|19
+[2025-12-17 04:55:05] [SEND] fd=4 user=user1: JOIN_ROOM_SUCCESS|Chao mung Chu phong|19|longroom
+[2025-12-17 04:55:06] [RECV] fd=4 user=user1: GET_ROOM_DETAIL|19
+[2025-12-17 04:55:06] [SEND] fd=4 user=user1: ROOM_DETAIL|19|longroom|ACTIVE|2025-12-17 04:36:20|2025-12-17 05:33:20|24|vpmoi|PENDING|12000|12000|200000|||2025-12-17 04:39:37|2025-12-17 04:48:37|5;
+[2025-12-17 05:27:29] [SEND] fd=5 user=(not_logged_in): Chao mung den voi dau gia
+[2025-12-17 05:28:02] [RECV] fd=4 user=user1: CREATE_ITEM|19|1|1|2|400000|2025-12-17 05:28:53|2025-12-17 05:32:53
+[2025-12-17 05:28:02] [SEND] fd=4 user=user1: CREATE_ITEM_SUCCESS|Tao vat pham thanh cong (khung 2025-12-17 05:28:53-2025-12-17 05:32:53)|25
+[2025-12-17 05:28:02] [RECV] fd=4 user=user1: GET_ROOM_DETAIL|19
+[2025-12-17 05:28:02] [SEND] fd=4 user=user1: ROOM_DETAIL|19|longroom|ACTIVE|2025-12-17 04:36:20|2025-12-17 05:33:20|24|vpmoi|PENDING|12000|12000|200000|||2025-12-17 04:39:37|2025-12-17 04:48:37|5;25|1|PENDING|1|1|400000|||2025-12-17 05:28:53|2025-12-17 05:32:53|2;
+[2025-12-17 05:28:53] [SEND] fd=4 user=user1: ITEM_STARTED|25|1|1|2025-12-17 05:30:53|2|2025-12-17 05:28:53|2025-12-17 05:32:53|2025-12-17 05:28:53|2025-12-17 05:30:53|120
+[2025-12-17 05:28:53] [RECV] fd=4 user=user1: GET_ROOM_DETAIL|19
+[2025-12-17 05:28:53] [SEND] fd=4 user=user1: ROOM_DETAIL|19|longroom|ACTIVE|2025-12-17 04:36:20|2025-12-17 05:33:20|24|vpmoi|PENDING|12000|12000|200000|||2025-12-17 04:39:37|2025-12-17 04:48:37|5;25|1|ACTIVE|1|1|400000|2025-12-17 05:28:53|2025-12-17 05:30:53|2025-12-17 05:28:53|2025-12-17 05:32:53|2;
+[2025-12-17 05:29:29] [RECV] fd=5 user=(not_logged_in): LOGIN|user2|pass2
+[2025-12-17 05:29:29] [SEND] fd=5 user=user2: LOGIN_SUCCESS|dang nhap thanh cong|user2|0
+[2025-12-17 05:29:34] [RECV] fd=5 user=user2: JOIN_ROOM|19
+[2025-12-17 05:29:34] [SEND] fd=5 user=user2: JOIN_ROOM_SUCCESS|Da tham gia phong|19|longroom
+[2025-12-17 05:29:34] [SEND] fd=4 user=user1: USER_JOINED|user2|vua tham gia phong
+[2025-12-17 05:29:36] [RECV] fd=5 user=user2: GET_ROOM_DETAIL|19
+[2025-12-17 05:29:36] [SEND] fd=5 user=user2: ROOM_DETAIL|19|longroom|ACTIVE|2025-12-17 04:36:20|2025-12-17 05:33:20|24|vpmoi|PENDING|12000|12000|200000|||2025-12-17 04:39:37|2025-12-17 04:48:37|5;25|1|ACTIVE|1|1|400000|2025-12-17 05:28:53|2025-12-17 05:30:53|2025-12-17 05:28:53|2025-12-17 05:32:53|2;
+[2025-12-17 05:30:03] [RECV] fd=5 user=user2: PLACE_BID|20000|2
+[2025-12-17 05:30:03] [SEND] fd=5 user=user2: BID_FAIL|Vat pham khong ton tai
+[2025-12-17 05:30:04] [RECV] fd=5 user=user2: GET_ROOM_DETAIL|19
+[2025-12-17 05:30:04] [SEND] fd=5 user=user2: ROOM_DETAIL|19|longroom|ACTIVE|2025-12-17 04:36:20|2025-12-17 05:33:20|24|vpmoi|PENDING|12000|12000|200000|||2025-12-17 04:39:37|2025-12-17 04:48:37|5;25|1|ACTIVE|1|1|400000|2025-12-17 05:28:53|2025-12-17 05:30:53|2025-12-17 05:28:53|2025-12-17 05:32:53|2;
+[2025-12-17 05:30:09] [RECV] fd=5 user=user2: PLACE_BID|4|2
+[2025-12-17 05:30:09] [SEND] fd=5 user=user2: BID_FAIL|Vat pham khong ton tai
+[2025-12-17 05:30:09] [RECV] fd=5 user=user2: GET_ROOM_DETAIL|19
+[2025-12-17 05:30:09] [SEND] fd=5 user=user2: ROOM_DETAIL|19|longroom|ACTIVE|2025-12-17 04:36:20|2025-12-17 05:33:20|24|vpmoi|PENDING|12000|12000|200000|||2025-12-17 04:39:37|2025-12-17 04:48:37|5;25|1|ACTIVE|1|1|400000|2025-12-17 05:28:53|2025-12-17 05:30:53|2025-12-17 05:28:53|2025-12-17 05:32:53|2;
+[2025-12-17 05:30:18] [RECV] fd=5 user=user2: PLACE_BID|25|20000
+[2025-12-17 05:30:18] [SEND] fd=5 user=user2: BID_SUCCESS|Dat gia thanh cong|20000
+[2025-12-17 05:30:18] [SEND] fd=4 user=user1: NEW_BID|25|1|user2|20000|2025-12-17 05:30:18|2025-12-17 05:28:53|2025-12-17 05:30:53|2025-12-17 05:28:53|2025-12-17 05:32:53|35
+[2025-12-17 05:30:18] [SEND] fd=5 user=user2: NEW_BID|25|1|user2|20000|2025-12-17 05:30:18|2025-12-17 05:28:53|2025-12-17 05:30:53|2025-12-17 05:28:53|2025-12-17 05:32:53|35
+[2025-12-17 05:30:18] [RECV] fd=5 user=user2: GET_ROOM_DETAIL|19
+[2025-12-17 05:30:18] [SEND] fd=5 user=user2: ROOM_DETAIL|19|longroom|ACTIVE|2025-12-17 04:36:20|2025-12-17 05:33:20|24|vpmoi|PENDING|12000|12000|200000|||2025-12-17 04:39:37|2025-12-17 04:48:37|5;25|1|ACTIVE|1|20000|400000|2025-12-17 05:28:53|2025-12-17 05:30:53|2025-12-17 05:28:53|2025-12-17 05:32:53|2;
+[2025-12-17 05:30:18] [RECV] fd=4 user=user1: GET_ROOM_DETAIL|19
+[2025-12-17 05:30:18] [SEND] fd=4 user=user1: ROOM_DETAIL|19|longroom|ACTIVE|2025-12-17 04:36:20|2025-12-17 05:33:20|24|vpmoi|PENDING|12000|12000|200000|||2025-12-17 04:39:37|2025-12-17 04:48:37|5;25|1|ACTIVE|1|20000|400000|2025-12-17 05:28:53|2025-12-17 05:30:53|2025-12-17 05:28:53|2025-12-17 05:32:53|2;
+[2025-12-17 05:30:19] [RECV] fd=5 user=user2: GET_ROOM_DETAIL|19
+[2025-12-17 05:30:19] [SEND] fd=5 user=user2: ROOM_DETAIL|19|longroom|ACTIVE|2025-12-17 04:36:20|2025-12-17 05:33:20|24|vpmoi|PENDING|12000|12000|200000|||2025-12-17 04:39:37|2025-12-17 04:48:37|5;25|1|ACTIVE|1|20000|400000|2025-12-17 05:28:53|2025-12-17 05:30:53|2025-12-17 05:28:53|2025-12-17 05:32:53|2;
+[2025-12-17 05:30:23] [SEND] fd=4 user=user1: AUCTION_WARNING|25|1|30
+[2025-12-17 05:30:23] [SEND] fd=5 user=user2: AUCTION_WARNING|25|1|30
+[2025-12-17 05:30:49] [RECV] fd=4 user=user1: PLACE_BID|25|40000
+[2025-12-17 05:30:49] [SEND] fd=4 user=user1: BID_FAIL|Chu phong khong duoc dat gia
+[2025-12-17 05:30:53] [SEND] fd=4 user=user1: AUCTION_ENDED|25|1|user2|20000|TIMEOUT
+[2025-12-17 05:30:53] [SEND] fd=5 user=user2: AUCTION_ENDED|25|1|user2|20000|TIMEOUT
+[2025-12-17 05:30:53] [SEND] fd=5 user=user2: YOU_WON|25|1|20000|Chuc mung ban da thang dau gia
+[2025-12-17 05:30:53] [RECV] fd=4 user=user1: GET_ROOM_DETAIL|19
+[2025-12-17 05:30:53] [SEND] fd=4 user=user1: ROOM_DETAIL|19|longroom|ACTIVE|2025-12-17 04:36:20|2025-12-17 05:33:20|24|vpmoi|PENDING|12000|12000|200000|||2025-12-17 04:39:37|2025-12-17 04:48:37|5;25|1|SOLD|1|20000|400000|2025-12-17 05:28:53|2025-12-17 05:30:53|2025-12-17 05:28:53|2025-12-17 05:32:53|2;
+[2025-12-17 05:30:53] [RECV] fd=5 user=user2: GET_ROOM_DETAIL|19
+[2025-12-17 05:30:53] [SEND] fd=5 user=user2: ROOM_DETAIL|19|longroom|ACTIVE|2025-12-17 04:36:20|2025-12-17 05:33:20|24|vpmoi|PENDING|12000|12000|200000|||2025-12-17 04:39:37|2025-12-17 04:48:37|5;25|1|SOLD|1|20000|400000|2025-12-17 05:28:53|2025-12-17 05:30:53|2025-12-17 05:28:53|2025-12-17 05:32:53|2;
+[2025-12-17 05:31:06] [RECV] fd=5 user=user2: GET_ROOM_DETAIL|19
+[2025-12-17 05:31:06] [SEND] fd=5 user=user2: ROOM_DETAIL|19|longroom|ACTIVE|2025-12-17 04:36:20|2025-12-17 05:33:20|24|vpmoi|PENDING|12000|12000|200000|||2025-12-17 04:39:37|2025-12-17 04:48:37|5;25|1|SOLD|1|20000|400000|2025-12-17 05:28:53|2025-12-17 05:30:53|2025-12-17 05:28:53|2025-12-17 05:32:53|2;
+[2025-12-17 05:31:20] [RECV] fd=5 user=user2: PLACE_BID|25|40000
+[2025-12-17 05:31:20] [SEND] fd=5 user=user2: BID_FAIL|Vat pham da dong
+[2025-12-17 05:33:20] [SEND] fd=4 user=user1: ROOM_CLOSED|19|Phong da dong
+[2025-12-17 05:33:20] [SEND] fd=5 user=user2: ROOM_CLOSED|19|Phong da dong
+[2025-12-17 05:33:20] [SEND] fd=5 user=user2: KICKED|Ban da bi kick khoi phong (phong dong)
+[2025-12-17 05:43:49] [SEND] fd=4 user=(not_logged_in): Chao mung den voi dau gia
+[2025-12-17 05:43:51] [SEND] fd=5 user=(not_logged_in): Chao mung den voi dau gia
+[2025-12-17 05:43:55] [SEND] fd=6 user=(not_logged_in): Chao mung den voi dau gia
+[2025-12-17 05:44:30] [RECV] fd=6 user=(not_logged_in): LOGIN|admin|admin
+[2025-12-17 05:44:30] [SEND] fd=6 user=admin: LOGIN_SUCCESS|dang nhap thanh cong|admin|1
+[2025-12-17 05:44:39] [SEND] fd=5 user=(not_logged_in): Chao mung den voi dau gia
+[2025-12-17 05:44:44] [RECV] fd=5 user=(not_logged_in): LOGIN|user1|pass1
+[2025-12-17 05:44:44] [SEND] fd=5 user=user1: LOGIN_SUCCESS|dang nhap thanh cong|user1|0
+[2025-12-17 05:44:53] [RECV] fd=4 user=(not_logged_in): LOGIN|user2|pass2
+[2025-12-17 05:44:53] [SEND] fd=4 user=user2: LOGIN_SUCCESS|dang nhap thanh cong|user2|0
+[2025-12-17 05:44:57] [RECV] fd=6 user=admin: GET_USER_LIST
+[2025-12-17 05:44:57] [SEND] fd=6 user=admin: USER_LIST|1|admin|1|1;2|user1|1|0;3|user2|1|0;4|alice|0|0;5|bob|0|0;6|charlie|0|0;7|david|0|0;8|emma|0|0;9|frank|0|0;10|grace|0|0;
+[2025-12-17 05:45:42] [RECV] fd=6 user=admin: CREATE_ROOM|test|2025-12-17 05:48:30|2025-12-17 06:45:30
+[2025-12-17 05:45:42] [SEND] fd=6 user=admin: CREATE_ROOM_SUCCESS|Tao phong thanh cong|20
+[2025-12-17 05:45:54] [RECV] fd=6 user=admin: JOIN_ROOM|20
+[2025-12-17 05:45:54] [SEND] fd=6 user=admin: JOIN_ROOM_SUCCESS|Chao mung Chu phong|20|test
+[2025-12-17 05:45:55] [RECV] fd=6 user=admin: GET_ROOM_DETAIL|20
+[2025-12-17 05:45:55] [SEND] fd=6 user=admin: ROOM_DETAIL|20|test|PENDING|2025-12-17 05:48:30|2025-12-17 06:45:30|
+[2025-12-17 05:46:01] [RECV] fd=5 user=user1: JOIN_ROOM|20
+[2025-12-17 05:46:01] [SEND] fd=5 user=user1: JOIN_ROOM_FAIL|Phong chua bat dau
+[2025-12-17 05:46:30] [RECV] fd=6 user=admin: CREATE_ITEM|20|vpmoi|12000|0|20000|d|d
+[2025-12-17 05:46:30] [SEND] fd=6 user=admin: CREATE_ITEM_FAIL|Thoi gian dau gia khong hop le
+[2025-12-17 05:46:32] [RECV] fd=6 user=admin: GET_ROOM_DETAIL|20
+[2025-12-17 05:46:32] [SEND] fd=6 user=admin: ROOM_DETAIL|20|test|PENDING|2025-12-17 05:48:30|2025-12-17 06:45:30|
+[2025-12-17 05:47:21] [RECV] fd=6 user=admin: CREATE_ITEM|20|vp moi|12000|5|200000|2025-12-17 05:48:06|2025-12-17 05:54:06
+[2025-12-17 05:47:21] [SEND] fd=6 user=admin: CREATE_ITEM_SUCCESS|Tao vat pham thanh cong (khung 2025-12-17 05:48:06-2025-12-17 05:54:06)|26
+[2025-12-17 05:47:21] [RECV] fd=6 user=admin: GET_ROOM_DETAIL|20
+[2025-12-17 05:47:21] [SEND] fd=6 user=admin: ROOM_DETAIL|20|test|PENDING|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|PENDING|12000|12000|200000|||2025-12-17 05:48:06|2025-12-17 05:54:06|5;
+[2025-12-17 05:47:30] [RECV] fd=5 user=user1: JOIN_ROOM|20
+[2025-12-17 05:47:30] [SEND] fd=5 user=user1: JOIN_ROOM_FAIL|Phong chua bat dau
+[2025-12-17 05:48:30] [SEND] fd=6 user=admin: ITEM_STARTED|26|vp moi|12000|2025-12-17 05:53:30|5|2025-12-17 05:48:06|2025-12-17 05:54:06|2025-12-17 05:48:30|2025-12-17 05:53:30|300
+[2025-12-17 05:48:30] [SEND] fd=6 user=admin: ROOM_STATUS_CHANGED|20|ACTIVE
+[2025-12-17 05:48:30] [RECV] fd=6 user=admin: CREATE_ITEM|20|vp2|30000|5|500000|2025-12-17 05:57:06|2025-12-17 06:05:28
+[2025-12-17 05:48:30] [SEND] fd=6 user=admin: CREATE_ITEM_SUCCESS|Tao vat pham thanh cong (khung 2025-12-17 05:57:06-2025-12-17 06:05:28)|27
+[2025-12-17 05:48:30] [RECV] fd=6 user=admin: GET_ROOM_DETAIL|20
+[2025-12-17 05:48:30] [SEND] fd=6 user=admin: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|ACTIVE|12000|12000|200000|2025-12-17 05:48:30|2025-12-17 05:53:30|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|PENDING|30000|30000|500000|||2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 05:48:30] [RECV] fd=6 user=admin: GET_ROOM_DETAIL|20
+[2025-12-17 05:48:30] [SEND] fd=6 user=admin: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|ACTIVE|12000|12000|200000|2025-12-17 05:48:30|2025-12-17 05:53:30|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|PENDING|30000|30000|500000|||2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 05:48:47] [RECV] fd=5 user=user1: JOIN_ROOM|20
+[2025-12-17 05:48:47] [SEND] fd=5 user=user1: JOIN_ROOM_SUCCESS|Da tham gia phong|20|test
+[2025-12-17 05:48:47] [SEND] fd=6 user=admin: USER_JOINED|user1|vua tham gia phong
+[2025-12-17 05:48:48] [RECV] fd=5 user=user1: GET_ROOM_DETAIL|20
+[2025-12-17 05:48:48] [SEND] fd=5 user=user1: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|ACTIVE|12000|12000|200000|2025-12-17 05:48:30|2025-12-17 05:53:30|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|PENDING|30000|30000|500000|||2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 05:48:53] [RECV] fd=4 user=user2: JOIN_ROOM|20
+[2025-12-17 05:48:53] [SEND] fd=4 user=user2: JOIN_ROOM_SUCCESS|Da tham gia phong|20|test
+[2025-12-17 05:48:53] [SEND] fd=5 user=user1: USER_JOINED|user2|vua tham gia phong
+[2025-12-17 05:48:53] [SEND] fd=6 user=admin: USER_JOINED|user2|vua tham gia phong
+[2025-12-17 05:48:54] [RECV] fd=4 user=user2: GET_ROOM_DETAIL|20
+[2025-12-17 05:48:54] [SEND] fd=4 user=user2: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|ACTIVE|12000|12000|200000|2025-12-17 05:48:30|2025-12-17 05:53:30|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|PENDING|30000|30000|500000|||2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 05:49:12] [RECV] fd=6 user=admin: PLACE_BID|27|30000
+[2025-12-17 05:49:12] [SEND] fd=6 user=admin: BID_FAIL|Chu phong khong duoc dat gia
+[2025-12-17 05:49:35] [RECV] fd=5 user=user1: PLACE_BID|27|30000
+[2025-12-17 05:49:35] [SEND] fd=5 user=user1: BID_FAIL|Vat pham da dong
+[2025-12-17 05:50:08] [RECV] fd=5 user=user1: GET_ROOM_DETAIL|20
+[2025-12-17 05:50:08] [SEND] fd=5 user=user1: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|ACTIVE|12000|12000|200000|2025-12-17 05:48:30|2025-12-17 05:53:30|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|PENDING|30000|30000|500000|||2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 05:50:18] [RECV] fd=5 user=user1: PLACE_BID|26|30000
+[2025-12-17 05:50:18] [SEND] fd=5 user=user1: BID_SUCCESS|Dat gia thanh cong|30000
+[2025-12-17 05:50:18] [SEND] fd=4 user=user2: NEW_BID|26|vp moi|user1|30000|2025-12-17 05:50:18|2025-12-17 05:48:30|2025-12-17 05:53:30|2025-12-17 05:48:06|2025-12-17 05:54:06|192
+[2025-12-17 05:50:18] [SEND] fd=5 user=user1: NEW_BID|26|vp moi|user1|30000|2025-12-17 05:50:18|2025-12-17 05:48:30|2025-12-17 05:53:30|2025-12-17 05:48:06|2025-12-17 05:54:06|192
+[2025-12-17 05:50:18] [SEND] fd=6 user=admin: NEW_BID|26|vp moi|user1|30000|2025-12-17 05:50:18|2025-12-17 05:48:30|2025-12-17 05:53:30|2025-12-17 05:48:06|2025-12-17 05:54:06|192
+[2025-12-17 05:50:18] [RECV] fd=5 user=user1: GET_ROOM_DETAIL|20
+[2025-12-17 05:50:18] [SEND] fd=5 user=user1: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|ACTIVE|12000|30000|200000|2025-12-17 05:48:30|2025-12-17 05:53:30|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|PENDING|30000|30000|500000|||2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 05:50:18] [RECV] fd=4 user=user2: GET_ROOM_DETAIL|20
+[2025-12-17 05:50:18] [SEND] fd=4 user=user2: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|ACTIVE|12000|30000|200000|2025-12-17 05:48:30|2025-12-17 05:53:30|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|PENDING|30000|30000|500000|||2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 05:50:18] [RECV] fd=6 user=admin: GET_ROOM_DETAIL|20
+[2025-12-17 05:50:18] [SEND] fd=6 user=admin: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|ACTIVE|12000|30000|200000|2025-12-17 05:48:30|2025-12-17 05:53:30|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|PENDING|30000|30000|500000|||2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 05:50:18] [RECV] fd=5 user=user1: GET_ROOM_DETAIL|20
+[2025-12-17 05:50:18] [SEND] fd=5 user=user1: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|ACTIVE|12000|30000|200000|2025-12-17 05:48:30|2025-12-17 05:53:30|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|PENDING|30000|30000|500000|||2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 05:51:10] [RECV] fd=4 user=user2: PLACE_BID|26|35000
+[2025-12-17 05:51:10] [SEND] fd=4 user=user2: BID_FAIL|Gia phai lon hon gia hien tai it nhat 10.000d
+[2025-12-17 05:51:16] [RECV] fd=4 user=user2: GET_ROOM_DETAIL|20
+[2025-12-17 05:51:16] [SEND] fd=4 user=user2: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|ACTIVE|12000|30000|200000|2025-12-17 05:48:30|2025-12-17 05:53:30|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|PENDING|30000|30000|500000|||2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 05:51:28] [RECV] fd=4 user=user2: PLACE_BID|26|40000
+[2025-12-17 05:51:28] [SEND] fd=4 user=user2: BID_SUCCESS|Dat gia thanh cong|40000
+[2025-12-17 05:51:28] [SEND] fd=4 user=user2: NEW_BID|26|vp moi|user2|40000|2025-12-17 05:51:28|2025-12-17 05:48:30|2025-12-17 05:53:30|2025-12-17 05:48:06|2025-12-17 05:54:06|122
+[2025-12-17 05:51:28] [SEND] fd=5 user=user1: NEW_BID|26|vp moi|user2|40000|2025-12-17 05:51:28|2025-12-17 05:48:30|2025-12-17 05:53:30|2025-12-17 05:48:06|2025-12-17 05:54:06|122
+[2025-12-17 05:51:28] [SEND] fd=6 user=admin: NEW_BID|26|vp moi|user2|40000|2025-12-17 05:51:28|2025-12-17 05:48:30|2025-12-17 05:53:30|2025-12-17 05:48:06|2025-12-17 05:54:06|122
+[2025-12-17 05:51:28] [RECV] fd=4 user=user2: GET_ROOM_DETAIL|20
+[2025-12-17 05:51:28] [SEND] fd=4 user=user2: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|ACTIVE|12000|40000|200000|2025-12-17 05:48:30|2025-12-17 05:53:30|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|PENDING|30000|30000|500000|||2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 05:51:28] [RECV] fd=5 user=user1: GET_ROOM_DETAIL|20
+[2025-12-17 05:51:28] [SEND] fd=5 user=user1: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|ACTIVE|12000|40000|200000|2025-12-17 05:48:30|2025-12-17 05:53:30|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|PENDING|30000|30000|500000|||2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 05:51:28] [RECV] fd=6 user=admin: GET_ROOM_DETAIL|20
+[2025-12-17 05:51:28] [SEND] fd=6 user=admin: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|ACTIVE|12000|40000|200000|2025-12-17 05:48:30|2025-12-17 05:53:30|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|PENDING|30000|30000|500000|||2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 05:51:28] [RECV] fd=4 user=user2: GET_ROOM_DETAIL|20
+[2025-12-17 05:51:28] [SEND] fd=4 user=user2: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|ACTIVE|12000|40000|200000|2025-12-17 05:48:30|2025-12-17 05:53:30|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|PENDING|30000|30000|500000|||2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 05:53:00] [SEND] fd=4 user=user2: AUCTION_WARNING|26|vp moi|30
+[2025-12-17 05:53:00] [SEND] fd=5 user=user1: AUCTION_WARNING|26|vp moi|30
+[2025-12-17 05:53:00] [SEND] fd=6 user=admin: AUCTION_WARNING|26|vp moi|30
+[2025-12-17 05:53:16] [RECV] fd=5 user=user1: PLACE_BID|26|50000
+[2025-12-17 05:53:16] [SEND] fd=5 user=user1: BID_SUCCESS|Dat gia thanh cong|50000
+[2025-12-17 05:53:16] [SEND] fd=4 user=user2: NEW_BID|26|vp moi|user1|50000|2025-12-17 05:53:16|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|30
+[2025-12-17 05:53:16] [SEND] fd=5 user=user1: NEW_BID|26|vp moi|user1|50000|2025-12-17 05:53:16|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|30
+[2025-12-17 05:53:16] [SEND] fd=6 user=admin: NEW_BID|26|vp moi|user1|50000|2025-12-17 05:53:16|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|30
+[2025-12-17 05:53:16] [SEND] fd=4 user=user2: TIME_EXTENDED|26|vp moi|2025-12-17 05:53:46|1
+[2025-12-17 05:53:16] [SEND] fd=5 user=user1: TIME_EXTENDED|26|vp moi|2025-12-17 05:53:46|1
+[2025-12-17 05:53:16] [SEND] fd=6 user=admin: TIME_EXTENDED|26|vp moi|2025-12-17 05:53:46|1
+[2025-12-17 05:53:16] [SEND] fd=4 user=user2: AUCTION_WARNING|26|vp moi|30
+[2025-12-17 05:53:16] [SEND] fd=5 user=user1: AUCTION_WARNING|26|vp moi|30
+[2025-12-17 05:53:16] [SEND] fd=6 user=admin: AUCTION_WARNING|26|vp moi|30
+[2025-12-17 05:53:16] [RECV] fd=5 user=user1: GET_ROOM_DETAIL|20
+[2025-12-17 05:53:16] [SEND] fd=5 user=user1: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|ACTIVE|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|PENDING|30000|30000|500000|||2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 05:53:16] [RECV] fd=4 user=user2: GET_ROOM_DETAIL|20
+[2025-12-17 05:53:16] [SEND] fd=4 user=user2: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|ACTIVE|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|PENDING|30000|30000|500000|||2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 05:53:16] [RECV] fd=6 user=admin: GET_ROOM_DETAIL|20
+[2025-12-17 05:53:16] [SEND] fd=6 user=admin: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|ACTIVE|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|PENDING|30000|30000|500000|||2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 05:53:16] [RECV] fd=4 user=user2: GET_ROOM_DETAIL|20
+[2025-12-17 05:53:16] [SEND] fd=4 user=user2: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|ACTIVE|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|PENDING|30000|30000|500000|||2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 05:53:16] [RECV] fd=5 user=user1: GET_ROOM_DETAIL|20
+[2025-12-17 05:53:16] [SEND] fd=5 user=user1: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|ACTIVE|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|PENDING|30000|30000|500000|||2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 05:53:16] [RECV] fd=5 user=user1: GET_ROOM_DETAIL|20
+[2025-12-17 05:53:16] [SEND] fd=5 user=user1: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|ACTIVE|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|PENDING|30000|30000|500000|||2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 05:53:16] [RECV] fd=6 user=admin: GET_ROOM_DETAIL|20
+[2025-12-17 05:53:16] [SEND] fd=6 user=admin: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|ACTIVE|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|PENDING|30000|30000|500000|||2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 05:53:46] [SEND] fd=4 user=user2: AUCTION_ENDED|26|vp moi|SOLD|user1|50000|Phien dau gia ket thuc! Nguoi chien thang: user1 voi gia 50000 VND
+[2025-12-17 05:53:46] [SEND] fd=5 user=user1: AUCTION_ENDED|26|vp moi|SOLD|user1|50000|Phien dau gia ket thuc! Nguoi chien thang: user1 voi gia 50000 VND
+[2025-12-17 05:53:46] [SEND] fd=6 user=admin: AUCTION_ENDED|26|vp moi|SOLD|user1|50000|Phien dau gia ket thuc! Nguoi chien thang: user1 voi gia 50000 VND
+[2025-12-17 05:53:46] [SEND] fd=5 user=user1: YOU_WON|26|vp moi|50000|CHUC MUNG! Ban da thang cuoc dau gia 'vp moi' voi gia 50000 VND
+[2025-12-17 05:53:46] [RECV] fd=5 user=user1: GET_ROOM_DETAIL|20
+[2025-12-17 05:53:46] [SEND] fd=5 user=user1: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|PENDING|30000|30000|500000|||2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 05:53:46] [RECV] fd=6 user=admin: GET_ROOM_DETAIL|20
+[2025-12-17 05:53:46] [SEND] fd=6 user=admin: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|PENDING|30000|30000|500000|||2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 05:53:51] [RECV] fd=4 user=user2: PLACE_BID|26|60000
+[2025-12-17 05:53:51] [SEND] fd=4 user=user2: BID_FAIL|Vat pham da dong
+[2025-12-17 05:53:51] [RECV] fd=4 user=user2: GET_ROOM_DETAIL|20
+[2025-12-17 05:53:51] [SEND] fd=4 user=user2: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|PENDING|30000|30000|500000|||2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 05:57:06] [SEND] fd=4 user=user2: ITEM_STARTED|27|vp2|30000|2025-12-17 06:02:06|5|2025-12-17 05:57:06|2025-12-17 06:05:28|2025-12-17 05:57:06|2025-12-17 06:02:06|300
+[2025-12-17 05:57:06] [SEND] fd=5 user=user1: ITEM_STARTED|27|vp2|30000|2025-12-17 06:02:06|5|2025-12-17 05:57:06|2025-12-17 06:05:28|2025-12-17 05:57:06|2025-12-17 06:02:06|300
+[2025-12-17 05:57:06] [SEND] fd=6 user=admin: ITEM_STARTED|27|vp2|30000|2025-12-17 06:02:06|5|2025-12-17 05:57:06|2025-12-17 06:05:28|2025-12-17 05:57:06|2025-12-17 06:02:06|300
+[2025-12-17 05:57:06] [RECV] fd=5 user=user1: GET_ROOM_DETAIL|20
+[2025-12-17 05:57:06] [SEND] fd=5 user=user1: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|30000|500000|2025-12-17 05:57:06|2025-12-17 06:02:06|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 05:57:06] [RECV] fd=4 user=user2: GET_ROOM_DETAIL|20
+[2025-12-17 05:57:06] [SEND] fd=4 user=user2: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|30000|500000|2025-12-17 05:57:06|2025-12-17 06:02:06|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 05:57:06] [RECV] fd=6 user=admin: GET_ROOM_DETAIL|20
+[2025-12-17 05:57:06] [SEND] fd=6 user=admin: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|30000|500000|2025-12-17 05:57:06|2025-12-17 06:02:06|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 05:57:39] [RECV] fd=5 user=user1: PLACE_BID|27|60000
+[2025-12-17 05:57:39] [SEND] fd=5 user=user1: BID_SUCCESS|Dat gia thanh cong|60000
+[2025-12-17 05:57:39] [SEND] fd=4 user=user2: NEW_BID|27|vp2|user1|60000|2025-12-17 05:57:39|2025-12-17 05:57:06|2025-12-17 06:02:06|2025-12-17 05:57:06|2025-12-17 06:05:28|267
+[2025-12-17 05:57:39] [SEND] fd=5 user=user1: NEW_BID|27|vp2|user1|60000|2025-12-17 05:57:39|2025-12-17 05:57:06|2025-12-17 06:02:06|2025-12-17 05:57:06|2025-12-17 06:05:28|267
+[2025-12-17 05:57:39] [SEND] fd=6 user=admin: NEW_BID|27|vp2|user1|60000|2025-12-17 05:57:39|2025-12-17 05:57:06|2025-12-17 06:02:06|2025-12-17 05:57:06|2025-12-17 06:05:28|267
+[2025-12-17 05:57:39] [RECV] fd=5 user=user1: GET_ROOM_DETAIL|20
+[2025-12-17 05:57:39] [SEND] fd=5 user=user1: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|60000|500000|2025-12-17 05:57:06|2025-12-17 06:02:06|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 05:57:39] [RECV] fd=4 user=user2: GET_ROOM_DETAIL|20
+[2025-12-17 05:57:39] [SEND] fd=4 user=user2: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|60000|500000|2025-12-17 05:57:06|2025-12-17 06:02:06|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 05:57:39] [RECV] fd=6 user=admin: GET_ROOM_DETAIL|20
+[2025-12-17 05:57:39] [SEND] fd=6 user=admin: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|60000|500000|2025-12-17 05:57:06|2025-12-17 06:02:06|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 05:57:39] [RECV] fd=5 user=user1: GET_ROOM_DETAIL|20
+[2025-12-17 05:57:39] [SEND] fd=5 user=user1: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|60000|500000|2025-12-17 05:57:06|2025-12-17 06:02:06|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 05:58:57] [RECV] fd=6 user=admin: CREATE_ITEM|20|vat pham xoa|110000|4|200000|2025-12-17 06:01:49|2025-12-17 06:13:49
+[2025-12-17 05:58:57] [SEND] fd=6 user=admin: CREATE_ITEM_FAIL|Khung gio bi trung voi vat pham khac trong phong
+[2025-12-17 05:59:09] [RECV] fd=6 user=admin: GET_ROOM_DETAIL|20
+[2025-12-17 05:59:09] [SEND] fd=6 user=admin: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|60000|500000|2025-12-17 05:57:06|2025-12-17 06:02:06|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 05:59:48] [RECV] fd=6 user=admin: CREATE_ITEM|20|vat pham xoa|120000|5|200000|2025-12-17 06:05:49|2025-12-17 06:13:49
+[2025-12-17 05:59:48] [SEND] fd=6 user=admin: CREATE_ITEM_SUCCESS|Tao vat pham thanh cong (khung 2025-12-17 06:05:49-2025-12-17 06:13:49)|28
+[2025-12-17 05:59:48] [RECV] fd=6 user=admin: GET_ROOM_DETAIL|20
+[2025-12-17 05:59:48] [SEND] fd=6 user=admin: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|60000|500000|2025-12-17 05:57:06|2025-12-17 06:02:06|2025-12-17 05:57:06|2025-12-17 06:05:28|5;28|vat pham xoa|PENDING|120000|120000|200000|||2025-12-17 06:05:49|2025-12-17 06:13:49|5;
+[2025-12-17 06:00:10] [RECV] fd=6 user=admin: DELETE_ITEM|28
+[2025-12-17 06:00:10] [SEND] fd=6 user=admin: DELETE_ITEM_SUCCESS|Da xoa vat pham 'vat pham xoa' (ID: 28)
+[2025-12-17 06:00:10] [SEND] fd=4 user=user2: ITEM_DELETED|28|vat pham xoa|Vat pham da bi chu phong xoa
+[2025-12-17 06:00:10] [SEND] fd=5 user=user1: ITEM_DELETED|28|vat pham xoa|Vat pham da bi chu phong xoa
+[2025-12-17 06:00:10] [RECV] fd=4 user=user2: GET_ROOM_DETAIL|20
+[2025-12-17 06:00:10] [SEND] fd=4 user=user2: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|60000|500000|2025-12-17 05:57:06|2025-12-17 06:02:06|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 06:00:10] [RECV] fd=5 user=user1: GET_ROOM_DETAIL|20
+[2025-12-17 06:00:10] [SEND] fd=5 user=user1: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|60000|500000|2025-12-17 05:57:06|2025-12-17 06:02:06|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 06:00:10] [RECV] fd=6 user=admin: GET_ROOM_DETAIL|20
+[2025-12-17 06:00:10] [SEND] fd=6 user=admin: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|60000|500000|2025-12-17 05:57:06|2025-12-17 06:02:06|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 06:00:30] [RECV] fd=6 user=admin: DELETE_ITEM|26
+[2025-12-17 06:00:30] [SEND] fd=6 user=admin: DELETE_ITEM_FAIL|Khong the xoa vat pham da ban
+[2025-12-17 06:00:36] [RECV] fd=6 user=admin: GET_ROOM_DETAIL|20
+[2025-12-17 06:00:36] [SEND] fd=6 user=admin: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|60000|500000|2025-12-17 05:57:06|2025-12-17 06:02:06|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 06:00:43] [RECV] fd=6 user=admin: DELETE_ITEM|27
+[2025-12-17 06:00:43] [SEND] fd=6 user=admin: DELETE_ITEM_FAIL|Khong the xoa vat pham dang dau gia
+[2025-12-17 06:00:49] [RECV] fd=6 user=admin: GET_ROOM_DETAIL|20
+[2025-12-17 06:00:49] [SEND] fd=6 user=admin: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|60000|500000|2025-12-17 05:57:06|2025-12-17 06:02:06|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 06:01:36] [SEND] fd=4 user=user2: AUCTION_WARNING|27|vp2|30
+[2025-12-17 06:01:36] [SEND] fd=5 user=user1: AUCTION_WARNING|27|vp2|30
+[2025-12-17 06:01:36] [SEND] fd=6 user=admin: AUCTION_WARNING|27|vp2|30
+[2025-12-17 06:01:57] [RECV] fd=4 user=user2: PLACE_BID|27|70000
+[2025-12-17 06:01:57] [SEND] fd=4 user=user2: BID_SUCCESS|Dat gia thanh cong|70000
+[2025-12-17 06:01:57] [SEND] fd=4 user=user2: NEW_BID|27|vp2|user2|70000|2025-12-17 06:01:57|2025-12-17 05:57:06|2025-12-17 06:02:27|2025-12-17 05:57:06|2025-12-17 06:05:28|30
+[2025-12-17 06:01:57] [SEND] fd=5 user=user1: NEW_BID|27|vp2|user2|70000|2025-12-17 06:01:57|2025-12-17 05:57:06|2025-12-17 06:02:27|2025-12-17 05:57:06|2025-12-17 06:05:28|30
+[2025-12-17 06:01:57] [SEND] fd=6 user=admin: NEW_BID|27|vp2|user2|70000|2025-12-17 06:01:57|2025-12-17 05:57:06|2025-12-17 06:02:27|2025-12-17 05:57:06|2025-12-17 06:05:28|30
+[2025-12-17 06:01:57] [SEND] fd=4 user=user2: TIME_EXTENDED|27|vp2|2025-12-17 06:02:27|1
+[2025-12-17 06:01:57] [SEND] fd=5 user=user1: TIME_EXTENDED|27|vp2|2025-12-17 06:02:27|1
+[2025-12-17 06:01:57] [SEND] fd=6 user=admin: TIME_EXTENDED|27|vp2|2025-12-17 06:02:27|1
+[2025-12-17 06:01:57] [SEND] fd=4 user=user2: AUCTION_WARNING|27|vp2|30
+[2025-12-17 06:01:57] [SEND] fd=5 user=user1: AUCTION_WARNING|27|vp2|30
+[2025-12-17 06:01:57] [SEND] fd=6 user=admin: AUCTION_WARNING|27|vp2|30
+[2025-12-17 06:01:57] [RECV] fd=4 user=user2: GET_ROOM_DETAIL|20
+[2025-12-17 06:01:57] [SEND] fd=4 user=user2: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|70000|500000|2025-12-17 05:57:06|2025-12-17 06:02:27|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 06:01:57] [RECV] fd=5 user=user1: GET_ROOM_DETAIL|20
+[2025-12-17 06:01:57] [SEND] fd=5 user=user1: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|70000|500000|2025-12-17 05:57:06|2025-12-17 06:02:27|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 06:01:57] [RECV] fd=6 user=admin: GET_ROOM_DETAIL|20
+[2025-12-17 06:01:57] [SEND] fd=6 user=admin: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|70000|500000|2025-12-17 05:57:06|2025-12-17 06:02:27|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 06:01:57] [RECV] fd=4 user=user2: GET_ROOM_DETAIL|20
+[2025-12-17 06:01:57] [SEND] fd=4 user=user2: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|70000|500000|2025-12-17 05:57:06|2025-12-17 06:02:27|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 06:01:57] [RECV] fd=4 user=user2: GET_ROOM_DETAIL|20
+[2025-12-17 06:01:57] [SEND] fd=4 user=user2: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|70000|500000|2025-12-17 05:57:06|2025-12-17 06:02:27|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 06:01:57] [RECV] fd=5 user=user1: GET_ROOM_DETAIL|20
+[2025-12-17 06:01:57] [SEND] fd=5 user=user1: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|70000|500000|2025-12-17 05:57:06|2025-12-17 06:02:27|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 06:01:57] [RECV] fd=6 user=admin: GET_ROOM_DETAIL|20
+[2025-12-17 06:01:57] [SEND] fd=6 user=admin: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|70000|500000|2025-12-17 05:57:06|2025-12-17 06:02:27|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 06:02:23] [RECV] fd=5 user=user1: PLACE_BID|27|80000
+[2025-12-17 06:02:23] [SEND] fd=5 user=user1: BID_SUCCESS|Dat gia thanh cong|80000
+[2025-12-17 06:02:23] [SEND] fd=4 user=user2: NEW_BID|27|vp2|user1|80000|2025-12-17 06:02:23|2025-12-17 05:57:06|2025-12-17 06:02:53|2025-12-17 05:57:06|2025-12-17 06:05:28|30
+[2025-12-17 06:02:23] [SEND] fd=5 user=user1: NEW_BID|27|vp2|user1|80000|2025-12-17 06:02:23|2025-12-17 05:57:06|2025-12-17 06:02:53|2025-12-17 05:57:06|2025-12-17 06:05:28|30
+[2025-12-17 06:02:23] [SEND] fd=6 user=admin: NEW_BID|27|vp2|user1|80000|2025-12-17 06:02:23|2025-12-17 05:57:06|2025-12-17 06:02:53|2025-12-17 05:57:06|2025-12-17 06:05:28|30
+[2025-12-17 06:02:23] [SEND] fd=4 user=user2: TIME_EXTENDED|27|vp2|2025-12-17 06:02:53|2
+[2025-12-17 06:02:23] [SEND] fd=5 user=user1: TIME_EXTENDED|27|vp2|2025-12-17 06:02:53|2
+[2025-12-17 06:02:23] [SEND] fd=6 user=admin: TIME_EXTENDED|27|vp2|2025-12-17 06:02:53|2
+[2025-12-17 06:02:23] [SEND] fd=4 user=user2: AUCTION_WARNING|27|vp2|30
+[2025-12-17 06:02:23] [SEND] fd=5 user=user1: AUCTION_WARNING|27|vp2|30
+[2025-12-17 06:02:23] [SEND] fd=6 user=admin: AUCTION_WARNING|27|vp2|30
+[2025-12-17 06:02:23] [RECV] fd=4 user=user2: GET_ROOM_DETAIL|20
+[2025-12-17 06:02:23] [SEND] fd=4 user=user2: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|80000|500000|2025-12-17 05:57:06|2025-12-17 06:02:53|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 06:02:23] [RECV] fd=5 user=user1: GET_ROOM_DETAIL|20
+[2025-12-17 06:02:23] [SEND] fd=5 user=user1: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|80000|500000|2025-12-17 05:57:06|2025-12-17 06:02:53|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 06:02:23] [RECV] fd=6 user=admin: GET_ROOM_DETAIL|20
+[2025-12-17 06:02:23] [SEND] fd=6 user=admin: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|80000|500000|2025-12-17 05:57:06|2025-12-17 06:02:53|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 06:02:23] [RECV] fd=4 user=user2: GET_ROOM_DETAIL|20
+[2025-12-17 06:02:23] [SEND] fd=4 user=user2: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|80000|500000|2025-12-17 05:57:06|2025-12-17 06:02:53|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 06:02:23] [RECV] fd=5 user=user1: GET_ROOM_DETAIL|20
+[2025-12-17 06:02:23] [SEND] fd=5 user=user1: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|80000|500000|2025-12-17 05:57:06|2025-12-17 06:02:53|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 06:02:23] [RECV] fd=5 user=user1: GET_ROOM_DETAIL|20
+[2025-12-17 06:02:23] [SEND] fd=5 user=user1: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|80000|500000|2025-12-17 05:57:06|2025-12-17 06:02:53|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 06:02:23] [RECV] fd=6 user=admin: GET_ROOM_DETAIL|20
+[2025-12-17 06:02:23] [SEND] fd=6 user=admin: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|80000|500000|2025-12-17 05:57:06|2025-12-17 06:02:53|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 06:02:45] [RECV] fd=4 user=user2: PLACE_BID|27|90000
+[2025-12-17 06:02:45] [SEND] fd=4 user=user2: BID_SUCCESS|Dat gia thanh cong|90000
+[2025-12-17 06:02:45] [SEND] fd=4 user=user2: NEW_BID|27|vp2|user2|90000|2025-12-17 06:02:45|2025-12-17 05:57:06|2025-12-17 06:03:15|2025-12-17 05:57:06|2025-12-17 06:05:28|30
+[2025-12-17 06:02:45] [SEND] fd=5 user=user1: NEW_BID|27|vp2|user2|90000|2025-12-17 06:02:45|2025-12-17 05:57:06|2025-12-17 06:03:15|2025-12-17 05:57:06|2025-12-17 06:05:28|30
+[2025-12-17 06:02:45] [SEND] fd=6 user=admin: NEW_BID|27|vp2|user2|90000|2025-12-17 06:02:45|2025-12-17 05:57:06|2025-12-17 06:03:15|2025-12-17 05:57:06|2025-12-17 06:05:28|30
+[2025-12-17 06:02:45] [SEND] fd=4 user=user2: TIME_EXTENDED|27|vp2|2025-12-17 06:03:15|3
+[2025-12-17 06:02:45] [SEND] fd=5 user=user1: TIME_EXTENDED|27|vp2|2025-12-17 06:03:15|3
+[2025-12-17 06:02:45] [SEND] fd=6 user=admin: TIME_EXTENDED|27|vp2|2025-12-17 06:03:15|3
+[2025-12-17 06:02:45] [SEND] fd=4 user=user2: AUCTION_WARNING|27|vp2|30
+[2025-12-17 06:02:45] [SEND] fd=5 user=user1: AUCTION_WARNING|27|vp2|30
+[2025-12-17 06:02:45] [SEND] fd=6 user=admin: AUCTION_WARNING|27|vp2|30
+[2025-12-17 06:02:45] [RECV] fd=4 user=user2: GET_ROOM_DETAIL|20
+[2025-12-17 06:02:45] [SEND] fd=4 user=user2: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|90000|500000|2025-12-17 05:57:06|2025-12-17 06:03:15|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 06:02:45] [RECV] fd=5 user=user1: GET_ROOM_DETAIL|20
+[2025-12-17 06:02:45] [SEND] fd=5 user=user1: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|90000|500000|2025-12-17 05:57:06|2025-12-17 06:03:15|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 06:02:45] [RECV] fd=6 user=admin: GET_ROOM_DETAIL|20
+[2025-12-17 06:02:45] [SEND] fd=6 user=admin: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|90000|500000|2025-12-17 05:57:06|2025-12-17 06:03:15|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 06:02:45] [RECV] fd=4 user=user2: GET_ROOM_DETAIL|20
+[2025-12-17 06:02:45] [SEND] fd=4 user=user2: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|90000|500000|2025-12-17 05:57:06|2025-12-17 06:03:15|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 06:02:45] [RECV] fd=4 user=user2: GET_ROOM_DETAIL|20
+[2025-12-17 06:02:45] [SEND] fd=4 user=user2: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|90000|500000|2025-12-17 05:57:06|2025-12-17 06:03:15|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 06:02:45] [RECV] fd=6 user=admin: GET_ROOM_DETAIL|20
+[2025-12-17 06:02:45] [SEND] fd=6 user=admin: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|90000|500000|2025-12-17 05:57:06|2025-12-17 06:03:15|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 06:02:45] [RECV] fd=5 user=user1: GET_ROOM_DETAIL|20
+[2025-12-17 06:02:45] [SEND] fd=5 user=user1: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|90000|500000|2025-12-17 05:57:06|2025-12-17 06:03:15|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 06:03:13] [RECV] fd=5 user=user1: PLACE_BID|27|100000
+[2025-12-17 06:03:13] [SEND] fd=5 user=user1: BID_SUCCESS|Dat gia thanh cong|100000
+[2025-12-17 06:03:13] [SEND] fd=4 user=user2: NEW_BID|27|vp2|user1|100000|2025-12-17 06:03:13|2025-12-17 05:57:06|2025-12-17 06:03:43|2025-12-17 05:57:06|2025-12-17 06:05:28|30
+[2025-12-17 06:03:13] [SEND] fd=5 user=user1: NEW_BID|27|vp2|user1|100000|2025-12-17 06:03:13|2025-12-17 05:57:06|2025-12-17 06:03:43|2025-12-17 05:57:06|2025-12-17 06:05:28|30
+[2025-12-17 06:03:13] [SEND] fd=6 user=admin: NEW_BID|27|vp2|user1|100000|2025-12-17 06:03:13|2025-12-17 05:57:06|2025-12-17 06:03:43|2025-12-17 05:57:06|2025-12-17 06:05:28|30
+[2025-12-17 06:03:13] [SEND] fd=4 user=user2: TIME_EXTENDED|27|vp2|2025-12-17 06:03:43|4
+[2025-12-17 06:03:13] [SEND] fd=5 user=user1: TIME_EXTENDED|27|vp2|2025-12-17 06:03:43|4
+[2025-12-17 06:03:13] [SEND] fd=6 user=admin: TIME_EXTENDED|27|vp2|2025-12-17 06:03:43|4
+[2025-12-17 06:03:13] [SEND] fd=4 user=user2: AUCTION_WARNING|27|vp2|30
+[2025-12-17 06:03:13] [SEND] fd=5 user=user1: AUCTION_WARNING|27|vp2|30
+[2025-12-17 06:03:13] [SEND] fd=6 user=admin: AUCTION_WARNING|27|vp2|30
+[2025-12-17 06:03:13] [RECV] fd=5 user=user1: GET_ROOM_DETAIL|20
+[2025-12-17 06:03:13] [SEND] fd=5 user=user1: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|100000|500000|2025-12-17 05:57:06|2025-12-17 06:03:43|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 06:03:13] [RECV] fd=4 user=user2: GET_ROOM_DETAIL|20
+[2025-12-17 06:03:13] [SEND] fd=4 user=user2: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|100000|500000|2025-12-17 05:57:06|2025-12-17 06:03:43|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 06:03:13] [RECV] fd=6 user=admin: GET_ROOM_DETAIL|20
+[2025-12-17 06:03:13] [SEND] fd=6 user=admin: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|100000|500000|2025-12-17 05:57:06|2025-12-17 06:03:43|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 06:03:13] [RECV] fd=4 user=user2: GET_ROOM_DETAIL|20
+[2025-12-17 06:03:13] [SEND] fd=4 user=user2: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|100000|500000|2025-12-17 05:57:06|2025-12-17 06:03:43|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 06:03:13] [RECV] fd=5 user=user1: GET_ROOM_DETAIL|20
+[2025-12-17 06:03:13] [SEND] fd=5 user=user1: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|100000|500000|2025-12-17 05:57:06|2025-12-17 06:03:43|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 06:03:13] [RECV] fd=5 user=user1: GET_ROOM_DETAIL|20
+[2025-12-17 06:03:13] [SEND] fd=5 user=user1: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|100000|500000|2025-12-17 05:57:06|2025-12-17 06:03:43|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 06:03:13] [RECV] fd=6 user=admin: GET_ROOM_DETAIL|20
+[2025-12-17 06:03:13] [SEND] fd=6 user=admin: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|100000|500000|2025-12-17 05:57:06|2025-12-17 06:03:43|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 06:03:37] [RECV] fd=4 user=user2: PLACE_BID|27|110000
+[2025-12-17 06:03:37] [SEND] fd=4 user=user2: BID_SUCCESS|Dat gia thanh cong|110000
+[2025-12-17 06:03:37] [SEND] fd=4 user=user2: NEW_BID|27|vp2|user2|110000|2025-12-17 06:03:37|2025-12-17 05:57:06|2025-12-17 06:04:07|2025-12-17 05:57:06|2025-12-17 06:05:28|30
+[2025-12-17 06:03:37] [SEND] fd=5 user=user1: NEW_BID|27|vp2|user2|110000|2025-12-17 06:03:37|2025-12-17 05:57:06|2025-12-17 06:04:07|2025-12-17 05:57:06|2025-12-17 06:05:28|30
+[2025-12-17 06:03:37] [SEND] fd=6 user=admin: NEW_BID|27|vp2|user2|110000|2025-12-17 06:03:37|2025-12-17 05:57:06|2025-12-17 06:04:07|2025-12-17 05:57:06|2025-12-17 06:05:28|30
+[2025-12-17 06:03:37] [SEND] fd=4 user=user2: TIME_EXTENDED|27|vp2|2025-12-17 06:04:07|5
+[2025-12-17 06:03:37] [SEND] fd=5 user=user1: TIME_EXTENDED|27|vp2|2025-12-17 06:04:07|5
+[2025-12-17 06:03:37] [SEND] fd=6 user=admin: TIME_EXTENDED|27|vp2|2025-12-17 06:04:07|5
+[2025-12-17 06:03:37] [SEND] fd=4 user=user2: AUCTION_WARNING|27|vp2|30
+[2025-12-17 06:03:37] [SEND] fd=5 user=user1: AUCTION_WARNING|27|vp2|30
+[2025-12-17 06:03:37] [SEND] fd=6 user=admin: AUCTION_WARNING|27|vp2|30
+[2025-12-17 06:03:37] [RECV] fd=4 user=user2: GET_ROOM_DETAIL|20
+[2025-12-17 06:03:37] [SEND] fd=4 user=user2: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|110000|500000|2025-12-17 05:57:06|2025-12-17 06:04:07|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 06:03:37] [RECV] fd=5 user=user1: GET_ROOM_DETAIL|20
+[2025-12-17 06:03:37] [SEND] fd=5 user=user1: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|110000|500000|2025-12-17 05:57:06|2025-12-17 06:04:07|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 06:03:37] [RECV] fd=6 user=admin: GET_ROOM_DETAIL|20
+[2025-12-17 06:03:37] [SEND] fd=6 user=admin: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|110000|500000|2025-12-17 05:57:06|2025-12-17 06:04:07|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 06:03:37] [RECV] fd=4 user=user2: GET_ROOM_DETAIL|20
+[2025-12-17 06:03:37] [SEND] fd=4 user=user2: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|110000|500000|2025-12-17 05:57:06|2025-12-17 06:04:07|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 06:03:37] [RECV] fd=4 user=user2: GET_ROOM_DETAIL|20
+[2025-12-17 06:03:37] [SEND] fd=4 user=user2: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|110000|500000|2025-12-17 05:57:06|2025-12-17 06:04:07|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 06:03:37] [RECV] fd=5 user=user1: GET_ROOM_DETAIL|20
+[2025-12-17 06:03:37] [SEND] fd=5 user=user1: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|110000|500000|2025-12-17 05:57:06|2025-12-17 06:04:07|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 06:03:37] [RECV] fd=6 user=admin: GET_ROOM_DETAIL|20
+[2025-12-17 06:03:37] [SEND] fd=6 user=admin: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|110000|500000|2025-12-17 05:57:06|2025-12-17 06:04:07|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 06:04:00] [RECV] fd=5 user=user1: PLACE_BID|27|120000
+[2025-12-17 06:04:00] [SEND] fd=5 user=user1: BID_SUCCESS|Dat gia thanh cong|120000
+[2025-12-17 06:04:00] [SEND] fd=4 user=user2: NEW_BID|27|vp2|user1|120000|2025-12-17 06:04:00|2025-12-17 05:57:06|2025-12-17 06:04:30|2025-12-17 05:57:06|2025-12-17 06:05:28|30
+[2025-12-17 06:04:00] [SEND] fd=5 user=user1: NEW_BID|27|vp2|user1|120000|2025-12-17 06:04:00|2025-12-17 05:57:06|2025-12-17 06:04:30|2025-12-17 05:57:06|2025-12-17 06:05:28|30
+[2025-12-17 06:04:00] [SEND] fd=6 user=admin: NEW_BID|27|vp2|user1|120000|2025-12-17 06:04:00|2025-12-17 05:57:06|2025-12-17 06:04:30|2025-12-17 05:57:06|2025-12-17 06:05:28|30
+[2025-12-17 06:04:00] [SEND] fd=4 user=user2: TIME_EXTENDED|27|vp2|2025-12-17 06:04:30|6
+[2025-12-17 06:04:00] [SEND] fd=5 user=user1: TIME_EXTENDED|27|vp2|2025-12-17 06:04:30|6
+[2025-12-17 06:04:00] [SEND] fd=6 user=admin: TIME_EXTENDED|27|vp2|2025-12-17 06:04:30|6
+[2025-12-17 06:04:00] [SEND] fd=4 user=user2: AUCTION_WARNING|27|vp2|30
+[2025-12-17 06:04:00] [SEND] fd=5 user=user1: AUCTION_WARNING|27|vp2|30
+[2025-12-17 06:04:00] [SEND] fd=6 user=admin: AUCTION_WARNING|27|vp2|30
+[2025-12-17 06:04:00] [RECV] fd=5 user=user1: GET_ROOM_DETAIL|20
+[2025-12-17 06:04:00] [SEND] fd=5 user=user1: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|120000|500000|2025-12-17 05:57:06|2025-12-17 06:04:30|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 06:04:00] [RECV] fd=4 user=user2: GET_ROOM_DETAIL|20
+[2025-12-17 06:04:00] [SEND] fd=4 user=user2: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|120000|500000|2025-12-17 05:57:06|2025-12-17 06:04:30|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 06:04:00] [RECV] fd=6 user=admin: GET_ROOM_DETAIL|20
+[2025-12-17 06:04:00] [SEND] fd=6 user=admin: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|120000|500000|2025-12-17 05:57:06|2025-12-17 06:04:30|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 06:04:00] [RECV] fd=4 user=user2: GET_ROOM_DETAIL|20
+[2025-12-17 06:04:00] [SEND] fd=4 user=user2: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|120000|500000|2025-12-17 05:57:06|2025-12-17 06:04:30|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 06:04:00] [RECV] fd=5 user=user1: GET_ROOM_DETAIL|20
+[2025-12-17 06:04:00] [SEND] fd=5 user=user1: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|120000|500000|2025-12-17 05:57:06|2025-12-17 06:04:30|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 06:04:00] [RECV] fd=5 user=user1: GET_ROOM_DETAIL|20
+[2025-12-17 06:04:00] [SEND] fd=5 user=user1: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|120000|500000|2025-12-17 05:57:06|2025-12-17 06:04:30|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 06:04:00] [RECV] fd=6 user=admin: GET_ROOM_DETAIL|20
+[2025-12-17 06:04:00] [SEND] fd=6 user=admin: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|ACTIVE|30000|120000|500000|2025-12-17 05:57:06|2025-12-17 06:04:30|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 06:04:31] [SEND] fd=4 user=user2: AUCTION_ENDED|27|vp2|SOLD|user1|120000|Phien dau gia ket thuc! Nguoi chien thang: user1 voi gia 120000 VND
+[2025-12-17 06:04:31] [SEND] fd=5 user=user1: AUCTION_ENDED|27|vp2|SOLD|user1|120000|Phien dau gia ket thuc! Nguoi chien thang: user1 voi gia 120000 VND
+[2025-12-17 06:04:31] [SEND] fd=6 user=admin: AUCTION_ENDED|27|vp2|SOLD|user1|120000|Phien dau gia ket thuc! Nguoi chien thang: user1 voi gia 120000 VND
+[2025-12-17 06:04:31] [SEND] fd=5 user=user1: YOU_WON|27|vp2|120000|CHUC MUNG! Ban da thang cuoc dau gia 'vp2' voi gia 120000 VND
+[2025-12-17 06:04:31] [RECV] fd=5 user=user1: GET_ROOM_DETAIL|20
+[2025-12-17 06:04:31] [SEND] fd=5 user=user1: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|SOLD|30000|120000|500000|2025-12-17 05:57:06|2025-12-17 06:04:30|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 06:04:31] [RECV] fd=6 user=admin: GET_ROOM_DETAIL|20
+[2025-12-17 06:04:31] [SEND] fd=6 user=admin: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|SOLD|30000|120000|500000|2025-12-17 05:57:06|2025-12-17 06:04:30|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 06:04:37] [RECV] fd=4 user=user2: PLACE_BID|27|130000
+[2025-12-17 06:04:37] [SEND] fd=4 user=user2: BID_FAIL|Vat pham da dong
+[2025-12-17 06:04:37] [RECV] fd=4 user=user2: GET_ROOM_DETAIL|20
+[2025-12-17 06:04:37] [SEND] fd=4 user=user2: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|SOLD|30000|120000|500000|2025-12-17 05:57:06|2025-12-17 06:04:30|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 06:05:44] [RECV] fd=6 user=admin: GET_ROOM_DETAIL|20
+[2025-12-17 06:05:44] [SEND] fd=6 user=admin: ROOM_DETAIL|20|test|ACTIVE|2025-12-17 05:48:30|2025-12-17 06:45:30|26|vp moi|SOLD|12000|50000|200000|2025-12-17 05:48:30|2025-12-17 05:53:46|2025-12-17 05:48:06|2025-12-17 05:54:06|5;27|vp2|SOLD|30000|120000|500000|2025-12-17 05:57:06|2025-12-17 06:04:30|2025-12-17 05:57:06|2025-12-17 06:05:28|5;
+[2025-12-17 06:05:47] [RECV] fd=6 user=admin: LEAVE_ROOM
+[2025-12-17 06:05:47] [SEND] fd=6 user=admin: LEAVE_ROOM_SUCCESS|Da roi phong
+[2025-12-17 06:05:47] [SEND] fd=4 user=user2: USER_LEFT|admin|da roi phong
+[2025-12-17 06:05:47] [SEND] fd=5 user=user1: USER_LEFT|admin|da roi phong
+[2025-12-17 06:06:00] [RECV] fd=6 user=admin: GET_ROOM_LIST|ALL|1|50
+[2025-12-17 06:06:00] [SEND] fd=6 user=admin: ROOM_LIST|20|1|Phong Dau Gia Do Co|admin|CLOSED|4|0|2024-12-01 08:00:00|2024-12-31 20:00:00;2|Phong Nghe Thuat|alice|CLOSED|2|0|2024-12-01 09:00:00|2024-12-31 21:00:00;3|Phong Trang Suc|admin|CLOSED|3|0|2024-12-01 10:00:00|2024-12-31 22:00:00;4|Phong Do Dien Tu|bob|CLOSED|2|0|2024-12-15 08:00:00|2024-12-31 20:00:00;5|Phong Sach Hiem|charlie|CLOSED|2|0|2024-11-01 08:00:00|2024-11-30 20:00:00;6|Phong Do Go My Nghe|admin|CLOSED|2|0|2024-12-01 08:00:00|2024-12-31 23:59:59;7|hong dau gia da quy|admin|CLOSED|0|0|2024-12-30 10:00:00|2025-01-16 23:59:59;8|phong gi do|user1|CLOSED|0|0|2025-01-01 00:00:00|2025-01-02 01:00:00;9|phong moi 1|admin|CLOSED|3|0|2025-12-03 00:00:00|2025-12-05 00:00:00;10|phong moi 2|admin|ACTIVE|0|0|2025-12-02 00:00:00|2025-12-04;11|phong moi 4|admin|CLOSED|2|0|2025-12-02 00:00:00|2025-12-05 00:00:00;12|phong dau gia test|user1|CLOSED|1|0|2025-12-17 00:51:26|2025-12-17 01:08:42;13|test|user1|CLOSED|0|0|2025-12-17 02:06:54|2025-12-17 02:03:54;14|phong test 2|user1|CLOSED|1|0|2025-12-17 03:14:45|2025-12-17 03:31:57;15|test phong moi |user1|CLOSED|0|0|2025-12-17 03:54:39|2025-12-17 04:12:53;16|room1|user1|ACTIVE|0|0|2025-12-17 03:57:31|cc;17|room2|user1|CLOSED|0|0|2025-12-17 04:09:28|2025-12-17 04:26:28;18|r1|user1|CLOSED|1|0|2025-12-17 04:23:46|2025-12-17 04:40:46;19|longroom|user1|CLOSED|2|0|2025-12-17 04:36:20|2025-12-17 05:33:20;20|test|admin|ACTIVE|2|2|2025-12-17 05:48:30|2025-12-17 06:45:30;
+[2025-12-17 06:06:05] [RECV] fd=6 user=admin: GET_MY_AUCTION_HISTORY|ALL|1|20
+[2025-12-17 06:06:05] [SEND] fd=6 user=admin: AUCTION_HISTORY|2|4|Phong Nghe Thuat|Tranh son dau Bui Xuan Phai|17000000|25000000|admin|WON|2024-12-02 10:30:00;5|Phong Nghe Thuat|Tuong Phat go tram|7200000|10000000|admin|WON|2025-12-02 12:03:26;
+[2025-12-17 06:06:12] [RECV] fd=5 user=user1: LEAVE_ROOM
+[2025-12-17 06:06:12] [SEND] fd=5 user=user1: LEAVE_ROOM_SUCCESS|Da roi phong
+[2025-12-17 06:06:12] [SEND] fd=4 user=user2: USER_LEFT|user1|da roi phong
+[2025-12-17 06:06:21] [RECV] fd=5 user=user1: GET_MY_AUCTION_HISTORY|ALL|1|20
+[2025-12-17 06:06:21] [SEND] fd=5 user=user1: AUCTION_HISTORY|3|1|Phong Dau Gia Do Co|Binh gom Bat Trang|5010000|0|None|BIDDING|2024-12-02 11:00:00;5|Phong Nghe Thuat|Tuong Phat go tram|7100000|10000000|admin|LOST|2025-12-02 12:03:26;11|Phong Sach Hiem|Truyen Kieu ban co|60000000|62000000|user2|LOST|2024-11-15 15:30:00;
+[2025-12-17 06:07:08] [RECV] fd=6 user=admin: LOGOUT
+[2025-12-17 06:07:08] [SEND] fd=6 user=(not_logged_in): LOGOUT_SUCCESS|dang xuat thanh cong
+[2025-12-17 06:07:24] [RECV] fd=6 user=(not_logged_in): LOGIN|admin|admin
+[2025-12-17 06:07:24] [SEND] fd=6 user=admin: LOGIN_SUCCESS|dang nhap thanh cong|admin|1
+[2025-12-17 06:07:37] [RECV] fd=6 user=admin: LOGIN|admin|admin
+[2025-12-17 06:07:37] [SEND] fd=6 user=admin: LOGIN_FAIL_LOGGED_IN|nguoi dung da dang nhap
+[2025-12-17 06:07:40] [RECV] fd=6 user=admin: GET_USER_LIST
+[2025-12-17 06:07:40] [SEND] fd=6 user=admin: USER_LIST|1|admin|1|1;2|user1|1|0;3|user2|1|0;4|alice|0|0;5|bob|0|0;6|charlie|0|0;7|david|0|0;8|emma|0|0;9|frank|0|0;10|grace|0|0;
+[2025-12-17 06:07:54] [RECV] fd=6 user=admin: GET_USER_LIST
+[2025-12-17 06:07:54] [SEND] fd=6 user=admin: USER_LIST|1|admin|1|1;2|user1|1|0;3|user2|1|0;4|alice|0|0;5|bob|0|0;6|charlie|0|0;7|david|0|0;8|emma|0|0;9|frank|0|0;10|grace|0|0;
+[2025-12-17 06:09:49] [SEND] fd=6 user=(not_logged_in): Chao mung den voi dau gia
+[2025-12-17 06:09:54] [SEND] fd=5 user=(not_logged_in): Chao mung den voi dau gia
+[2025-12-17 06:09:58] [SEND] fd=4 user=(not_logged_in): Chao mung den voi dau gia
+[2025-12-17 06:11:59] [SEND] fd=4 user=(not_logged_in): Chao mung den voi dau gia
+[2025-12-17 06:12:05] [RECV] fd=4 user=(not_logged_in): LOGIN|user1|pass1
+[2025-12-17 06:12:05] [SEND] fd=4 user=user1: LOGIN_SUCCESS|dang nhap thanh cong|user1|0
+[2025-12-17 06:12:21] [RECV] fd=4 user=user1: GET_MY_AUCTION_HISTORY|ALL|1|20
+[2025-12-17 06:13:23] [SEND] fd=4 user=(not_logged_in): Chao mung den voi dau gia
+[2025-12-17 06:13:30] [SEND] fd=5 user=(not_logged_in): Chao mung den voi dau gia
+[2025-12-17 06:13:34] [SEND] fd=4 user=(not_logged_in): Chao mung den voi dau gia
+[2025-12-17 06:13:37] [SEND] fd=6 user=(not_logged_in): Chao mung den voi dau gia
+[2025-12-17 06:13:44] [RECV] fd=5 user=(not_logged_in): LOGIN|user1|pass1
+[2025-12-17 06:13:44] [SEND] fd=5 user=user1: LOGIN_SUCCESS|dang nhap thanh cong|user1|0
+[2025-12-17 06:13:58] [SEND] fd=4 user=(not_logged_in): Chao mung den voi dau gia
+[2025-12-17 06:14:04] [RECV] fd=4 user=(not_logged_in): LOGIN|alice|alice123
+[2025-12-17 06:14:04] [SEND] fd=4 user=alice: LOGIN_SUCCESS|dang nhap thanh cong|alice|0
+[2025-12-17 06:14:12] [RECV] fd=5 user=user1: GET_MY_AUCTION_HISTORY|ALL|1|20
+[2025-12-17 06:16:28] [SEND] fd=4 user=(not_logged_in): Chao mung den voi dau gia
+[2025-12-17 06:16:30] [SEND] fd=5 user=(not_logged_in): Chao mung den voi dau gia
+[2025-12-17 06:16:33] [SEND] fd=6 user=(not_logged_in): Chao mung den voi dau gia
+[2025-12-17 06:16:44] [RECV] fd=4 user=(not_logged_in): LOGIN|alice|alice123
+[2025-12-17 06:16:44] [SEND] fd=4 user=alice: LOGIN_SUCCESS|dang nhap thanh cong|alice|0
+[2025-12-17 06:16:52] [SEND] fd=6 user=(not_logged_in): Chao mung den voi dau gia
+[2025-12-17 06:16:59] [RECV] fd=6 user=(not_logged_in): LOGIN|user1|pass1
+[2025-12-17 06:16:59] [SEND] fd=6 user=user1: LOGIN_SUCCESS|dang nhap thanh cong|user1|0
+[2025-12-17 06:17:08] [RECV] fd=5 user=(not_logged_in): LOGIN|user2|pass2
+[2025-12-17 06:17:08] [SEND] fd=5 user=user2: LOGIN_SUCCESS|dang nhap thanh cong|user2|0
+[2025-12-17 06:17:53] [RECV] fd=4 user=alice: CREATE_ROOM|phong chong toi pham|2025-12-17 06:18:47|2025-12-17 06:24:47
+[2025-12-17 06:17:53] [SEND] fd=4 user=alice: CREATE_ROOM_SUCCESS|Tao phong thanh cong|21
+[2025-12-17 06:18:05] [RECV] fd=4 user=alice: JOIN_ROOM|21
+[2025-12-17 06:18:05] [SEND] fd=4 user=alice: JOIN_ROOM_SUCCESS|Chao mung Chu phong|21|phong chong toi pham
+[2025-12-17 06:18:06] [RECV] fd=4 user=alice: GET_ROOM_DETAIL|21
+[2025-12-17 06:18:06] [SEND] fd=4 user=alice: ROOM_DETAIL|21|phong chong toi pham|PENDING|2025-12-17 06:18:47|2025-12-17 06:24:47|
+[2025-12-17 06:18:47] [SEND] fd=4 user=alice: ROOM_STATUS_CHANGED|21|ACTIVE

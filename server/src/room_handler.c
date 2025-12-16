@@ -700,20 +700,21 @@ void handle_join_room(Client* client, char* room_id_str) {
         return;
     }
     
-    if (strcmp(room->status, ROOM_STATUS_ACTIVE) != 0) {
+    // Kiểm tra trạng thái phòng - Owner được vào bất cứ lúc nào
+    if (strcmp(room->status, ROOM_STATUS_ACTIVE) != 0 && room->owner_id != client->user_id) {
         send_message(client, "JOIN_ROOM_FAIL|Phong chua bat dau");
         return;
     }
     
+    // Owner vào phòng của mình
     if (room->owner_id == client->user_id) {
-        // send_message(client, "JOIN_ROOM_FAIL|Owner tu dong trong phong");
-        // return;
         client->current_room_id = room_id;
         char response[256];
         snprintf(response, sizeof(response), 
                  "JOIN_ROOM_SUCCESS|Chao mung Chu phong|%d|%s", 
                  room_id, room->room_name);
         send_message(client, response);
+        return;
     }
     
     // Tham gia phòng
@@ -894,7 +895,7 @@ void handle_get_room_detail(Client* client, char* room_id_str) {
                 token = get_token(&current_ptr);
                 strncpy(item_name, token ? token : "", sizeof(item_name));
                 
-                // 4. Description (QUAN TRỌNG: get_token sẽ lấy được chuỗi rỗng ở đây)
+                // 4. Description
                 token = get_token(&current_ptr); 
                 
                 // 5. Start Price
@@ -909,16 +910,53 @@ void handle_get_room_detail(Client* client, char* room_id_str) {
                 token = get_token(&current_ptr);
                 buy_now_price = token ? atof(token) : 0;
                 
-                // 8. Status (Bây giờ sẽ lấy đúng chữ "SOLD" hoặc "ACTIVE")
+                // 8. Status
                 token = get_token(&current_ptr);
                 strncpy(status, token ? token : "UNKNOWN", sizeof(status));
                 
-                // Tạo chuỗi item data gửi về client
-                char item_data[512];
+                // 9. Winner ID
+                token = get_token(&current_ptr);
+                
+                // 10. Final Price
+                token = get_token(&current_ptr);
+                
+                // 11. Auction Start
+                token = get_token(&current_ptr);
+                char auction_start[30] = "";
+                if (token) strncpy(auction_start, token, sizeof(auction_start) - 1);
+                
+                // 12. Auction End
+                token = get_token(&current_ptr);
+                char auction_end[30] = "";
+                if (token) strncpy(auction_end, token, sizeof(auction_end) - 1);
+                
+                // 13. Extend Count
+                token = get_token(&current_ptr);
+                
+                // 14. Duration
+                token = get_token(&current_ptr);
+                int duration = token ? atoi(token) : 0;
+                
+                // 15. Created At
+                token = get_token(&current_ptr);
+                
+                // 16. Scheduled Start
+                token = get_token(&current_ptr);
+                char sched_start[30] = "";
+                if (token) strncpy(sched_start, token, sizeof(sched_start) - 1);
+                
+                // 17. Scheduled End
+                token = get_token(&current_ptr);
+                char sched_end[30] = "";
+                if (token) strncpy(sched_end, token, sizeof(sched_end) - 1);
+                
+                // Tạo chuỗi item data gửi về client với thông tin thời gian
+                char item_data[768];
                 snprintf(item_data, sizeof(item_data), 
-                         "%d|%s|%s|%.0f|%.0f|%.0f;",
+                         "%d|%s|%s|%.0f|%.0f|%.0f|%s|%s|%s|%s|%d;",
                          item_id, item_name, status, 
-                         start_price, current_price, buy_now_price);
+                         start_price, current_price, buy_now_price,
+                         auction_start, auction_end, sched_start, sched_end, duration);
                 strncat(response, item_data, sizeof(response) - strlen(response) - 1);
             }
         }
@@ -1045,11 +1083,31 @@ void check_and_update_room_statuses() {
             activate_next_item_in_room(updates[i].room_id);
         }
         
-        // Broadcast thông báo
-        char msg[256];
-        snprintf(msg, sizeof(msg), "ROOM_STATUS_CHANGED|%d|%s",
-                 updates[i].room_id, updates[i].new_status);
-        broadcast_to_room(updates[i].room_id, msg, -1);
+        // Lỗi 6: Khi phòng CLOSED, thông báo và kick user (trừ owner)
+        if (strcmp(updates[i].new_status, ROOM_STATUS_CLOSED) == 0) {
+            // Broadcast thông báo phòng đóng
+            char msg[256];
+            snprintf(msg, sizeof(msg), "ROOM_CLOSED|%d|Phong da dong",
+                     updates[i].room_id);
+            broadcast_to_room(updates[i].room_id, msg, -1);
+            
+            // Kick tất cả user ra khỏi phòng (trừ owner)
+            Room* closed_room = get_room_by_id(updates[i].room_id);
+            for (int j = 0; j < MAX_CLIENTS; j++) {
+                if (g_clients[j] && g_clients[j]->current_room_id == updates[i].room_id) {
+                    if (closed_room && g_clients[j]->user_id != closed_room->owner_id) {
+                        g_clients[j]->current_room_id = 0;
+                        send_message(g_clients[j], "KICKED|Ban da bi kick khoi phong (phong dong)");
+                    }
+                }
+            }
+        } else {
+            // Broadcast thông báo thay đổi trạng thái khác
+            char msg[256];
+            snprintf(msg, sizeof(msg), "ROOM_STATUS_CHANGED|%d|%s",
+                     updates[i].room_id, updates[i].new_status);
+            broadcast_to_room(updates[i].room_id, msg, -1);
+        }
     }
 }
 

@@ -43,4 +43,7 @@ void activate_next_item_in_room(int room_id);
 // Kiểm tra và gửi cảnh báo 30s
 void check_and_send_warnings();
 
+// Kiểm tra và kích hoạt items theo scheduled_start
+void check_scheduled_items();
+
 #endif // TIMER_HANDLER_H

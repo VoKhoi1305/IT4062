@@ -650,6 +650,7 @@
 //     return 0;
 // }
 
+#define _XOPEN_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -658,6 +659,7 @@
 #include <arpa/inet.h>
 #include <sys/select.h>
 #include <ctype.h>
+#include <time.h>
 
 // =============================================================
 // 1. CẤU HÌNH & HẰNG SỐ [cite: 5, 6, 7]
@@ -798,17 +800,19 @@ void render_room_info(char* response) {
 
     clear_screen();
     print_header("DAU GIA TRUC TUYEN (LIVE)");
-    printf(BOLD " Phong: %s (#%s)\n" RESET, r_name, r_id);
+    printf(BOLD " Phong: %s" RESET " (ID: %s)\n", r_name, r_id);
     
     char stat_color[10] = RESET;
     if(strcmp(r_stat,"ACTIVE")==0) strcpy(stat_color, GREEN);
     else strcpy(stat_color, RED);
-    printf(" Trang thai: %s%s" RESET " | %s -> %s\n", stat_color, r_stat, r_start, r_end);
-    print_divider('-', APP_WIDTH);
+    printf(" Trang thai: %s%s" RESET "\n", stat_color, r_stat);
+    printf(" Thoi gian phien: %s -> %s\n", r_start, r_end);
+    print_divider('=', APP_WIDTH);
 
-    printf(BOLD " %-4s %-25s %-10s %-12s %-12s %-12s" RESET "\n", 
-           "ID", "VAT PHAM", "STATUS", "KHOI DIEM", "HIEN TAI", "MUA NGAY");
-    print_divider('.', APP_WIDTH);
+    // Header với thông tin đầy đủ hơn - thêm cột thời gian
+    printf(BOLD "\n %-4s %-18s %-9s %-10s %-10s %-10s %-17s" RESET "\n", 
+           "ID", "VAT PHAM", "TRANG THAI", "KHOI DIEM", "HIEN TAI", "MUA NGAY", "THOI GIAN");
+    print_divider('-', APP_WIDTH);
 
     int pipes = 0; char* item_start = ptr;
     while(*item_start) {
@@ -817,31 +821,66 @@ void render_room_info(char* response) {
         item_start++;
     }
 
-    int count = 0;
+    int count = 0, active_count = 0, pending_count = 0;
     if (item_start && strlen(item_start) > 0) {
         char items_buf[BUFFER_SIZE];
         strncpy(items_buf, item_start, sizeof(items_buf));
         char* item = strtok(items_buf, ";");
         while (item) {
-            int iid; char iname[100], istat[20]; double p1, p2, p3;
-            if(sscanf(item, "%d|%[^|]|%[^|]|%lf|%lf|%lf", &iid, iname, istat, &p1, &p2, &p3) >= 6) {
+            int iid, duration; 
+            char iname[100], istat[20];
+            char auction_start[30], auction_end[30], sched_start[30], sched_end[30];
+            double p1, p2, p3;
+            
+            // Parse: id|name|status|start_price|current_price|buy_price|auction_start|auction_end|sched_start|sched_end|duration
+            int parsed = sscanf(item, "%d|%[^|]|%[^|]|%lf|%lf|%lf|%[^|]|%[^|]|%[^|]|%[^|]|%d", 
+                               &iid, iname, istat, &p1, &p2, &p3, 
+                               auction_start, auction_end, sched_start, sched_end, &duration);
+            
+            if(parsed >= 6) {
                 char c[10]=RESET;
-                if(strcmp(istat,"ACTIVE")==0) strcpy(c, GREEN);
+                if(strcmp(istat,"ACTIVE")==0) { strcpy(c, GREEN); active_count++; }
                 else if(strcmp(istat,"SOLD")==0) strcpy(c, RED);
-                else strcpy(c, YELLOW); 
+                else if(strcmp(istat,"PENDING")==0) { strcpy(c, YELLOW); pending_count++; }
+                else strcpy(c, CYAN);
+                
+                // Hiển thị thời gian ngắn gọn (chỉ HH:MM)
+                char time_display[20] = "";
+                if (strcmp(istat, "ACTIVE") == 0 && strlen(auction_end) > 11) {
+                    // Lấy phần HH:MM từ auction_end (yyyy-mm-dd HH:MM:SS)
+                    snprintf(time_display, sizeof(time_display), "~%.*s", 5, auction_end + 11);
+                } else if (strcmp(istat, "PENDING") == 0 && strlen(sched_start) > 11) {
+                    // Lấy phần HH:MM từ scheduled_start
+                    snprintf(time_display, sizeof(time_display), "%.*s-%.*s", 
+                            5, sched_start + 11, 5, sched_end + 11);
+                } else if (strcmp(istat, "SOLD") == 0 || strcmp(istat, "CLOSED") == 0) {
+                    strcpy(time_display, "Ket thuc");
+                }
 
-                printf(" %-4d %-25.25s %s%-10s" RESET " %-12.0f %-12.0f %-12.0f\n", 
-                       iid, iname, c, istat, p1, p2, p3);
+                printf(" %-4d %-18.18s %s%-9s" RESET " %-10.0f %-10.0f %-10.0f %-17s\n", 
+                       iid, iname, c, istat, p1, p2, p3, time_display);
                 count++;
             }
             item = strtok(NULL, ";");
         }
     } 
-    if (count == 0) printf(YELLOW " >> Phong chua co vat pham nao.\n" RESET);
+    
+    print_divider('-', APP_WIDTH);
+    if (count == 0) {
+        printf(YELLOW " >> Phong chua co vat pham nao.\n" RESET);
+    } else {
+        printf(CYAN " >> Tong: %d vat pham" RESET " | ", count);
+        if (active_count > 0) printf(GREEN "Dang dau gia: %d" RESET " | ", active_count);
+        if (pending_count > 0) printf(YELLOW "Cho bat dau: %d" RESET, pending_count);
+        printf("\n");
+    }
     
     print_divider('=', APP_WIDTH);
-    printf(BOLD " [4] Dat gia    [5] Mua ngay    [6] Roi phong\n" RESET);
-    printf(BOLD " [7] Tao Vat Pham (Owner Only)  [0] Ve Menu chinh\n" RESET);
+    printf(BOLD " HANH DONG:\n" RESET);
+    printf(" [4] Dat gia          [5] Mua ngay         [6] Roi phong\n");
+    printf(" [7] Tao vat pham     [8] Xoa vat pham (Owner)\n");
+    printf(" [0] Ve menu chinh\n");
+    print_divider('-', APP_WIDTH);
     printf(CYAN " >> Nhap lua chon: " RESET);
     fflush(stdout);
 }
@@ -884,14 +923,144 @@ void process_server_msg(char* msg, char* refresh_cmd) {
         if(refresh_cmd) send_command(refresh_cmd);
     }
     else if (strncmp(msg, "NEW_BID", 7) == 0) {
-        char* content = msg + 7; 
-        if(*content == '|' || *content == ' ') content++;
-        printf(YELLOW "\n [GIA MOI] %s\n" RESET, content);
+        char* content = msg + 8; // Skip "NEW_BID|"
+        char item_name[256], username[50], bid_time[30];
+        char auction_start[30], auction_end[30], sched_start[30], sched_end[30];
+        int item_id, countdown;
+        double amount;
+        
+        // Parse: item_id|item_name|username|amount|timestamp|auction_start|auction_end|sched_start|sched_end|countdown
+        if (sscanf(content, "%d|%255[^|]|%49[^|]|%lf|%29[^|]|%29[^|]|%29[^|]|%29[^|]|%29[^|]|%d",
+                   &item_id, item_name, username, &amount, bid_time,
+                   auction_start, auction_end, sched_start, sched_end, &countdown) >= 5) {
+            printf(YELLOW "\n [GIA MOI] %s dat gia %.0f cho '%s' (#%d)\n", username, amount, item_name, item_id);
+            printf("           Phien: %s -> %s\n", auction_start, auction_end);
+            if (strlen(sched_start) > 2) {
+                printf("           Khung gio: %s - %s\n", sched_start, sched_end);
+            }
+            printf("           Con lai: %d giay\n" RESET, countdown);
+        } else {
+            printf(YELLOW "\n [GIA MOI] %s\n" RESET, content);
+        }
         if(refresh_cmd) send_command(refresh_cmd); 
     }
    else if (strncmp(msg, "TIME_EXTENDED", 13) == 0) { 
         printf(RED "\n [GIA HAN] Co dau gia phut chot! Thoi gian duoc cong them.\n" RESET);
         if(refresh_cmd) send_command(refresh_cmd);
+    }
+    else if (strncmp(msg, "DELETE_ITEM_SUCCESS", 19) == 0) {
+        printf(GREEN "\n [SUCCESS] %s\n" RESET, strchr(msg, '|') + 1);
+        if(refresh_cmd) send_command(refresh_cmd);
+    }
+    else if (strncmp(msg, "ITEM_DELETED", 12) == 0) {
+        printf(YELLOW "\n [THONG BAO] Vat pham da bi xoa: %s\n" RESET, strchr(msg, '|') + 1);
+        if(refresh_cmd) send_command(refresh_cmd);
+    }
+    else if (strncmp(msg, "ITEM_STARTED", 12) == 0) {
+        char* content = msg + 13; // Skip "ITEM_STARTED|"
+        char item_name[256], auction_start[30], auction_end[30];
+        char sched_start[30], sched_end[30];
+        int item_id, duration, countdown;
+        double start_price;
+        
+        // Parse: item_id|item_name|start_price|auction_end|duration|sched_start|sched_end|auction_start|auction_end|countdown
+        if (sscanf(content, "%d|%255[^|]|%lf|%*[^|]|%d|%29[^|]|%29[^|]|%29[^|]|%29[^|]|%d",
+                   &item_id, item_name, &start_price, &duration,
+                   sched_start, sched_end, auction_start, auction_end, &countdown) >= 4) {
+            printf(GREEN BOLD "\n [BAT DAU] Vat pham moi: '%s' (#%d)\n" RESET, item_name, item_id);
+            printf("           Gia khoi diem: %.0f\n", start_price);
+            printf("           Phien: %s -> %s\n", auction_start, auction_end);
+            if (strlen(sched_start) > 2) {
+                printf("           Khung gio: %s - %s\n", sched_start, sched_end);
+            }
+            printf("           Con lai: %d giay\n", countdown);
+        } else {
+            printf(GREEN BOLD "\n [BAT DAU] Vat pham moi bat dau dau gia!\n" RESET);
+        }
+        if(refresh_cmd) send_command(refresh_cmd);
+    }
+    else if (strncmp(msg, "AUCTION_ENDED", 13) == 0) {
+        // Parse: AUCTION_ENDED|item_id|item_name|status|winner_name|final_price|message
+        char item_name[256] = "", status[20] = "", winner_name[100] = "", message[512] = "";
+        int item_id = 0;
+        double final_price = 0.0;
+        
+        char temp[1024];
+        strcpy(temp, msg);
+        char* ptr = strtok(temp, "|");
+        
+        if (ptr) ptr = strtok(NULL, "|"); // item_id
+        if (ptr) item_id = atoi(ptr);
+        
+        if (ptr) ptr = strtok(NULL, "|"); // item_name
+        if (ptr) strcpy(item_name, ptr);
+        
+        if (ptr) ptr = strtok(NULL, "|"); // status
+        if (ptr) strcpy(status, ptr);
+        
+        if (ptr) ptr = strtok(NULL, "|"); // winner_name
+        if (ptr) strcpy(winner_name, ptr);
+        
+        if (ptr) ptr = strtok(NULL, "|"); // final_price
+        if (ptr) final_price = atof(ptr);
+        
+        if (ptr) ptr = strtok(NULL, "|"); // message
+        if (ptr) strcpy(message, ptr);
+        
+        printf(MAGENTA BOLD "\n================================================================\n" RESET);
+        printf(MAGENTA BOLD "         PHIEN DAU GIA KET THUC\n" RESET);
+        printf(MAGENTA BOLD "================================================================\n" RESET);
+        printf(MAGENTA "  Vat pham: " RESET BOLD "%s" RESET " (ID: %d)\n", item_name, item_id);
+        
+        if (strcmp(status, "SOLD") == 0) {
+            printf(GREEN BOLD "  Nguoi chien thang: %s\n" RESET, winner_name);
+            printf(YELLOW "  Gia cuoi cung: %.0f VND\n" RESET, final_price);
+        } else {
+            printf(YELLOW "  Ket qua: Khong co nguoi dat gia\n" RESET);
+        }
+        
+        printf(MAGENTA BOLD "================================================================\n" RESET);
+        
+        if(refresh_cmd) send_command(refresh_cmd);
+    }
+    else if (strncmp(msg, "YOU_WON", 7) == 0) {
+        // Parse: YOU_WON|item_id|item_name|final_price|message
+        char item_name[256] = "", message[512] = "";
+        int item_id = 0;
+        double final_price = 0.0;
+        
+        char temp[1024];
+        strcpy(temp, msg);
+        char* ptr = strtok(temp, "|");
+        
+        if (ptr) ptr = strtok(NULL, "|"); // item_id
+        if (ptr) item_id = atoi(ptr);
+        
+        if (ptr) ptr = strtok(NULL, "|"); // item_name
+        if (ptr) strcpy(item_name, ptr);
+        
+        if (ptr) ptr = strtok(NULL, "|"); // final_price
+        if (ptr) final_price = atof(ptr);
+        
+        if (ptr) ptr = strtok(NULL, "|"); // message
+        if (ptr) strcpy(message, ptr);
+        
+        printf(GREEN BOLD "\n================================================================\n" RESET);
+        printf(GREEN BOLD "  *** CHUC MUNG! BAN DA THANG DAU GIA! ***\n" RESET);
+        printf(GREEN BOLD "================================================================\n" RESET);
+        printf(GREEN "  Vat pham: " RESET BOLD "%s\n" RESET, item_name);
+        printf(YELLOW BOLD "  Gia thang: %.0f VND\n" RESET, final_price);
+        printf(GREEN BOLD "================================================================\n" RESET);
+    }
+    else if (strncmp(msg, "ROOM_CLOSED", 11) == 0) {
+        printf(RED BOLD "\n [THONG BAO] PHONG DA DONG! Ban se bi kick ra ngoai.\n" RESET);
+        g_current_room_id = 0;
+        if(refresh_cmd) refresh_cmd = NULL; // Clear refresh
+    }
+    else if (strncmp(msg, "KICKED", 6) == 0) {
+        printf(RED "\n [KICKED] %s\n" RESET, strchr(msg, '|') + 1);
+        g_current_room_id = 0;
+        if(refresh_cmd) refresh_cmd = NULL;
     }
     else if (strncmp(msg, "ERROR", 5) == 0 || strstr(msg, "FAIL")) {
         printf(RED "\n %s\n" RESET, msg);
@@ -972,9 +1141,52 @@ void handle_room_detail() {
                     char name[100]; get_input_string(" Ten: ", name, sizeof(name));
                     double sp = get_input_double(" Gia khoi diem: ");
                     double bp = get_input_double(" Gia mua ngay (0=bo qua): ");
-                    int dur = get_input_int(" Thoi gian (phut): ");
-                    char ccmd[256]; snprintf(ccmd, sizeof(ccmd), "CREATE_ITEM|%d|%s|%.0f|%d|%.0f", g_current_room_id, name, sp, dur, bp);
+                    int dur = get_input_int(" Thoi gian dau gia (phut): ");
+                    
+                    printf(CYAN "\n === KHUNG GIO DAU GIA ===\n" RESET);
+                    printf(" (Khoang thoi gian duoc phep dau gia)\n");
+                    
+                    char sched_start[30] = "", sched_end[30] = "";
+                    get_input_string(" Khung gio bat dau (yyyy-mm-dd hh:mm:ss): ", sched_start, sizeof(sched_start));
+                    get_input_string(" Khung gio ket thuc (yyyy-mm-dd hh:mm:ss): ", sched_end, sizeof(sched_end));
+                    
+                    // Kiểm tra và hiển thị thông tin
+                    if (strlen(sched_start) > 0 && strlen(sched_end) > 0) {
+                        struct tm tm_start = {0}, tm_end = {0};
+                        if (strptime(sched_start, "%Y-%m-%d %H:%M:%S", &tm_start) != NULL &&
+                            strptime(sched_end, "%Y-%m-%d %H:%M:%S", &tm_end) != NULL) {
+                            
+                            time_t slot_start = mktime(&tm_start);
+                            time_t slot_end = mktime(&tm_end);
+                            time_t auction_end = slot_start + (dur * 60);
+                            
+                            // Kiểm tra nếu auction end vượt quá slot end
+                            if (auction_end > slot_end) {
+                                printf(YELLOW "\n [CANH BAO] Thoi gian dau gia (%d phut) vuot qua khung gio!\n", dur);
+                                printf(" Phien dau gia se ket thuc khi het khung gio.\n" RESET);
+                            } else {
+                                struct tm* tm_auction_end = localtime(&auction_end);
+                                char auction_end_str[30];
+                                strftime(auction_end_str, sizeof(auction_end_str), "%Y-%m-%d %H:%M:%S", tm_auction_end);
+                                printf(GREEN "\n [THONG TIN] Phien dau gia se:\n");
+                                printf(" - Bat dau: %s\n", sched_start);
+                                printf(" - Ket thuc: %s\n", auction_end_str);
+                                printf(" - Thoi luong: %d phut\n" RESET, dur);
+                            }
+                        }
+                    }
+                    
+                    char ccmd[512]; 
+                    snprintf(ccmd, sizeof(ccmd), "CREATE_ITEM|%d|%s|%.0f|%d|%.0f|%s|%s", 
+                            g_current_room_id, name, sp, dur, bp, sched_start, sched_end);
                     send_command(ccmd);
+                }
+                else if (strcmp(input, "8") == 0) { 
+                    // Xóa vật phẩm (chỉ owner)
+                    printf(RED "\n [OWNER] Xoa vat pham:\n" RESET);
+                    int id = get_input_int(" ID vat pham can xoa: ");
+                    char dcmd[100]; snprintf(dcmd, sizeof(dcmd), "DELETE_ITEM|%d", id);
+                    send_command(dcmd);
                 }
                 else {
                     send_command(cmd); 
@@ -1083,32 +1295,65 @@ void handle_create_room() {
 
 
 void handle_search_items() {
-    print_header("TIM KIEM");
-    printf(" [1] Ten  [2] Thoi gian  [3] Ca hai\n");
-    int c = get_input_int(" >> Chon: ");
+    print_header("TIM KIEM VAT PHAM");
+    printf(BOLD " [1]" RESET " Tim theo Ten\n");
+    printf(BOLD " [2]" RESET " Tim theo Thoi gian\n");
+    printf(BOLD " [3]" RESET " Tim ket hop (Ten & Thoi gian)\n");
+    printf(BOLD " [0]" RESET " Quay lai\n");
+    
+    int c = get_input_int("\n >> Chon: ");
+    if (c == 0) return;
+    
     char type[10]="NAME", kw[100]="", t1[30]="", t2[30]="";
-    if(c==1 || c==3) get_input_string(" Keyword: ", kw, sizeof(kw));
+    
+    if(c==1 || c==3) {
+        get_input_string("\n Nhap tu khoa tim kiem: ", kw, sizeof(kw));
+    }
     if(c==2 || c==3) {
         strcpy(type, c==2?"TIME":"BOTH");
-        get_input_string(" Tu (YYYY-MM-DD HH:MM:SS): ", t1, sizeof(t1));
-        get_input_string(" Den: ", t2, sizeof(t2));
+        get_input_string(" Tu ngay (YYYY-MM-DD): ", t1, sizeof(t1));
+        get_input_string(" Den ngay (YYYY-MM-DD): ", t2, sizeof(t2));
     }
+    
     char cmd[512]; snprintf(cmd, sizeof(cmd), "SEARCH_ITEMS|%s|%s|%s|%s", type, kw, t1, t2);
     send_command(cmd);
     char* res = wait_for_response();
+    
     if(res && strncmp(res, "SEARCH_RESULT", 13)==0) {
         char* ptr = strchr(res, '|') + 1;
-        printf(GREEN " Ket qua: %d item(s)\n" RESET, atoi(ptr));
-        print_divider('.', APP_WIDTH);
-        ptr = strchr(ptr, '|') + 1;
-        char* it = strtok(ptr, ";");
-        while(it) {
-            int id, rid; char rn[50], in[50], st[20], dum[20]; double p1, p2;
-            sscanf(it, "%d|%d|%[^|]|%[^|]|%lf|%lf|%s", &id, &rid, rn, in, &p1, &p2, st);
-            printf(" #%d (%s) - %s: %.0f (Phong: %s)\n", id, st, in, p2, rn);
-            it = strtok(NULL, ";");
+        int total = atoi(ptr);
+        
+        clear_screen();
+        print_header("KET QUA TIM KIEM");
+        printf(GREEN BOLD " Tim thay: %d vat pham\n" RESET, total);
+        
+        if (total > 0) {
+            print_divider('-', APP_WIDTH);
+            printf(BOLD " %-4s %-20s %-15s %-10s %-12s %-12s" RESET "\n", 
+                   "ID", "TEN VAT PHAM", "PHONG", "TRANG THAI", "GIA KHOI", "GIA HIEN");
+            print_divider('.', APP_WIDTH);
+            
+            ptr = strchr(ptr, '|') + 1;
+            char* it = strtok(ptr, ";");
+            while(it) {
+                int id, rid; char rn[50], in[50], st[20], dum[20]; double p1, p2;
+                if(sscanf(it, "%d|%d|%[^|]|%[^|]|%lf|%lf|%s", &id, &rid, rn, in, &p1, &p2, st) >= 6) {
+                    char c[10]=RESET;
+                    if(strcmp(st,"ACTIVE")==0) strcpy(c, GREEN);
+                    else if(strcmp(st,"SOLD")==0) strcpy(c, RED);
+                    else if(strcmp(st,"PENDING")==0) strcpy(c, YELLOW);
+                    else strcpy(c, CYAN);
+                    
+                    printf(" %-4d %-20.20s %-15.15s %s%-10s" RESET " %-12.0f %-12.0f\n", 
+                           id, in, rn, c, st, p1, p2);
+                }
+                it = strtok(NULL, ";");
+            }
+            print_divider('=', APP_WIDTH);
         }
-    } else print_message("ERROR", res?res:"Loi tim kiem");
+    } else {
+        print_message("ERROR", res?res:"Loi tim kiem");
+    }
     wait_enter();
 }
 

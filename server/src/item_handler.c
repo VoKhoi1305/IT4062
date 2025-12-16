@@ -319,6 +319,7 @@
  * Triển khai các chức năng quản lý vật phẩm đấu giá
  */
 
+#define _XOPEN_SOURCE
 #include "item_handler.h"
 #include "room_handler.h"
 #include "client_handler.h"
@@ -357,17 +358,12 @@ Item* get_item_by_id(int item_id) {
     while (fgets(line, sizeof(line), file)) {
         line[strcspn(line, "\n")] = 0;
         
-        char item_name[200], description[500], status[20];
-        char auction_start[30], auction_end[30], bid_history[2048];
-        int iid, room_id, winner_id, extend_count;
-        double start_price, current_price, buy_now_price, final_price;
-        
-        // Parse theo format
-        char* tokens[17];
+        // Parse theo format mới với 18 trường
+        char* tokens[19];
         char* ptr = line;
         int token_count = 0;
         
-        for (int i = 0; i < 17 && ptr; i++) {
+        for (int i = 0; i < 19 && ptr; i++) {
             tokens[i] = ptr;
             ptr = strchr(ptr, '|');
             if (ptr) {
@@ -377,10 +373,13 @@ Item* get_item_by_id(int item_id) {
             token_count++;
         }
         
+        // Hỗ trợ cả format cũ (16 trường) và mới (18 trường)
         if (token_count >= 16) {
-            iid = atoi(tokens[0]);
+            int iid = atoi(tokens[0]);
             
             if (iid == item_id) {
+                memset(&item, 0, sizeof(Item));
+                
                 item.item_id = iid;
                 item.room_id = atoi(tokens[1]);
                 strncpy(item.item_name, tokens[2], sizeof(item.item_name));
@@ -396,7 +395,18 @@ Item* get_item_by_id(int item_id) {
                 item.extend_count = atoi(tokens[12]);
                 item.duration = atoi(tokens[13]);
                 strncpy(item.created_at, tokens[14], sizeof(item.created_at));
-                strncpy(item.bid_history, tokens[15], sizeof(item.bid_history));
+                
+                // Format mới có scheduled_start/end
+                if (token_count >= 18) {
+                    strncpy(item.scheduled_start, tokens[15], sizeof(item.scheduled_start));
+                    strncpy(item.scheduled_end, tokens[16], sizeof(item.scheduled_end));
+                    strncpy(item.bid_history, tokens[17], sizeof(item.bid_history));
+                } else {
+                    // Format cũ - không có scheduled_start/end
+                    item.scheduled_start[0] = '\0';
+                    item.scheduled_end[0] = '\0';
+                    strncpy(item.bid_history, tokens[15], sizeof(item.bid_history));
+                }
                 
                 fclose(file);
                 return &item;
@@ -422,14 +432,16 @@ int save_item(Item* item) {
         
         int iid;
         if (sscanf(lines[line_count], "%d|", &iid) == 1 && iid == item->item_id) {
-            // Cập nhật dòng này
+            // Cập nhật dòng này với format mới bao gồm scheduled_start/end
             snprintf(lines[line_count], sizeof(lines[0]),
-                     "%d|%d|%s|%s|%.0f|%.0f|%.0f|%s|%d|%.0f|%s|%s|%d|%d|%s|%s",
+                     "%d|%d|%s|%s|%.0f|%.0f|%.0f|%s|%d|%.0f|%s|%s|%d|%d|%s|%s|%s|%s",
                      item->item_id, item->room_id, item->item_name, item->description,
                      item->start_price, item->current_price, item->buy_now_price,
                      item->status, item->winner_id, item->final_price,
                      item->auction_start, item->auction_end, item->extend_count,
-                     item->duration, item->created_at, item->bid_history);
+                     item->duration, item->created_at, 
+                     item->scheduled_start, item->scheduled_end,
+                     item->bid_history);
             found = 1;
         }
         line_count++;
@@ -448,9 +460,196 @@ int save_item(Item* item) {
     return found;
 }
 
-// Tạo vật phẩm đấu giá
+// Xóa vật phẩm khỏi file
+int delete_item_from_file(int item_id) {
+    FILE* file = fopen(ITEMS_FILE, "r");
+    if (file == NULL) return 0;
+    
+    char lines[1000][2048];
+    int line_count = 0;
+    int found = 0;
+    
+    // Đọc tất cả các dòng, bỏ qua dòng cần xóa
+    while (fgets(lines[line_count], sizeof(lines[0]), file)) {
+        lines[line_count][strcspn(lines[line_count], "\n")] = 0;
+        
+        int iid;
+        if (sscanf(lines[line_count], "%d|", &iid) == 1 && iid == item_id) {
+            found = 1;
+            continue; // Bỏ qua dòng này (không tăng line_count)
+        }
+        line_count++;
+    }
+    fclose(file);
+    
+    if (!found) return 0;
+    
+    // Ghi lại file không có dòng đã xóa
+    file = fopen(ITEMS_FILE, "w");
+    if (file == NULL) return 0;
+    
+    for (int i = 0; i < line_count; i++) {
+        fprintf(file, "%s\n", lines[i]);
+    }
+    fclose(file);
+    
+    return 1;
+}
+
+// Parse thời gian yyyy-mm-dd hh:mm:ss thành timestamp
+static time_t parse_time_to_timestamp(const char* time_str) {
+    if (!time_str || strlen(time_str) == 0) return -1;
+    
+    struct tm tm_info = {0};
+    if (strptime(time_str, "%Y-%m-%d %H:%M:%S", &tm_info) == NULL) {
+        return -1;
+    }
+    return mktime(&tm_info);
+}
+
+// Kiểm tra xung đột khung giờ trong cùng phòng
+int check_time_slot_conflict(int room_id, const char* new_start, const char* new_end, int exclude_item_id) {
+    if (!new_start || !new_end || strlen(new_start) == 0 || strlen(new_end) == 0) {
+        return 0; // Không có khung giờ thì không xung đột
+    }
+    
+    time_t new_start_time = parse_time_to_timestamp(new_start);
+    time_t new_end_time = parse_time_to_timestamp(new_end);
+    
+    if (new_start_time < 0 || new_end_time < 0) return 0;
+    if (new_start_time >= new_end_time) return 1; // Thời gian không hợp lệ
+    
+    FILE* file = fopen(ITEMS_FILE, "r");
+    if (file == NULL) return 0;
+    
+    char line[2048];
+    int conflict = 0;
+    
+    while (fgets(line, sizeof(line), file)) {
+        line[strcspn(line, "\n")] = 0;
+        
+        char* tokens[19];
+        char* ptr = line;
+        int token_count = 0;
+        
+        for (int i = 0; i < 19 && ptr; i++) {
+            tokens[i] = ptr;
+            ptr = strchr(ptr, '|');
+            if (ptr) {
+                *ptr = '\0';
+                ptr++;
+            }
+            token_count++;
+        }
+        
+        if (token_count < 17) continue;
+        
+        int item_id = atoi(tokens[0]);
+        int item_room_id = atoi(tokens[1]);
+        char* status = tokens[7];
+        char* sched_start = tokens[15];
+        char* sched_end = tokens[16];
+        
+        // Bỏ qua item đang exclude hoặc item đã SOLD/CLOSED
+        if (item_id == exclude_item_id) continue;
+        if (item_room_id != room_id) continue;
+        if (strcmp(status, ITEM_STATUS_SOLD) == 0 || strcmp(status, ITEM_STATUS_CLOSED) == 0) continue;
+        
+        // Kiểm tra xung đột thời gian
+        time_t exist_start = parse_time_to_timestamp(sched_start);
+        time_t exist_end = parse_time_to_timestamp(sched_end);
+        
+        if (exist_start < 0 || exist_end < 0) continue;
+        
+        // Xung đột nếu: new_start < exist_end AND new_end > exist_start
+        if (new_start_time < exist_end && new_end_time > exist_start) {
+            printf("Time conflict detected: new [%s-%s] overlaps with item %d [%s-%s]\n",
+                   new_start, new_end, item_id, sched_start, sched_end);
+            conflict = 1;
+            break;
+        }
+    }
+    fclose(file);
+    
+    return conflict;
+}
+
+// Xử lý xóa vật phẩm
+void handle_delete_item(Client* client, char* item_id_str) {
+    if (!client->is_logged_in) {
+        send_message(client, "ERROR|Ban phai dang nhap truoc");
+        return;
+    }
+    
+    if (!item_id_str || strlen(item_id_str) == 0) {
+        send_message(client, "DELETE_ITEM_FAIL|Thieu ID vat pham");
+        return;
+    }
+    
+    int item_id = atoi(item_id_str);
+    Item* item = get_item_by_id(item_id);
+    
+    if (item == NULL) {
+        send_message(client, "DELETE_ITEM_FAIL|Vat pham khong ton tai");
+        return;
+    }
+    
+    // Kiểm tra quyền: phải là chủ phòng chứa vật phẩm này
+    Room* room = get_room_by_id(item->room_id);
+    if (room == NULL) {
+        send_message(client, "DELETE_ITEM_FAIL|Phong khong ton tai");
+        return;
+    }
+    
+    if (room->owner_id != client->user_id) {
+        send_message(client, "DELETE_ITEM_FAIL|Ban khong phai chu phong, khong co quyen xoa");
+        return;
+    }
+    
+    // Kiểm tra trạng thái: chỉ được xóa item PENDING
+    if (strcmp(item->status, ITEM_STATUS_PENDING) != 0) {
+        if (strcmp(item->status, ITEM_STATUS_ACTIVE) == 0) {
+            send_message(client, "DELETE_ITEM_FAIL|Khong the xoa vat pham dang dau gia");
+        } else if (strcmp(item->status, ITEM_STATUS_SOLD) == 0) {
+            send_message(client, "DELETE_ITEM_FAIL|Khong the xoa vat pham da ban");
+        } else {
+            send_message(client, "DELETE_ITEM_FAIL|Khong the xoa vat pham da dong");
+        }
+        return;
+    }
+    
+    // Kiểm tra không có ai đặt giá
+    if (strlen(item->bid_history) > 0) {
+        send_message(client, "DELETE_ITEM_FAIL|Khong the xoa vat pham da co nguoi dat gia");
+        return;
+    }
+    
+    // Thực hiện xóa
+    char item_name[200];
+    strncpy(item_name, item->item_name, sizeof(item_name));
+    
+    if (delete_item_from_file(item_id)) {
+        char response[256];
+        snprintf(response, sizeof(response), 
+                 "DELETE_ITEM_SUCCESS|Da xoa vat pham '%s' (ID: %d)", item_name, item_id);
+        send_message(client, response);
+        
+        // Broadcast cho những người trong phòng
+        char broadcast_msg[256];
+        snprintf(broadcast_msg, sizeof(broadcast_msg),
+                 "ITEM_DELETED|%d|%s|Vat pham da bi chu phong xoa", item_id, item_name);
+        broadcast_to_room(item->room_id, broadcast_msg, client->socket_fd);
+        
+        printf("Item %d '%s' deleted by user %d\n", item_id, item_name, client->user_id);
+    } else {
+        send_message(client, "DELETE_ITEM_FAIL|Loi khi xoa vat pham");
+    }
+}
+
+// Tạo vật phẩm đấu giá với khung giờ
 void handle_create_item(Client* client, char* room_id_str, char* item_name, 
-                        char* start_price_str, char* duration_str, char* buy_now_price_str) {
+                        char* start_price_str, char* duration_str, char* buy_now_price_str,
+                        char* scheduled_start, char* scheduled_end) {
     if (!client->is_logged_in) {
         send_message(client, "ERROR|Ban phai dang nhap truoc");
         return;
@@ -489,6 +688,53 @@ void handle_create_item(Client* client, char* room_id_str, char* item_name,
         return;
     }
     
+    // Xử lý khung giờ - nếu có scheduled_start/end thì kiểm tra
+    char sched_start[30] = "";
+    char sched_end[30] = "";
+    
+    if (scheduled_start && strlen(scheduled_start) > 0) {
+        strncpy(sched_start, scheduled_start, sizeof(sched_start) - 1);
+    }
+    if (scheduled_end && strlen(scheduled_end) > 0) {
+        strncpy(sched_end, scheduled_end, sizeof(sched_end) - 1);
+    }
+    
+    // Nếu có khung giờ, kiểm tra xung đột
+    if (strlen(sched_start) > 0 && strlen(sched_end) > 0) {
+        // Validate format yyyy-mm-dd hh:mm:ss
+        struct tm start_tm = {0}, end_tm = {0};
+        if (strptime(sched_start, "%Y-%m-%d %H:%M:%S", &start_tm) == NULL ||
+            strptime(sched_end, "%Y-%m-%d %H:%M:%S", &end_tm) == NULL) {
+            send_message(client, "CREATE_ITEM_FAIL|Khung gio khong hop le (dinh dang yyyy-mm-dd hh:mm:ss)");
+            return;
+        }
+        
+        time_t start_time = mktime(&start_tm);
+        time_t end_time = mktime(&end_tm);
+        
+        if (start_time >= end_time) {
+            send_message(client, "CREATE_ITEM_FAIL|Gio bat dau phai truoc gio ket thuc");
+            return;
+        }
+        
+        // Kiểm tra duration có phù hợp với khung giờ không
+        int slot_duration = (int)difftime(end_time, start_time) / 60;
+        if (duration > slot_duration) {
+            char err_msg[256];
+            snprintf(err_msg, sizeof(err_msg), 
+                     "CREATE_ITEM_FAIL|Thoi luong %d phut vuot qua khung gio (%d phut)", 
+                     duration, slot_duration);
+            send_message(client, err_msg);
+            return;
+        }
+        
+        // Kiểm tra xung đột với các item khác trong phòng
+        if (check_time_slot_conflict(room_id, sched_start, sched_end, -1)) {
+            send_message(client, "CREATE_ITEM_FAIL|Khung gio bi trung voi vat pham khac trong phong");
+            return;
+        }
+    }
+    
     // Tạo item mới
     int new_item_id = get_last_item_id() + 1;
     
@@ -504,17 +750,24 @@ void handle_create_item(Client* client, char* room_id_str, char* item_name,
         return;
     }
     
-    // Format: item_id|room_id|item_name|description|start_price|current_price|
-    //         buy_now_price|status|winner_id|final_price|auction_start|auction_end|
-    //         extend_count|duration|created_at|bid_history
-    fprintf(file, "%d|%d|%s||%.0f|%.0f|%.0f|%s|0|0.0|||0|%d|%s|\n",
+    // Format mới: item_id|room_id|item_name|description|start_price|current_price|
+    //             buy_now_price|status|winner_id|final_price|auction_start|auction_end|
+    //             extend_count|duration|created_at|scheduled_start|scheduled_end|bid_history
+    fprintf(file, "%d|%d|%s||%.0f|%.0f|%.0f|%s|0|0.0|||0|%d|%s|%s|%s|\n",
             new_item_id, room_id, item_name, start_price, start_price,
-            buy_now_price, ITEM_STATUS_PENDING, duration, created_at);
+            buy_now_price, ITEM_STATUS_PENDING, duration, created_at,
+            sched_start, sched_end);
     fclose(file);
     
     char response[256];
-    snprintf(response, sizeof(response), 
-             "CREATE_ITEM_SUCCESS|Tao vat pham thanh cong|%d", new_item_id);
+    if (strlen(sched_start) > 0) {
+        snprintf(response, sizeof(response), 
+                 "CREATE_ITEM_SUCCESS|Tao vat pham thanh cong (khung %s-%s)|%d", 
+                 sched_start, sched_end, new_item_id);
+    } else {
+        snprintf(response, sizeof(response), 
+                 "CREATE_ITEM_SUCCESS|Tao vat pham thanh cong|%d", new_item_id);
+    }
     send_message(client, response);
 }
 
