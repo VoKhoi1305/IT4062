@@ -132,53 +132,7 @@ void show_message_dialog(GtkMessageType type, const char* title, const char* mes
 
 void refresh_room_list() {
     send_command("GET_ROOM_LIST|ALL|1|50");
-    
-    // Wait a bit for response
-    usleep(100000);  // 100ms
-    
-    char* response = wait_for_response_sync();
-    if (!response || strncmp(response, "ROOM_LIST", 9) != 0) {
-        return;
-    }
-    
-    // Clear existing list
-    gtk_list_store_clear(g_room_list_store);
-    
-    // Parse response: ROOM_LIST|count|data
-    char* ptr = strchr(response, '|');
-    if (!ptr) return;
-    ptr++;
-    
-    int count = atoi(ptr);
-    ptr = strchr(ptr, '|');
-    if (!ptr) return;
-    ptr++;
-    
-    // Parse room data
-    char data[BUFFER_SIZE];
-    strncpy(data, ptr, BUFFER_SIZE);
-    
-    char* room = strtok(data, ";");
-    while (room) {
-        int id, item_count, participant_count;
-        char name[50], owner[50], status[20], created[50];
-        
-        if (sscanf(room, "%d|%49[^|]|%49[^|]|%19[^|]|%d|%d|%49s", 
-                   &id, name, owner, status, &item_count, &participant_count, created) >= 6) {
-            
-            GtkTreeIter iter;
-            gtk_list_store_append(g_room_list_store, &iter);
-            gtk_list_store_set(g_room_list_store, &iter,
-                              0, id,
-                              1, name,
-                              2, owner,
-                              3, status,
-                              4, item_count,
-                              -1);
-        }
-        
-        room = strtok(NULL, ";");
-    }
+    // Response will be handled by receiver thread
 }
 
 // =============================================================
@@ -248,6 +202,72 @@ gboolean update_room_detail_ui(gpointer user_data) {
     
     free(data);
     return FALSE;  // Don't repeat
+}
+
+typedef struct {
+    char data[BUFFER_SIZE];
+} RoomListData;
+
+gboolean update_room_list_ui(gpointer user_data) {
+    RoomListData *data = (RoomListData*)user_data;
+    
+    // Clear existing list
+    gtk_list_store_clear(g_room_list_store);
+    
+    // Parse response: ROOM_LIST|count|data
+    char* ptr = strchr(data->data, '|');
+    if (!ptr) {
+        free(data);
+        return FALSE;
+    }
+    ptr++;
+    
+    int count = atoi(ptr);
+    ptr = strchr(ptr, '|');
+    if (!ptr) {
+        free(data);
+        return FALSE;
+    }
+    ptr++;
+    
+    // Parse room data
+    char room_data[BUFFER_SIZE];
+    strncpy(room_data, ptr, BUFFER_SIZE);
+    
+    char* room = strtok(room_data, ";");
+    while (room) {
+        int id, item_count, participant_count;
+        char name[50], owner[50], status[20], created[50];
+        
+        if (sscanf(room, "%d|%49[^|]|%49[^|]|%19[^|]|%d|%d|%49s", 
+                   &id, name, owner, status, &item_count, &participant_count, created) >= 6) {
+            
+            GtkTreeIter iter;
+            gtk_list_store_append(g_room_list_store, &iter);
+            gtk_list_store_set(g_room_list_store, &iter,
+                              0, id,
+                              1, name,
+                              2, owner,
+                              3, status,
+                              4, item_count,
+                              -1);
+        }
+        
+        room = strtok(NULL, ";");
+    }
+    
+    free(data);
+    return FALSE;  // Don't repeat
+}
+
+void process_room_list_response(char* response) {
+    if (!response || strncmp(response, "ROOM_LIST", 9) != 0) return;
+    
+    RoomListData *data = malloc(sizeof(RoomListData));
+    strncpy(data->data, response, BUFFER_SIZE);
+    
+    // Schedule UI update in main thread
+    g_idle_add(update_room_list_ui, data);
 }
 
 void process_room_detail_response(char* response) {
@@ -338,7 +358,9 @@ void* receiver_thread_func(void* arg) {
                 *newline = '\0';
                 
                 // Process this line
-                if (strncmp(line_start, "ROOM_DETAIL", 11) == 0) {
+                if (strncmp(line_start, "ROOM_LIST", 9) == 0) {
+                    process_room_list_response(line_start);
+                } else if (strncmp(line_start, "ROOM_DETAIL", 11) == 0) {
                     process_room_detail_response(line_start);
                 } else if (strncmp(line_start, "NEW_BID", 7) == 0 ||
                           strncmp(line_start, "BID_SUCCESS", 11) == 0 ||

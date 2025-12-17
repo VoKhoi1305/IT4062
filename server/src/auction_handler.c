@@ -379,16 +379,21 @@ void handle_get_my_auction_history(Client* client, char* filter, char* page_str,
     while (fgets(line, sizeof(line), file)) {
         line[strcspn(line, "\n")] = 0;
         
-        char* tokens[14];
+        // Hỗ trợ cả format cũ (14 trường) và mới (18 trường)
+        char* tokens[19];
         char* ptr = line;
-        for (int i = 0; i < 14 && ptr; i++) {
+        int token_count = 0;
+        for (int i = 0; i < 19 && ptr; i++) {
             tokens[i] = ptr;
             ptr = strchr(ptr, '|');
             if (ptr) {
                 *ptr = '\0';
                 ptr++;
             }
+            token_count++;
         }
+        
+        if (token_count < 14) continue;
         
         int item_id = atoi(tokens[0]);
         int room_id = atoi(tokens[1]);
@@ -397,7 +402,15 @@ void handle_get_my_auction_history(Client* client, char* filter, char* page_str,
         int winner_id = atoi(tokens[8]);
         double final_price = atof(tokens[9]);
         char* auction_end = tokens[11];
-        char* bid_history = tokens[13];
+        
+        // bid_history ở index 17 (format mới) hoặc index 13 (format cũ)
+        // Kiểm tra format dựa trên số lượng trường
+        char* bid_history;
+        if (token_count >= 18) {
+            bid_history = tokens[17];  // Format mới: index 17
+        } else {
+            bid_history = tokens[13];  // Format cũ: index 13 (nếu có)
+        }
         
         char history_copy[2048];
         strncpy(history_copy, bid_history, sizeof(history_copy));
