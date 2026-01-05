@@ -50,6 +50,7 @@ GtkWidget *g_room_detail_view = NULL;
 GtkListStore *g_room_detail_store = NULL;
 GtkWidget *g_room_info_label = NULL;
 GtkWidget *g_notification_bar = NULL;
+GtkWidget *g_activity_log = NULL;  // Text view for room activity/notifications
 
 // Room detail buttons (to show/hide based on role)
 GtkWidget *g_bid_button = NULL;
@@ -58,8 +59,9 @@ GtkWidget *g_create_item_button = NULL;
 GtkWidget *g_delete_item_button = NULL;
 int g_is_room_owner = 0;  // 1 if current user is room owner, 0 otherwise
 
-// User info widget
+// User info widgets
 GtkWidget *g_user_info_label = NULL;
+GtkWidget *g_room_user_info_label = NULL;  // User info in room detail page
 
 // Dialog widgets (for populating from receiver thread)
 GtkListStore *g_search_result_store = NULL;
@@ -308,6 +310,31 @@ void show_notification(const char* message, GtkMessageType type) {
     gtk_widget_show(g_notification_bar);
 }
 
+void append_activity_log(const char* message) {
+    if (!g_activity_log) return;
+    
+    GtkTextBuffer *buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(g_activity_log));
+    GtkTextIter start;
+    gtk_text_buffer_get_start_iter(buffer, &start);
+    
+    // Get current time
+    time_t now = time(NULL);
+    struct tm *tm_info = localtime(&now);
+    char timestamp[20];
+    strftime(timestamp, sizeof(timestamp), "%H:%M:%S", tm_info);
+    
+    // Format message with timestamp
+    char full_message[512];
+    snprintf(full_message, sizeof(full_message), "[%s] %s\n", timestamp, message);
+    
+    // Insert at beginning to show newest first
+    gtk_text_buffer_insert(buffer, &start, full_message, -1);
+    
+    // Auto-scroll to top to show newest
+    GtkTextMark *mark = gtk_text_buffer_get_insert(buffer);
+    gtk_text_view_scroll_to_mark(GTK_TEXT_VIEW(g_activity_log), mark, 0.0, TRUE, 0.0, 0.0);
+}
+
 // =============================================================
 // ROOM LIST FUNCTIONS
 // =============================================================
@@ -383,11 +410,8 @@ gboolean update_room_detail_ui(gpointer user_data) {
                        auction_start, auction_end, sched_start, sched_end, &duration);
             
             if (parsed >= 6) {
-                // Show ACTIVE and PENDING items, hide SOLD and CLOSED
-                if (strcmp(item_status, "SOLD") == 0 || strcmp(item_status, "CLOSED") == 0) {
-                    item = strtok(NULL, ";");
-                    continue;
-                }
+                // Display all items (ACTIVE, PENDING, SOLD, CLOSED)
+                // No filtering - show complete history
                 
                 // Parse and store auction_end time (only for ACTIVE items)
                 if (strcmp(item_status, "ACTIVE") == 0 && strlen(auction_end) > 0 && strcmp(auction_end, "NULL") != 0) {
@@ -409,7 +433,7 @@ gboolean update_room_detail_ui(gpointer user_data) {
                 }
                 
                 GtkTreeIter iter;
-                gtk_list_store_append(g_room_detail_store, &iter);
+                gtk_list_store_prepend(g_room_detail_store, &iter);
                 
                 // Color-code status: ACTIVE=green, PENDING=yellow, SOLD=red, CLOSED=gray
                 char status_display[50];
@@ -444,6 +468,10 @@ gboolean update_room_detail_ui(gpointer user_data) {
                     } else {
                         snprintf(countdown_str, sizeof(countdown_str), "⏳ Chờ kích hoạt");
                     }
+                } else if (strcmp(item_status, "SOLD") == 0) {
+                    snprintf(countdown_str, sizeof(countdown_str), "✅ Đã bán");
+                } else if (strcmp(item_status, "CLOSED") == 0) {
+                    snprintf(countdown_str, sizeof(countdown_str), "❌ Đã đóng");
                 }
                 
                 gtk_list_store_set(g_room_detail_store, &iter,
@@ -510,7 +538,7 @@ gboolean update_room_list_ui(gpointer user_data) {
                    &id, name, owner, status, &item_count, &participant_count, created) >= 6) {
             
             GtkTreeIter iter;
-            gtk_list_store_append(g_room_list_store, &iter);
+            gtk_list_store_prepend(g_room_list_store, &iter);
             gtk_list_store_set(g_room_list_store, &iter,
                               0, id,
                               1, name,
@@ -646,6 +674,10 @@ void* receiver_thread_func(void* arg) {
                     double amount;
                     char countdown[20];
                     if (sscanf(line_start, "NEW_BID|%d|%49[^|]|%lf|%19s", &item_id, bidder, &amount, countdown) >= 3) {
+                        snprintf(msg, sizeof(msg), "💰 %s đặt giá %.0f VND cho vật phẩm #%d", 
+                                bidder, amount, item_id);
+                        g_idle_add((GSourceFunc)append_activity_log, g_strdup(msg));
+                        
                         snprintf(msg, sizeof(msg), "💰 Đặt giá mới: %s đã đặt %.0f cho vật phẩm #%d (Còn %s)", 
                                 bidder, amount, item_id, countdown);
                         NotificationData *data = malloc(sizeof(NotificationData));
@@ -668,6 +700,62 @@ void* receiver_thread_func(void* arg) {
                     data->type = GTK_MESSAGE_INFO;
                     g_idle_add(show_notification_ui, data);
                     if (g_current_room_id > 0) refresh_room_detail();
+                }
+                else if (strncmp(line_start, "JOIN_ROOM_SUCCESS", 17) == 0) {
+                    // Format: JOIN_ROOM_SUCCESS|msg|room_id|room_name
+                    // Check if message contains "Chu phong" to detect room owner
+                    g_is_room_owner = (strstr(line_start, "Chu phong") != NULL) ? 1 : 0;
+                    
+                    // Show/hide buttons based on role
+                    if (g_is_room_owner) {
+                        if (g_create_item_button) gtk_widget_show(g_create_item_button);
+                        if (g_delete_item_button) gtk_widget_show(g_delete_item_button);
+                        if (g_bid_button) gtk_widget_hide(g_bid_button);
+                        if (g_buy_button) gtk_widget_hide(g_buy_button);
+                    } else {
+                        if (g_create_item_button) gtk_widget_hide(g_create_item_button);
+                        if (g_delete_item_button) gtk_widget_hide(g_delete_item_button);
+                        if (g_bid_button) gtk_widget_show(g_bid_button);
+                        if (g_buy_button) gtk_widget_show(g_buy_button);
+                    }
+                    
+                    // Switch to room detail view
+                    gtk_stack_set_visible_child_name(GTK_STACK(g_stack), "room_detail");
+                    
+                    // Update room user info label
+                    if (g_room_user_info_label) {
+                        char user_info[256];
+                        const char* role_str = (g_user_role == 1) ? "Admin" : "User";
+                        snprintf(user_info, sizeof(user_info), 
+                                 "<b>👤 %s</b> | <span foreground='blue'>%s</span>", 
+                                 g_username, role_str);
+                        gtk_label_set_markup(GTK_LABEL(g_room_user_info_label), user_info);
+                        gtk_widget_show(g_room_user_info_label);
+                    }
+                    
+                    char status[128];
+                    snprintf(status, sizeof(status), "Đã vào phòng: %s", g_current_room_name);
+                    update_status_bar(status);
+                    
+                    // Request room detail
+                    refresh_room_detail();
+                    
+                    // Clear joining flag
+                    g_joining_room = 0;
+                }
+                else if (strncmp(line_start, "JOIN_ROOM_FAIL", 14) == 0 || 
+                         strncmp(line_start, "ERROR", 5) == 0) {
+                    // Reset state on failure
+                    if (g_joining_room) {
+                        g_current_room_id = 0;
+                        g_is_room_owner = 0;
+                        memset(g_current_room_name, 0, sizeof(g_current_room_name));
+                        g_joining_room = 0;
+                        
+                        char* msg = strchr(line_start, '|');
+                        if (msg) msg++;
+                        show_message_dialog(GTK_MESSAGE_ERROR, "Lỗi", msg ? msg : "Không thể vào phòng!");
+                    }
                 }
                 else if (strncmp(line_start, "ITEM_STARTED", 12) == 0) {
                     // Format: ITEM_STARTED|item_id|item_name|start_price|auction_end|duration|sched_start|sched_end|auction_start|auction_end2|countdown
@@ -713,6 +801,10 @@ void* receiver_thread_func(void* arg) {
                         }
                     }
                     
+                    snprintf(msg, sizeof(msg), "🔔 Đấu giá bắt đầu: %s (#%d)", 
+                            item_name, item_id);
+                    g_idle_add((GSourceFunc)append_activity_log, g_strdup(msg));
+                    
                     snprintf(msg, sizeof(msg), "🔔 Đấu giá bắt đầu: %s (#%d) - Thời gian: %d phút", 
                             item_name, item_id, duration);
                     NotificationData *data = malloc(sizeof(NotificationData));
@@ -722,6 +814,17 @@ void* receiver_thread_func(void* arg) {
                     
                     if (g_current_room_id > 0) refresh_room_detail();
                 }
+                else if (strncmp(line_start, "ITEM_CREATED", 12) == 0) {
+                    // Format: ITEM_CREATED|item_id|item_name|start_price|duration|sched_start|sched_end|message
+                    char msg[512];
+                    int item_id;
+                    char item_name[100];
+                    if (sscanf(line_start, "ITEM_CREATED|%d|%99[^|]", &item_id, item_name) >= 2) {
+                        snprintf(msg, sizeof(msg), "➕ Vật phẩm mới: %s (#%d)", item_name, item_id);
+                        g_idle_add((GSourceFunc)append_activity_log, g_strdup(msg));
+                    }
+                    if (g_current_room_id > 0) refresh_room_detail();
+                }
                 else if (strncmp(line_start, "ITEM_SOLD", 9) == 0) {
                     // Format: ITEM_SOLD|item_id|winner|final_price
                     char msg[512];
@@ -729,6 +832,10 @@ void* receiver_thread_func(void* arg) {
                     char winner[50];
                     double price;
                     if (sscanf(line_start, "ITEM_SOLD|%d|%49[^|]|%lf", &item_id, winner, &price) >= 2) {
+                        snprintf(msg, sizeof(msg), "🏆 %s thắng vật phẩm #%d - %.0f VND", 
+                                winner, item_id, price);
+                        g_idle_add((GSourceFunc)append_activity_log, g_strdup(msg));
+                        
                         snprintf(msg, sizeof(msg), "🏆 Đấu giá kết thúc: %s đã thắng vật phẩm #%d với giá %.0f", 
                                 winner, item_id, price);
                         NotificationData *data = malloc(sizeof(NotificationData));
@@ -767,10 +874,18 @@ void* receiver_thread_func(void* arg) {
                     if (sscanf(ptr, "%d|%99[^|]|%19[^|]|%49[^|]|%lf|%255[^\n]", 
                               &item_id, item_name, result, winner_name, &final_price, message) >= 3) {
                         
+                        char log_msg[256];
                         if (strcmp(result, "SOLD") == 0) {
+                            snprintf(log_msg, sizeof(log_msg), "⏹️ '%s' kết thúc - Bán cho %s: %.0f VND", 
+                                    item_name, winner_name, final_price);
+                            g_idle_add((GSourceFunc)append_activity_log, g_strdup(log_msg));
+                            
                             snprintf(msg, sizeof(msg), "🏆 Đấu giá kết thúc: '%s' đã được bán cho %s với giá %.0f VND", 
                                     item_name, winner_name, final_price);
                         } else {
+                            snprintf(log_msg, sizeof(log_msg), "⏹️ '%s' kết thúc - Không có bid", item_name);
+                            g_idle_add((GSourceFunc)append_activity_log, g_strdup(log_msg));
+                            
                             snprintf(msg, sizeof(msg), "⏹️ Đấu giá kết thúc: '%s' - Không có người đặt giá", item_name);
                         }
                         
@@ -895,11 +1010,23 @@ void* receiver_thread_func(void* arg) {
                     char username[50];
                     if (sscanf(line_start, "USER_JOINED|%49[^|]", username) >= 1) {
                         char msg[256];
+                        snprintf(msg, sizeof(msg), "👋 %s vào phòng", username);
+                        g_idle_add((GSourceFunc)append_activity_log, g_strdup(msg));
+                        
                         snprintf(msg, sizeof(msg), "👋 %s đã vào phòng", username);
                         NotificationData *data = malloc(sizeof(NotificationData));
                         strncpy(data->message, msg, sizeof(data->message));
                         data->type = GTK_MESSAGE_INFO;
                         g_idle_add(show_notification_ui, data);
+                    }
+                }
+                else if (strncmp(line_start, "USER_LEFT", 9) == 0) {
+                    // Format: USER_LEFT|username|message
+                    char username[50];
+                    if (sscanf(line_start, "USER_LEFT|%49[^|]", username) >= 1) {
+                        char msg[256];
+                        snprintf(msg, sizeof(msg), "🚪 %s rời phòng", username);
+                        g_idle_add((GSourceFunc)append_activity_log, g_strdup(msg));
                     }
                 }
                 else if (strncmp(line_start, "USER_LEFT", 9) == 0) {
@@ -1282,54 +1409,18 @@ void on_join_room_clicked(GtkWidget *widget, gpointer data) {
         
         gtk_tree_model_get(model, &iter, 0, &room_id, 1, &room_name, -1);
         
-        g_joining_room = 1;  // Set flag before sending command
+        // Set flag and store room info BEFORE sending command
+        g_joining_room = 1;
+        g_current_room_id = room_id;
+        strncpy(g_current_room_name, room_name, sizeof(g_current_room_name));
         
         char cmd[50];
         snprintf(cmd, sizeof(cmd), "JOIN_ROOM|%d", room_id);
         send_command(cmd);
         
-        char* response = wait_for_response_sync();
-        if (response && strncmp(response, "JOIN_ROOM_SUCCESS", 17) == 0) {
-            g_current_room_id = room_id;
-            strncpy(g_current_room_name, room_name, sizeof(g_current_room_name));
-            
-            // Parse: JOIN_ROOM_SUCCESS|msg|room_id|room_name
-            // Check if message contains "Chu phong" to detect room owner
-            g_is_room_owner = (strstr(response, "Chu phong") != NULL) ? 1 : 0;
-            
-            // Show/hide buttons based on role
-            if (g_is_room_owner) {
-                // Owner: show create/delete item buttons, hide bid/buy buttons
-                if (g_create_item_button) gtk_widget_show(g_create_item_button);
-                if (g_delete_item_button) gtk_widget_show(g_delete_item_button);
-                if (g_bid_button) gtk_widget_hide(g_bid_button);
-                if (g_buy_button) gtk_widget_hide(g_buy_button);
-            } else {
-                // Guest: show bid/buy buttons, hide create/delete item buttons
-                if (g_create_item_button) gtk_widget_hide(g_create_item_button);
-                if (g_delete_item_button) gtk_widget_hide(g_delete_item_button);
-                if (g_bid_button) gtk_widget_show(g_bid_button);
-                if (g_buy_button) gtk_widget_show(g_buy_button);
-            }
-            
-            // Switch to room detail view
-            gtk_stack_set_visible_child_name(GTK_STACK(g_stack), "room_detail");
-            
-            char status[128];
-            snprintf(status, sizeof(status), "Đã vào phòng: %s", room_name);
-            update_status_bar(status);
-            
-            // Request room detail
-            refresh_room_detail();
-        } else {
-            // Ensure current room ID is reset on failure
-            g_current_room_id = 0;
-            g_is_room_owner = 0;
-            memset(g_current_room_name, 0, sizeof(g_current_room_name));
-            show_message_dialog(GTK_MESSAGE_ERROR, "Lỗi", response ? response : "Không thể vào phòng!");
-        }
+        // Response will be handled asynchronously by receiver_thread_func
+        // No need to wait here - receiver will handle JOIN_ROOM_SUCCESS/FAIL
         
-        g_joining_room = 0;  // Clear flag after operation completes
         g_free(room_name);
     } else {
         show_message_dialog(GTK_MESSAGE_WARNING, "Cảnh báo", "Vui lòng chọn một phòng!");
@@ -1616,6 +1707,11 @@ void on_leave_room_clicked(GtkWidget *widget, gpointer data) {
     g_current_room_id = 0;
     g_is_room_owner = 0;
     memset(g_current_room_name, 0, sizeof(g_current_room_name));
+    
+    // Hide room user info label
+    if (g_room_user_info_label) {
+        gtk_widget_hide(g_room_user_info_label);
+    }
     
     // Switch back to room list
     gtk_stack_set_visible_child_name(GTK_STACK(g_stack), "room_list");
@@ -2088,11 +2184,22 @@ GtkWidget* create_room_detail_page() {
     gtk_widget_set_no_show_all(g_notification_bar, TRUE);
     gtk_box_pack_start(GTK_BOX(box), g_notification_bar, FALSE, FALSE, 0);
     
+    // Header with room info and user info
+    GtkWidget *header_box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 20);
+    
     // Room info
     g_room_info_label = gtk_label_new("");
     gtk_label_set_use_markup(GTK_LABEL(g_room_info_label), TRUE);
     gtk_label_set_xalign(GTK_LABEL(g_room_info_label), 0);
-    gtk_box_pack_start(GTK_BOX(box), g_room_info_label, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(header_box), g_room_info_label, FALSE, FALSE, 0);
+    
+    // User info label (right-aligned)
+    g_room_user_info_label = gtk_label_new("");
+    gtk_label_set_use_markup(GTK_LABEL(g_room_user_info_label), TRUE);
+    gtk_widget_set_no_show_all(g_room_user_info_label, TRUE);
+    gtk_box_pack_end(GTK_BOX(header_box), g_room_user_info_label, FALSE, FALSE, 0);
+    
+    gtk_box_pack_start(GTK_BOX(box), header_box, FALSE, FALSE, 0);
     
     // Toolbar
     GtkWidget *toolbar_box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
@@ -2154,7 +2261,41 @@ GtkWidget* create_room_detail_page() {
                                                -1, "⏱️ Thời gian còn lại", renderer, "text", 6, NULL);
     
     gtk_container_add(GTK_CONTAINER(scrolled), g_room_detail_view);
-    gtk_box_pack_start(GTK_BOX(box), scrolled, TRUE, TRUE, 0);
+    
+    // Create a paned widget to split between item list and activity log
+    GtkWidget *paned = gtk_paned_new(GTK_ORIENTATION_VERTICAL);
+    gtk_paned_pack1(GTK_PANED(paned), scrolled, TRUE, FALSE);  // Item list takes more space
+    
+    // Activity log section
+    GtkWidget *log_frame = gtk_frame_new("📋 Hoạt động phòng");
+    GtkWidget *log_scrolled = gtk_scrolled_window_new(NULL, NULL);
+    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(log_scrolled),
+                                   GTK_POLICY_AUTOMATIC,
+                                   GTK_POLICY_AUTOMATIC);
+    gtk_scrolled_window_set_min_content_height(GTK_SCROLLED_WINDOW(log_scrolled), 100);
+    
+    g_activity_log = gtk_text_view_new();
+    gtk_text_view_set_editable(GTK_TEXT_VIEW(g_activity_log), FALSE);
+    gtk_text_view_set_cursor_visible(GTK_TEXT_VIEW(g_activity_log), FALSE);
+    gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(g_activity_log), GTK_WRAP_WORD_CHAR);
+    
+    // Set CSS for better readability
+    GtkCssProvider *css_provider = gtk_css_provider_new();
+    gtk_css_provider_load_from_data(css_provider,
+                                     "textview { font-family: monospace; font-size: 9pt; }",
+                                     -1, NULL);
+    gtk_style_context_add_provider(gtk_widget_get_style_context(g_activity_log),
+                                   GTK_STYLE_PROVIDER(css_provider),
+                                   GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+    g_object_unref(css_provider);
+    
+    gtk_container_add(GTK_CONTAINER(log_scrolled), g_activity_log);
+    gtk_container_add(GTK_CONTAINER(log_frame), log_scrolled);
+    
+    gtk_paned_pack2(GTK_PANED(paned), log_frame, FALSE, TRUE);  // Activity log at bottom
+    gtk_paned_set_position(GTK_PANED(paned), 350);  // Initial split position
+    
+    gtk_box_pack_start(GTK_BOX(box), paned, TRUE, TRUE, 0);
     
     return box;
 }

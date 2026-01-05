@@ -259,24 +259,15 @@ void activate_next_item_in_room(int room_id) {
             // Tính thời gian kết thúc
             time_t end_time;
             
-            // Nếu có scheduled_end (format yyyy-mm-dd HH:MM:SS), sử dụng nó làm giới hạn
+            // Luôn sử dụng duration để tính end_time
+            // Scheduled times chỉ dùng để xác định khi nào item được kích hoạt, không giới hạn duration
+            // Duration is in seconds
+            end_time = now + next_item_duration;
+            
+            // Copy scheduled times vào item (nếu có)
             if (strlen(next_scheduled_end) >= 19) {
-                struct tm end_tm = {0};
-                if (strptime(next_scheduled_end, "%Y-%m-%d %H:%M:%S", &end_tm) != NULL) {
-                    time_t scheduled_deadline = mktime(&end_tm);
-                    
-                    // Chọn thời gian kết thúc: min(now + duration, scheduled_end)
-                    time_t duration_end = now + (next_item_duration * 60);
-                    end_time = (duration_end < scheduled_deadline) ? duration_end : scheduled_deadline;
-                } else {
-                    end_time = now + (next_item_duration * 60);
-                }
-                
-                // Copy scheduled times vào item
                 strncpy(item->scheduled_start, next_scheduled_start, sizeof(item->scheduled_start) - 1);
                 strncpy(item->scheduled_end, next_scheduled_end, sizeof(item->scheduled_end) - 1);
-            } else {
-                end_time = now + (next_item_duration * 60);
             }
             
             tm_info = localtime(&end_time);

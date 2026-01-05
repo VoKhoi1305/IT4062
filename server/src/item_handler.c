@@ -773,6 +773,22 @@ void handle_create_item(Client* client, char* room_id_str, char* item_name,
                  "CREATE_ITEM_SUCCESS|Tao vat pham thanh cong|%d", new_item_id);
     }
     send_message(client, response);
+    
+    // Broadcast cho những người trong phòng
+    char broadcast_msg[512];
+    if (strlen(sched_start) > 0) {
+        snprintf(broadcast_msg, sizeof(broadcast_msg),
+                 "ITEM_CREATED|%d|%s|%.0f|%d|%s|%s|Vat pham moi '%s' da duoc them vao phong (khung gio: %s - %s)",
+                 new_item_id, item_name, start_price, duration, sched_start, sched_end, 
+                 item_name, sched_start, sched_end);
+    } else {
+        snprintf(broadcast_msg, sizeof(broadcast_msg),
+                 "ITEM_CREATED|%d|%s|%.0f|%d|||Vat pham moi '%s' da duoc them vao phong",
+                 new_item_id, item_name, start_price, duration, item_name);
+    }
+    broadcast_to_room(room_id, broadcast_msg, client->socket_fd);
+    
+    printf("Item %d '%s' created in room %d by user %d\n", new_item_id, item_name, room_id, client->user_id);
 }
 
 // Chuyển chuỗi thành chữ thường

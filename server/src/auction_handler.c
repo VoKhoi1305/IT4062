@@ -159,55 +159,27 @@ void handle_place_bid(Client* client, char* item_id_str, char* bid_amount_str) {
         }
     }
     
-    // --- LỖI 5: XỬ LÝ GIA HẠN 30 GIÂY (LUÔN RESET KHI CÓ BID) ---
+    // --- TIME EXTENSION: 30 SECOND RULE ---
     time_t now = time(NULL);
     time_t end_time = parse_time_string(item->auction_end);
-    time_t hard_deadline = get_hard_deadline(item);
     int remaining = (int)difftime(end_time, now);
     
     int time_extended = 0;
-    // Luật 30s: Nếu còn dưới 30s, reset = now + 30s (không vượt scheduled_end)
+    // Rule: If less than 30s remaining, extend to now + 30s
     if (remaining <= 30 && remaining > 0) {
-        // Tính thời gian mới: hiện tại + 30s
+        // Reset time to now + 30s
         time_t new_end_time = now + 30;
+        item->extend_count++;
         
-        // Kiểm tra có vượt quá khung giờ cứng không
-        if (hard_deadline > 0 && new_end_time > hard_deadline) {
-            // Không tăng nếu vượt quá scheduled_end
-            int time_until_deadline = (int)difftime(hard_deadline, now);
-            if (time_until_deadline <= 0) {
-                // Đã hết khung giờ, không gia hạn
-                printf("Cannot extend: hard deadline reached for item %d\n", item_id);
-            } else {
-                // Reset đến hard_deadline (không vượt quá)
-                new_end_time = hard_deadline;
-                item->extend_count++;
-                
-                struct tm* tm_info = localtime(&new_end_time);
-                strftime(item->auction_end, sizeof(item->auction_end),
-                         "%Y-%m-%d %H:%M:%S", tm_info);
-                
-                update_timer(item_id, new_end_time);
-                time_extended = 2; // Đánh dấu gia hạn giới hạn
-                
-                printf("Time reset (limited) for item %d, new end: %s (hard limit)\n",
-                       item_id, item->auction_end);
-            }
-        } else {
-            // Reset time = now + 30s
-            end_time = new_end_time;
-            item->extend_count++;
-            
-            struct tm* tm_info = localtime(&end_time);
-            strftime(item->auction_end, sizeof(item->auction_end),
-                     "%Y-%m-%d %H:%M:%S", tm_info);
-            
-            update_timer(item_id, end_time);
-            time_extended = 1;
-            
-            printf("Time reset to +30s for item %d, new end: %s, extend_count: %d\n",
-                   item_id, item->auction_end, item->extend_count);
-        }
+        struct tm* tm_info = localtime(&new_end_time);
+        strftime(item->auction_end, sizeof(item->auction_end),
+                 "%Y-%m-%d %H:%M:%S", tm_info);
+        
+        update_timer(item_id, new_end_time);
+        time_extended = 1;
+        
+        printf("Time extended +30s for item %d, new end: %s, extend_count: %d\n",
+               item_id, item->auction_end, item->extend_count);
     }
     
     // Cập nhật item
@@ -245,12 +217,6 @@ void handle_place_bid(Client* client, char* item_id_str, char* bid_amount_str) {
         snprintf(extend_msg, sizeof(extend_msg),
                  "TIME_EXTENDED|%d|%s|%s|%d",
                  item_id, item->item_name, item->auction_end, item->extend_count);
-        broadcast_to_room(client->current_room_id, extend_msg, -1);
-    } else if (time_extended == 2) {
-        char extend_msg[512];
-        snprintf(extend_msg, sizeof(extend_msg),
-                 "TIME_EXTENDED_LIMITED|%d|%s|%s|Da dat gioi han khung gio",
-                 item_id, item->item_name, item->auction_end);
         broadcast_to_room(client->current_room_id, extend_msg, -1);
     }
 }
