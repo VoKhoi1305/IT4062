@@ -116,6 +116,12 @@ int main() {
     int listening_socket;
     struct sockaddr_in server_addr;
 
+    // Thiết lập timezone UTC+7 (Múi giờ Việt Nam)
+    setenv("TZ", "Asia/Ho_Chi_Minh", 1);
+    tzset();
+    
+    printf("Server starting in timezone: UTC+7 (Asia/Ho_Chi_Minh)\n");
+    
     // Khởi tạo timer system
     init_timer_system();
 

@@ -473,9 +473,67 @@ void auto_activate_first_item_if_needed(int room_id) {
     }
     fclose(file);
     
-    // Nếu không có item active nhưng có item pending, kích hoạt item đầu tiên
+    // Nếu không có item active nhưng có item pending, kiểm tra scheduled_start trước khi kích hoạt
     if (!has_active_item && has_pending_item) {
-        activate_next_item_in_room(room_id);
+        // Kiểm tra xem có item pending nào đã đến scheduled_start không
+        file = fopen(ITEMS_FILE, "r");
+        if (file == NULL) return;
+        
+        time_t now = time(NULL);
+        int can_activate = 0;
+        
+        while (fgets(line, sizeof(line), file)) {
+            int item_id, item_room_id;
+            char status[20], sched_start[30];
+            
+            // Parse: item_id|room_id|name|desc|start|current|buynow|status|winner|final|auc_start|auc_end|extend|duration|created|sched_start|sched_end|bids
+            char* ptr = line;
+            char* tokens[18];
+            int token_count = 0;
+            
+            // Tokenize by |
+            while (*ptr && token_count < 18) {
+                tokens[token_count++] = ptr;
+                char* next = strchr(ptr, '|');
+                if (next) {
+                    *next = '\0';
+                    ptr = next + 1;
+                } else {
+                    break;
+                }
+            }
+            
+            if (token_count >= 16) {
+                item_id = atoi(tokens[0]);
+                item_room_id = atoi(tokens[1]);
+                strncpy(status, tokens[7], sizeof(status) - 1);
+                strncpy(sched_start, tokens[15], sizeof(sched_start) - 1);
+                
+                if (item_room_id == room_id && strcmp(status, ITEM_STATUS_PENDING) == 0) {
+                    // Nếu không có scheduled_start hoặc scheduled_start đã đến, có thể activate
+                    if (strlen(sched_start) == 0 || strcmp(sched_start, "NULL") == 0) {
+                        can_activate = 1;
+                        break;
+                    } else {
+                        // Parse scheduled_start và so sánh với hiện tại
+                        struct tm start_tm = {0};
+                        if (strptime(sched_start, "%Y-%m-%d %H:%M:%S", &start_tm) != NULL) {
+                            time_t start_time = mktime(&start_tm);
+                            if (now >= start_time) {
+                                can_activate = 1;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        fclose(file);
+        
+        // Chỉ activate nếu có item đủ điều kiện
+        if (can_activate) {
+            activate_next_item_in_room(room_id);
+        }
     }
 }
 
@@ -714,6 +772,13 @@ void handle_join_room(Client* client, char* room_id_str) {
                  "JOIN_ROOM_SUCCESS|Chao mung Chu phong|%d|%s", 
                  room_id, room->room_name);
         send_message(client, response);
+        
+        // Broadcast cho những người khác trong phòng
+        char broadcast_msg[256];
+        snprintf(broadcast_msg, sizeof(broadcast_msg), 
+                 "USER_JOINED|%s|vua tham gia phong", client->username);
+        broadcast_to_room(room_id, broadcast_msg, client->socket_fd);
+        
         return;
     }
     
