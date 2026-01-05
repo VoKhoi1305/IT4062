@@ -82,9 +82,8 @@ int main(int argc, char *argv[]) {
     
     gtk_container_add(GTK_CONTAINER(g_main_window), main_box);
     
-    // Start receiver thread
-    g_thread_running = 1;
-    pthread_create(&g_receiver_thread, NULL, receiver_thread_func, NULL);
+    // DON'T start receiver thread here - will be started after login
+    // Receiver thread should only run when user is logged in
     
     // Setup auto-refresh timer for room detail
     g_timeout_add(REFRESH_INTERVAL, auto_refresh_room, NULL);

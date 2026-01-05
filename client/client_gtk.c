@@ -383,14 +383,14 @@ gboolean update_room_detail_ui(gpointer user_data) {
                        auction_start, auction_end, sched_start, sched_end, &duration);
             
             if (parsed >= 6) {
-                // Only show ACTIVE items (filter out PENDING, SOLD, CLOSED)
-                if (strcmp(item_status, "ACTIVE") != 0) {
+                // Show ACTIVE and PENDING items, hide SOLD and CLOSED
+                if (strcmp(item_status, "SOLD") == 0 || strcmp(item_status, "CLOSED") == 0) {
                     item = strtok(NULL, ";");
                     continue;
                 }
                 
-                // Parse and store auction_end time
-                if (strlen(auction_end) > 0 && strcmp(auction_end, "NULL") != 0) {
+                // Parse and store auction_end time (only for ACTIVE items)
+                if (strcmp(item_status, "ACTIVE") == 0 && strlen(auction_end) > 0 && strcmp(auction_end, "NULL") != 0) {
                     struct tm tm_info;
                     memset(&tm_info, 0, sizeof(tm_info));
                     if (sscanf(auction_end, "%d-%d-%d %d:%d:%d",
@@ -425,10 +425,24 @@ gboolean update_room_detail_ui(gpointer user_data) {
                 
                 // Format initial countdown
                 char countdown_str[50] = "⏱️ --:--";
-                if (strlen(auction_end) > 0 && strcmp(auction_end, "NULL") != 0) {
-                    gpointer end_time_ptr = g_hash_table_lookup(g_item_timers, GINT_TO_POINTER(item_id));
-                    if (end_time_ptr) {
-                        format_countdown(GPOINTER_TO_INT(end_time_ptr), countdown_str, sizeof(countdown_str));
+                if (strcmp(item_status, "ACTIVE") == 0) {
+                    // For ACTIVE items, show countdown
+                    if (strlen(auction_end) > 0 && strcmp(auction_end, "NULL") != 0) {
+                        gpointer end_time_ptr = g_hash_table_lookup(g_item_timers, GINT_TO_POINTER(item_id));
+                        if (end_time_ptr) {
+                            format_countdown(GPOINTER_TO_INT(end_time_ptr), countdown_str, sizeof(countdown_str));
+                        }
+                    }
+                } else if (strcmp(item_status, "PENDING") == 0) {
+                    // For PENDING items, show waiting status with start time (HH:MM only)
+                    if (strlen(sched_start) > 0 && strcmp(sched_start, "NULL") != 0 && strlen(sched_start) >= 16) {
+                        // Extract time part (HH:MM) from "YYYY-MM-DD HH:MM:SS"
+                        char time_only[10];
+                        strncpy(time_only, sched_start + 11, 5);  // Skip "YYYY-MM-DD " and take "HH:MM"
+                        time_only[5] = '\0';
+                        snprintf(countdown_str, sizeof(countdown_str), "⏳ Bắt đầu %s", time_only);
+                    } else {
+                        snprintf(countdown_str, sizeof(countdown_str), "⏳ Chờ kích hoạt");
                     }
                 }
                 
@@ -656,18 +670,56 @@ void* receiver_thread_func(void* arg) {
                     if (g_current_room_id > 0) refresh_room_detail();
                 }
                 else if (strncmp(line_start, "ITEM_STARTED", 12) == 0) {
-                    // Format: ITEM_STARTED|item_id|item_name|duration
+                    // Format: ITEM_STARTED|item_id|item_name|start_price|auction_end|duration|sched_start|sched_end|auction_start|auction_end2|countdown
                     char msg[512];
-                    int item_id;
-                    char item_name[100], duration[20];
-                    if (sscanf(line_start, "ITEM_STARTED|%d|%99[^|]|%19s", &item_id, item_name, duration) >= 2) {
-                        snprintf(msg, sizeof(msg), "🔔 Đấu giá bắt đầu: %s (#%d) - Thời gian: %s", 
-                                item_name, item_id, duration);
-                        NotificationData *data = malloc(sizeof(NotificationData));
-                        strncpy(data->message, msg, sizeof(data->message));
-                        data->type = GTK_MESSAGE_WARNING;
-                        g_idle_add(show_notification_ui, data);
+                    int item_id, duration, countdown;
+                    char item_name[100], auction_end[30];
+                    double start_price;
+                    
+                    // Try to parse full format with auction_end time
+                    char* ptr = line_start + 13; // Skip "ITEM_STARTED|"
+                    char temp_buf[1024];
+                    strncpy(temp_buf, ptr, sizeof(temp_buf) - 1);
+                    temp_buf[sizeof(temp_buf) - 1] = '\0';
+                    
+                    // Parse: item_id|item_name|start_price|auction_end|duration|...
+                    char* tok = strtok(temp_buf, "|");
+                    if (tok) item_id = atoi(tok);
+                    tok = strtok(NULL, "|");
+                    if (tok) strncpy(item_name, tok, sizeof(item_name) - 1);
+                    tok = strtok(NULL, "|");
+                    if (tok) start_price = atof(tok);
+                    tok = strtok(NULL, "|");
+                    if (tok) strncpy(auction_end, tok, sizeof(auction_end) - 1);
+                    tok = strtok(NULL, "|");
+                    if (tok) duration = atoi(tok);
+                    
+                    // Parse and store auction_end time in hash table
+                    if (strlen(auction_end) > 0 && strcmp(auction_end, "NULL") != 0) {
+                        struct tm tm_info;
+                        memset(&tm_info, 0, sizeof(tm_info));
+                        if (sscanf(auction_end, "%d-%d-%d %d:%d:%d",
+                                   &tm_info.tm_year, &tm_info.tm_mon, &tm_info.tm_mday,
+                                   &tm_info.tm_hour, &tm_info.tm_min, &tm_info.tm_sec) == 6) {
+                            tm_info.tm_year -= 1900;
+                            tm_info.tm_mon -= 1;
+                            time_t end_time = mktime(&tm_info);
+                            
+                            // Store in hash table for countdown timer
+                            if (!g_item_timers) {
+                                g_item_timers = g_hash_table_new(g_direct_hash, g_direct_equal);
+                            }
+                            g_hash_table_insert(g_item_timers, GINT_TO_POINTER(item_id), GINT_TO_POINTER((int)end_time));
+                        }
                     }
+                    
+                    snprintf(msg, sizeof(msg), "🔔 Đấu giá bắt đầu: %s (#%d) - Thời gian: %d phút", 
+                            item_name, item_id, duration);
+                    NotificationData *data = malloc(sizeof(NotificationData));
+                    strncpy(data->message, msg, sizeof(data->message));
+                    data->type = GTK_MESSAGE_WARNING;
+                    g_idle_add(show_notification_ui, data);
+                    
                     if (g_current_room_id > 0) refresh_room_detail();
                 }
                 else if (strncmp(line_start, "ITEM_SOLD", 9) == 0) {
@@ -700,6 +752,40 @@ void* receiver_thread_func(void* arg) {
                         data->type = GTK_MESSAGE_INFO;
                         g_idle_add(show_notification_ui, data);
                     }
+                    if (g_current_room_id > 0) refresh_room_detail();
+                }
+                else if (strncmp(line_start, "AUCTION_ENDED", 13) == 0) {
+                    // Format: AUCTION_ENDED|item_id|item_name|result|winner_name|final_price|message
+                    // result can be: SOLD or CLOSED
+                    char msg[512];
+                    int item_id;
+                    char item_name[100], result[20], winner_name[50], message[256];
+                    double final_price = 0;
+                    
+                    // Parse the auction ended message
+                    char* ptr = line_start + 14; // Skip "AUCTION_ENDED|"
+                    if (sscanf(ptr, "%d|%99[^|]|%19[^|]|%49[^|]|%lf|%255[^\n]", 
+                              &item_id, item_name, result, winner_name, &final_price, message) >= 3) {
+                        
+                        if (strcmp(result, "SOLD") == 0) {
+                            snprintf(msg, sizeof(msg), "🏆 Đấu giá kết thúc: '%s' đã được bán cho %s với giá %.0f VND", 
+                                    item_name, winner_name, final_price);
+                        } else {
+                            snprintf(msg, sizeof(msg), "⏹️ Đấu giá kết thúc: '%s' - Không có người đặt giá", item_name);
+                        }
+                        
+                        NotificationData *data = malloc(sizeof(NotificationData));
+                        strncpy(data->message, msg, sizeof(data->message));
+                        data->type = GTK_MESSAGE_INFO;
+                        g_idle_add(show_notification_ui, data);
+                    }
+                    
+                    // Remove timer for this item
+                    if (g_item_timers) {
+                        g_hash_table_remove(g_item_timers, GINT_TO_POINTER(item_id));
+                    }
+                    
+                    // Refresh room detail to update item list
                     if (g_current_room_id > 0) refresh_room_detail();
                 }
                 else if (strncmp(line_start, "AUCTION_WARNING", 15) == 0) {
@@ -769,12 +855,40 @@ void* receiver_thread_func(void* arg) {
                     g_idle_add(show_notification_ui, data);
                     if (g_current_room_id > 0) refresh_room_detail();
                 }
+                else if (strncmp(line_start, "CREATE_ITEM_FAIL", 16) == 0) {
+                    // Format: CREATE_ITEM_FAIL|message
+                    char* msg_ptr = strchr(line_start, '|');
+                    char error_msg[256];
+                    if (msg_ptr) {
+                        snprintf(error_msg, sizeof(error_msg), "❌ Tạo vật phẩm thất bại: %s", msg_ptr + 1);
+                    } else {
+                        snprintf(error_msg, sizeof(error_msg), "❌ Tạo vật phẩm thất bại!");
+                    }
+                    NotificationData *data = malloc(sizeof(NotificationData));
+                    strncpy(data->message, error_msg, sizeof(data->message));
+                    data->type = GTK_MESSAGE_ERROR;
+                    g_idle_add(show_notification_ui, data);
+                }
                 else if (strncmp(line_start, "DELETE_ITEM_SUCCESS", 19) == 0) {
                     NotificationData *data = malloc(sizeof(NotificationData));
                     strncpy(data->message, "✅ Xóa vật phẩm thành công!", sizeof(data->message));
                     data->type = GTK_MESSAGE_INFO;
                     g_idle_add(show_notification_ui, data);
                     if (g_current_room_id > 0) refresh_room_detail();
+                }
+                else if (strncmp(line_start, "DELETE_ITEM_FAIL", 16) == 0) {
+                    // Format: DELETE_ITEM_FAIL|message
+                    char* msg_ptr = strchr(line_start, '|');
+                    char error_msg[256];
+                    if (msg_ptr) {
+                        snprintf(error_msg, sizeof(error_msg), "❌ Xóa thất bại: %s", msg_ptr + 1);
+                    } else {
+                        snprintf(error_msg, sizeof(error_msg), "❌ Xóa vật phẩm thất bại!");
+                    }
+                    NotificationData *data = malloc(sizeof(NotificationData));
+                    strncpy(data->message, error_msg, sizeof(data->message));
+                    data->type = GTK_MESSAGE_ERROR;
+                    g_idle_add(show_notification_ui, data);
                 }
                 else if (strncmp(line_start, "USER_JOINED", 11) == 0) {
                     // Format: USER_JOINED|username|message
@@ -1434,9 +1548,14 @@ void on_create_item_clicked(GtkWidget *widget, gpointer data) {
                     strlen(buy_now_str) > 0 ? buy_now_str : "0",
                     start_time,
                     end_time);
+            
+            printf("[DEBUG] Creating item: name=%s, price=%s, duration=%s, start=%s, end=%s\n",
+                   name, start_price_str, duration_str, start_time, end_time);
+            printf("[DEBUG] Sending command: %s\n", cmd);
+            
             send_command(cmd);
             
-            update_status_bar("Đã gửi lệnh tạo vật phẩm");
+            update_status_bar("Đã gửi lệnh tạo vật phẩm...");
         } else {
             show_error_dialog("Vui lòng nhập đầy đủ thông tin bắt buộc!");
         }
@@ -1456,7 +1575,7 @@ void on_delete_item_clicked(GtkWidget *widget, gpointer data) {
     GtkTreeIter iter;
     
     if (!gtk_tree_selection_get_selected(selection, &model, &iter)) {
-        show_error_dialog("Vui lòng chọn một vật phẩm!");
+        show_error_dialog("Vui lòng chọn một vật phẩm để xóa!");
         return;
     }
     
@@ -1464,8 +1583,10 @@ void on_delete_item_clicked(GtkWidget *widget, gpointer data) {
     char *item_name;
     gtk_tree_model_get(model, &iter, 0, &item_id, 1, &item_name, -1);
     
+    printf("[DEBUG] Deleting item: id=%d, name=%s\n", item_id, item_name);
+    
     char msg[256];
-    snprintf(msg, sizeof(msg), "Bạn có chắc muốn xóa vật phẩm '%s'?", item_name);
+    snprintf(msg, sizeof(msg), "Bạn có chắc muốn xóa vật phẩm '%s' (ID: %d)?", item_name, item_id);
     
     GtkWidget *dialog = gtk_message_dialog_new(GTK_WINDOW(g_main_window),
                                                GTK_DIALOG_MODAL,
@@ -1478,9 +1599,12 @@ void on_delete_item_clicked(GtkWidget *widget, gpointer data) {
     if (result == GTK_RESPONSE_YES) {
         char cmd[100];
         snprintf(cmd, sizeof(cmd), "DELETE_ITEM|%d", item_id);
+        printf("[DEBUG] Sending delete command: %s\n", cmd);
         send_command(cmd);
         
-        update_status_bar("Đã gửi lệnh xóa vật phẩm");
+        update_status_bar("Đã gửi lệnh xóa vật phẩm...");
+    } else {
+        printf("[DEBUG] User cancelled delete\n");
     }
     
     g_free(item_name);
@@ -1760,13 +1884,12 @@ void on_admin_panel_clicked(GtkWidget *widget, gpointer data) {
 }
 
 gboolean auto_refresh_room(gpointer data) {
-    if (g_current_room_id > 0) {
-        const gchar *current_page = gtk_stack_get_visible_child_name(GTK_STACK(g_stack));
-        if (strcmp(current_page, "room_detail") == 0) {
-            refresh_room_detail();
-        }
-    }
-    return TRUE;  // Continue calling
+    // Auto-refresh is disabled because:
+    // 1. Countdown timer already updates every second
+    // 2. Server broadcasts all changes (NEW_BID, ITEM_STARTED, AUCTION_ENDED)
+    // 3. Receiver thread handles broadcasts and auto-refreshes when needed
+    // This prevents unnecessary network traffic and UI reloading
+    return TRUE;  // Continue calling (but do nothing)
 }
 
 // =============================================================

@@ -8,7 +8,7 @@
 // CONSTANTS
 // =============================================================
 
-#define PORT 8888
+#define PORT 8080
 #define BUFFER_SIZE 8192
 #define REFRESH_INTERVAL 5000  // milliseconds
 

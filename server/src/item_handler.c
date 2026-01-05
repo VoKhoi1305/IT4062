@@ -324,6 +324,7 @@
 #include "room_handler.h"
 #include "client_handler.h"
 #include "server.h"
+#include "timer_handler.h"
 #include <ctype.h>
 #include <time.h>
 
@@ -606,22 +607,25 @@ void handle_delete_item(Client* client, char* item_id_str) {
         return;
     }
     
-    // Kiểm tra trạng thái: chỉ được xóa item PENDING
-    if (strcmp(item->status, ITEM_STATUS_PENDING) != 0) {
-        if (strcmp(item->status, ITEM_STATUS_ACTIVE) == 0) {
-            send_message(client, "DELETE_ITEM_FAIL|Khong the xoa vat pham dang dau gia");
-        } else if (strcmp(item->status, ITEM_STATUS_SOLD) == 0) {
-            send_message(client, "DELETE_ITEM_FAIL|Khong the xoa vat pham da ban");
-        } else {
-            send_message(client, "DELETE_ITEM_FAIL|Khong the xoa vat pham da dong");
-        }
+    // Kiểm tra không thể xóa item đã bán hoặc đã đóng
+    if (strcmp(item->status, ITEM_STATUS_SOLD) == 0) {
+        send_message(client, "DELETE_ITEM_FAIL|Khong the xoa vat pham da ban");
+        return;
+    }
+    if (strcmp(item->status, ITEM_STATUS_CLOSED) == 0) {
+        send_message(client, "DELETE_ITEM_FAIL|Khong the xoa vat pham da dong");
         return;
     }
     
-    // Kiểm tra không có ai đặt giá
+    // Kiểm tra không có ai đặt giá (áp dụng cho cả PENDING và ACTIVE)
     if (strlen(item->bid_history) > 0) {
         send_message(client, "DELETE_ITEM_FAIL|Khong the xoa vat pham da co nguoi dat gia");
         return;
+    }
+    
+    // Nếu item đang ACTIVE, cần remove timer và broadcast
+    if (strcmp(item->status, ITEM_STATUS_ACTIVE) == 0) {
+        remove_timer(item_id);
     }
     
     // Thực hiện xóa
@@ -718,11 +722,11 @@ void handle_create_item(Client* client, char* room_id_str, char* item_name,
         }
         
         // Kiểm tra duration có phù hợp với khung giờ không
-        int slot_duration = (int)difftime(end_time, start_time) / 60;
+        int slot_duration = (int)difftime(end_time, start_time);  // in seconds
         if (duration > slot_duration) {
             char err_msg[256];
             snprintf(err_msg, sizeof(err_msg), 
-                     "CREATE_ITEM_FAIL|Thoi luong %d phut vuot qua khung gio (%d phut)", 
+                     "CREATE_ITEM_FAIL|Thoi luong %d giay vuot qua khung gio (%d giay)", 
                      duration, slot_duration);
             send_message(client, err_msg);
             return;
