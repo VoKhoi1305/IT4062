@@ -269,8 +269,7 @@ void get_datetime_from_picker(GtkWidget *picker_vbox, char* output_buffer, int b
         int minute = strlen(minute_str) > 0 ? atoi(minute_str) : 0;
         int second = strlen(second_str) > 0 ? atoi(second_str) : 0;
         
-        snprintf(output_buffer, buffer_size, "%04d-%02d-%02d %02d:%02d:%02d", 
-                year, month, day, hour, minute, second);
+        snprintf(output_buffer, buffer_size, "%04d-%02d-%02d %02d:%02d:%02d", year, month, day, hour, minute, second);
     } else {
         output_buffer[0] = '\0';
     }
@@ -666,11 +665,13 @@ gboolean update_room_detail_ui(gpointer user_data) {
                 // Display all items (ACTIVE, PENDING, SOLD, CLOSED)
                 // No filtering - show complete history
                 
-                // Parse and store sched_end time (only for ACTIVE items)
-                if (strcmp(item_status, "ACTIVE") == 0 && strlen(sched_end) > 0 && strcmp(sched_end, "NULL") != 0) {
+                // Parse and store auction_end time (only for ACTIVE items)
+                // NOTE: countdown should reflect auction duration (auction_end - now),
+                // not the scheduled window (sched_end - sched_start).
+                if (strcmp(item_status, "ACTIVE") == 0 && strlen(auction_end) > 0 && strcmp(auction_end, "NULL") != 0) {
                     struct tm tm_info;
                     memset(&tm_info, 0, sizeof(tm_info));
-                    if (sscanf(sched_end, "%d-%d-%d %d:%d:%d",
+                    if (sscanf(auction_end, "%d-%d-%d %d:%d:%d",
                                &tm_info.tm_year, &tm_info.tm_mon, &tm_info.tm_mday,
                                &tm_info.tm_hour, &tm_info.tm_min, &tm_info.tm_sec) == 6) {
                         tm_info.tm_year -= 1900;
@@ -704,7 +705,7 @@ gboolean update_room_detail_ui(gpointer user_data) {
                 char countdown_str[50] = "--:--";
                 if (strcmp(item_status, "ACTIVE") == 0) {
                     // For ACTIVE items, show countdown
-                    if (strlen(sched_end) > 0 && strcmp(sched_end, "NULL") != 0) {
+                    if (strlen(auction_end) > 0 && strcmp(auction_end, "NULL") != 0) {
                         gpointer end_time_ptr = g_hash_table_lookup(g_item_timers, GINT_TO_POINTER(item_id));
                         if (end_time_ptr) {
                             format_countdown(GPOINTER_TO_INT(end_time_ptr), countdown_str, sizeof(countdown_str));
@@ -737,7 +738,7 @@ gboolean update_room_detail_ui(gpointer user_data) {
                                   6, (int)buy_now_price,
                                   7, countdown_str,
                                   8, auction_start,
-                                  9, sched_end,
+                                  9, auction_end,
                                   10, sched_start,
                                   11, duration,
                                   -1);
@@ -1097,24 +1098,110 @@ void* receiver_thread_func(void* arg) {
                 } 
                 // Handle all notification message types
                 else if (strncmp(line_start, "NEW_BID", 7) == 0) {
-                    // Format: NEW_BID|item_id|bidder|amount|countdown
+                    // Server (current) format:
+                    // NEW_BID|item_id|item_name|bidder|amount|timestamp|auction_start|auction_end|sched_start|sched_end|countdown
+                    // Older format (fallback): NEW_BID|item_id|bidder|amount|countdown
                     char msg[512];
-                    int item_id;
-                    char bidder[50];
-                    double amount;
-                    char countdown[20];
-                    if (sscanf(line_start, "NEW_BID|%d|%49[^|]|%lf|%19s", &item_id, bidder, &amount, countdown) >= 3) {
-                        snprintf(msg, sizeof(msg), "%s đặt giá %.0f VND cho vật phẩm #%d", 
-                                bidder, amount, item_id);
+
+                    int item_id = 0;
+                    char item_name[200] = "";
+                    char bidder[50] = "";
+                    double amount = 0;
+                    char auction_end[30] = "";
+                    int countdown_sec = -1;
+
+                    char tmp[1024];
+                    strncpy(tmp, line_start, sizeof(tmp) - 1);
+                    tmp[sizeof(tmp) - 1] = '\0';
+                    char *cursor = tmp;
+
+                    // Consume prefix
+                    char *tok = get_token_preserve_empty(&cursor); // NEW_BID
+                    (void)tok;
+
+                    // Try full format
+                    tok = get_token_preserve_empty(&cursor);
+                    if (tok) item_id = atoi(tok);
+                    tok = get_token_preserve_empty(&cursor);
+                    if (tok) {
+                        strncpy(item_name, tok, sizeof(item_name) - 1);
+                        item_name[sizeof(item_name) - 1] = '\0';
+                    }
+                    tok = get_token_preserve_empty(&cursor);
+                    if (tok) {
+                        strncpy(bidder, tok, sizeof(bidder) - 1);
+                        bidder[sizeof(bidder) - 1] = '\0';
+                    }
+                    tok = get_token_preserve_empty(&cursor);
+                    if (tok && *tok) amount = atof(tok);
+
+                    // Skip timestamp + auction_start
+                    (void)get_token_preserve_empty(&cursor);
+                    (void)get_token_preserve_empty(&cursor);
+
+                    tok = get_token_preserve_empty(&cursor);
+                    if (tok) {
+                        strncpy(auction_end, tok, sizeof(auction_end) - 1);
+                        auction_end[sizeof(auction_end) - 1] = '\0';
+                    }
+
+                    // Skip sched_start, sched_end
+                    (void)get_token_preserve_empty(&cursor);
+                    (void)get_token_preserve_empty(&cursor);
+
+                    tok = get_token_preserve_empty(&cursor);
+                    if (tok && *tok) countdown_sec = atoi(tok);
+
+                    // If full parse failed, fall back to old short format
+                    if (item_id <= 0 || bidder[0] == '\0' || amount <= 0) {
+                        item_id = 0;
+                        bidder[0] = '\0';
+                        amount = 0;
+                        countdown_sec = -1;
+                        char countdown_str[20] = "";
+                        if (sscanf(line_start, "NEW_BID|%d|%49[^|]|%lf|%19s", &item_id, bidder, &amount, countdown_str) >= 3) {
+                            // best-effort: countdown might be mm:ss or seconds
+                        }
+                    }
+
+                    if (item_id > 0 && bidder[0] != '\0' && amount > 0) {
+                        if (item_name[0] != '\0') {
+                            snprintf(msg, sizeof(msg), "%s đặt giá %.0f VND cho %s (#%d)", bidder, amount, item_name, item_id);
+                        } else {
+                            snprintf(msg, sizeof(msg), "%s đặt giá %.0f VND cho vật phẩm #%d", bidder, amount, item_id);
+                        }
                         g_idle_add((GSourceFunc)append_activity_log, g_strdup(msg));
-                        
-                        snprintf(msg, sizeof(msg), "Đặt giá mới: %s đã đặt %.0f cho vật phẩm #%d (Còn %s)", 
-                                bidder, amount, item_id, countdown);
+
+                        if (countdown_sec >= 0) {
+                            snprintf(msg, sizeof(msg), "Đặt giá mới: %s đã đặt %.0f cho vật phẩm #%d (Còn %d giây)",
+                                     bidder, amount, item_id, countdown_sec);
+                        } else {
+                            snprintf(msg, sizeof(msg), "Đặt giá mới: %s đã đặt %.0f cho vật phẩm #%d",
+                                     bidder, amount, item_id);
+                        }
                         NotificationData *data = malloc(sizeof(NotificationData));
                         strncpy(data->message, msg, sizeof(data->message));
                         data->type = GTK_MESSAGE_INFO;
                         g_idle_add(show_notification_ui, data);
+
+                        // Update countdown end-time if server provided auction_end
+                        if (auction_end[0] != '\0' && strcmp(auction_end, "NULL") != 0) {
+                            struct tm tm_info;
+                            memset(&tm_info, 0, sizeof(tm_info));
+                            if (sscanf(auction_end, "%d-%d-%d %d:%d:%d",
+                                       &tm_info.tm_year, &tm_info.tm_mon, &tm_info.tm_mday,
+                                       &tm_info.tm_hour, &tm_info.tm_min, &tm_info.tm_sec) == 6) {
+                                tm_info.tm_year -= 1900;
+                                tm_info.tm_mon -= 1;
+                                time_t end_time = mktime(&tm_info);
+                                if (!g_item_timers) {
+                                    g_item_timers = g_hash_table_new(g_direct_hash, g_direct_equal);
+                                }
+                                g_hash_table_insert(g_item_timers, GINT_TO_POINTER(item_id), GINT_TO_POINTER((int)end_time));
+                            }
+                        }
                     }
+
                     if (g_current_room_id > 0) refresh_room_detail();
                 }
                 else if (strncmp(line_start, "BID_SUCCESS", 11) == 0) {
@@ -2246,7 +2333,7 @@ void on_search_items_clicked(GtkWidget *widget, gpointer data) {
                                                      "_Đóng", GTK_RESPONSE_CLOSE,
                                                      NULL);
     
-    gtk_window_set_default_size(GTK_WINDOW(dialog), 900, 600);
+    gtk_window_set_default_size(GTK_WINDOW(dialog), 1000, 750);
     
     GtkWidget *content = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
     GtkWidget *main_box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 10);
@@ -2303,11 +2390,16 @@ void on_search_items_clicked(GtkWidget *widget, gpointer data) {
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolled),
                                    GTK_POLICY_AUTOMATIC,
                                    GTK_POLICY_AUTOMATIC);
+    gtk_widget_set_hexpand(scrolled, TRUE);
+    gtk_widget_set_vexpand(scrolled, TRUE);
+    gtk_widget_set_size_request(scrolled, -1, 500);
     
     g_search_result_store = gtk_list_store_new(6, G_TYPE_INT, G_TYPE_STRING,
                                                 G_TYPE_STRING, G_TYPE_STRING,
                                                 G_TYPE_INT, G_TYPE_INT);
     GtkWidget *tree_view = gtk_tree_view_new_with_model(GTK_TREE_MODEL(g_search_result_store));
+    gtk_widget_set_hexpand(tree_view, TRUE);
+    gtk_widget_set_vexpand(tree_view, TRUE);
     
     GtkCellRenderer *renderer = gtk_cell_renderer_text_new();
     gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(tree_view),
@@ -2356,7 +2448,7 @@ void on_view_history_clicked(GtkWidget *widget, gpointer data) {
                                                      "_Đóng", GTK_RESPONSE_CLOSE,
                                                      NULL);
     
-    gtk_window_set_default_size(GTK_WINDOW(dialog), 800, 500);
+    gtk_window_set_default_size(GTK_WINDOW(dialog), 1000, 750);
     
     GtkWidget *content = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
     GtkWidget *box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 10);
@@ -2394,10 +2486,15 @@ void on_view_history_clicked(GtkWidget *widget, gpointer data) {
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolled),
                                    GTK_POLICY_AUTOMATIC,
                                    GTK_POLICY_AUTOMATIC);
+    gtk_widget_set_hexpand(scrolled, TRUE);
+    gtk_widget_set_vexpand(scrolled, TRUE);
+    gtk_widget_set_size_request(scrolled, -1, 500);
     
     g_history_store = gtk_list_store_new(5, G_TYPE_INT, G_TYPE_STRING,
                                              G_TYPE_STRING, G_TYPE_INT, G_TYPE_STRING);
     GtkWidget *tree_view = gtk_tree_view_new_with_model(GTK_TREE_MODEL(g_history_store));
+    gtk_widget_set_hexpand(tree_view, TRUE);
+    gtk_widget_set_vexpand(tree_view, TRUE);
     
     GtkCellRenderer *renderer = gtk_cell_renderer_text_new();
     gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(tree_view),
@@ -2439,7 +2536,7 @@ void on_admin_panel_clicked(GtkWidget *widget, gpointer data) {
                                                      "_Đóng", GTK_RESPONSE_CLOSE,
                                                      NULL);
     
-    gtk_window_set_default_size(GTK_WINDOW(dialog), 700, 500);
+    gtk_window_set_default_size(GTK_WINDOW(dialog), 900, 650);
     
     GtkWidget *content = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
     GtkWidget *box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 10);
@@ -2450,10 +2547,14 @@ void on_admin_panel_clicked(GtkWidget *widget, gpointer data) {
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolled),
                                    GTK_POLICY_AUTOMATIC,
                                    GTK_POLICY_AUTOMATIC);
+    gtk_widget_set_hexpand(scrolled, TRUE);
+    gtk_widget_set_vexpand(scrolled, TRUE);
     
     g_admin_user_store = gtk_list_store_new(4, G_TYPE_INT, G_TYPE_STRING,
                                              G_TYPE_STRING, G_TYPE_STRING);
     GtkWidget *tree_view = gtk_tree_view_new_with_model(GTK_TREE_MODEL(g_admin_user_store));
+    gtk_widget_set_hexpand(tree_view, TRUE);
+    gtk_widget_set_vexpand(tree_view, TRUE);
     
     GtkCellRenderer *renderer = gtk_cell_renderer_text_new();
     gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(tree_view),

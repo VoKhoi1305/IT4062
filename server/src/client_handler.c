@@ -120,9 +120,25 @@ void remove_client(int i) {
 }
 
 void send_message(Client* client, const char* message) {
+    if (!client || client->socket_fd < 0 || !message) return;
+
     char buffer[BUFFER_SIZE];
-    snprintf(buffer, BUFFER_SIZE, "%s\n", message);
-    send(client->socket_fd, buffer, strlen(buffer), 0);
+    int written = snprintf(buffer, BUFFER_SIZE, "%s\n", message);
+    if (written <= 0) {
+        return;
+    }
+
+    size_t total = (size_t)written;
+    size_t sent = 0;
+    while (sent < total) {
+        ssize_t n = send(client->socket_fd, buffer + sent, total - sent, 0);
+        if (n < 0) {
+            if (errno == EINTR) continue;
+            break;
+        }
+        if (n == 0) break;
+        sent += (size_t)n;
+    }
 
     log_message(client, "SEND", message);
 }
