@@ -961,7 +961,9 @@ void handle_get_room_detail(Client* client, char* room_id_str) {
                 strncpy(item_name, token ? token : "", sizeof(item_name));
                 
                 // 4. Description
-                token = get_token(&current_ptr); 
+                token = get_token(&current_ptr);
+                char description[200] = "";
+                if (token) strncpy(description, token, sizeof(description) - 1);
                 
                 // 5. Start Price
                 token = get_token(&current_ptr);
@@ -1016,10 +1018,10 @@ void handle_get_room_detail(Client* client, char* room_id_str) {
                 if (token) strncpy(sched_end, token, sizeof(sched_end) - 1);
                 
                 // Tạo chuỗi item data gửi về client với thông tin thời gian
-                char item_data[768];
+                char item_data[1024];
                 snprintf(item_data, sizeof(item_data), 
-                         "%d|%s|%s|%.0f|%.0f|%.0f|%s|%s|%s|%s|%d;",
-                         item_id, item_name, status, 
+                         "%d|%s|%s|%s|%.0f|%.0f|%.0f|%s|%s|%s|%s|%d;",
+                         item_id, item_name, description, status, 
                          start_price, current_price, buy_now_price,
                          auction_start, auction_end, sched_start, sched_end, duration);
                 strncat(response, item_data, sizeof(response) - strlen(response) - 1);
