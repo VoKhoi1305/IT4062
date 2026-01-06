@@ -551,12 +551,13 @@ static void parse_and_execute(Client* client, char* line) {
     else if (strcmp(command, "CREATE_ITEM") == 0) {
         char* room_id = strtok(NULL, "|");
         char* item_name = strtok(NULL, "|");
+        char* description = strtok(NULL, "|");      // Description parameter
         char* start_price = strtok(NULL, "|");
         char* duration = strtok(NULL, "|");
         char* buy_now_price = strtok(NULL, "|");
         char* scheduled_start = strtok(NULL, "|");  // Khung giờ bắt đầu (HH:MM)
         char* scheduled_end = strtok(NULL, "|");    // Khung giờ kết thúc (HH:MM)
-        handle_create_item(client, room_id, item_name, start_price, duration, buy_now_price,
+        handle_create_item(client, room_id, item_name, description, start_price, duration, buy_now_price,
                           scheduled_start, scheduled_end);
         return;
     }

@@ -652,8 +652,8 @@ void handle_delete_item(Client* client, char* item_id_str) {
 
 // Tạo vật phẩm đấu giá với khung giờ
 void handle_create_item(Client* client, char* room_id_str, char* item_name, 
-                        char* start_price_str, char* duration_str, char* buy_now_price_str,
-                        char* scheduled_start, char* scheduled_end) {
+                        char* description, char* start_price_str, char* duration_str, 
+                        char* buy_now_price_str, char* scheduled_start, char* scheduled_end) {
     if (!client->is_logged_in) {
         send_message(client, "ERROR|Ban phai dang nhap truoc");
         return;
@@ -663,6 +663,10 @@ void handle_create_item(Client* client, char* room_id_str, char* item_name,
     double start_price = atof(start_price_str);
     int duration = atoi(duration_str);
     double buy_now_price = atof(buy_now_price_str);
+    
+    // Debug: Log parsed values
+    printf("[DEBUG] CREATE_ITEM parsed: room_id=%d, start_price=%.2f (str='%s'), duration=%d, buy_now=%.2f\n",
+           room_id, start_price, start_price_str, duration, buy_now_price);
     
     // Kiểm tra phòng tồn tại
     Room* room = get_room_by_id(room_id);
@@ -832,11 +836,12 @@ void handle_search_items(Client* client, char* search_type, char* keyword,
         double start_price, current_price;
         char auction_start[30], auction_end[30];
         
-        char* tokens[14];
+        // Hỗ trợ cả format cũ (14 trường) và mới (18 trường)
+        char* tokens[19];
         char* ptr = line;
         int token_count = 0;
         
-        for (int i = 0; i < 14 && ptr; i++) {
+        for (int i = 0; i < 19 && ptr; i++) {
             tokens[i] = ptr;
             ptr = strchr(ptr, '|');
             if (ptr) {
@@ -854,14 +859,20 @@ void handle_search_items(Client* client, char* search_type, char* keyword,
         start_price = atof(tokens[4]);
         current_price = atof(tokens[5]);
         strncpy(status, tokens[7], sizeof(status));
-        strncpy(auction_start, tokens[10], sizeof(auction_start));
-        strncpy(auction_end, tokens[11], sizeof(auction_end));
         
-        // Chỉ lấy items ACTIVE hoặc PENDING
-        if (strcmp(status, ITEM_STATUS_ACTIVE) != 0 && 
-            strcmp(status, ITEM_STATUS_PENDING) != 0) {
-            continue;
+        // auction_start và auction_end ở vị trí 10 và 11
+        if (token_count >= 18) {
+            // Format mới: có đủ 18 trường
+            strncpy(auction_start, tokens[10], sizeof(auction_start));
+            strncpy(auction_end, tokens[11], sizeof(auction_end));
+        } else {
+            // Format cũ: 14 trường
+            strncpy(auction_start, tokens[10], sizeof(auction_start));
+            strncpy(auction_end, tokens[11], sizeof(auction_end));
         }
+        
+        // Hiển thị tất cả items (bao gồm cả CLOSED, SOLD) trong kết quả tìm kiếm
+        // User có thể muốn xem lại các vật phẩm đã kết thúc
         
         int match = 0;
         

@@ -167,8 +167,19 @@ void handle_place_bid(Client* client, char* item_id_str, char* bid_amount_str) {
     int time_extended = 0;
     // Rule: If less than 30s remaining, extend to now + 30s
     if (remaining <= 30 && remaining > 0) {
-        // Reset time to now + 30s
+        // Tính thời gian gia hạn
         time_t new_end_time = now + 30;
+        
+        // Kiểm tra scheduled_end để không vượt quá thời gian lên lịch
+        if (item->scheduled_end[0] != '\0') {
+            time_t scheduled_end_time = parse_time_string(item->scheduled_end);
+            if (scheduled_end_time > 0 && new_end_time > scheduled_end_time) {
+                // Giới hạn không vượt quá scheduled_end
+                new_end_time = scheduled_end_time;
+                printf("Time extension limited by scheduled_end for item %d\n", item_id);
+            }
+        }
+        
         item->extend_count++;
         
         struct tm* tm_info = localtime(&new_end_time);
@@ -178,7 +189,7 @@ void handle_place_bid(Client* client, char* item_id_str, char* bid_amount_str) {
         update_timer(item_id, new_end_time);
         time_extended = 1;
         
-        printf("Time extended +30s for item %d, new end: %s, extend_count: %d\n",
+        printf("Time extended for item %d, new end: %s, extend_count: %d\n",
                item_id, item->auction_end, item->extend_count);
     }
     

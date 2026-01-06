@@ -38,8 +38,8 @@ typedef struct {
 
 
 void handle_create_item(Client* client, char* room_id_str, char* item_name, 
-                        char* start_price_str, char* duration_str, char* buy_now_price_str,
-                        char* scheduled_start, char* scheduled_end);
+                        char* description, char* start_price_str, char* duration_str, 
+                        char* buy_now_price_str, char* scheduled_start, char* scheduled_end);
 void handle_delete_item(Client* client, char* item_id_str);
 void handle_search_items(Client* client, char* search_type, char* keyword, 
                          char* time_from, char* time_to);
