@@ -292,8 +292,8 @@ void handle_buy_now(Client* client, char* item_id_str) {
     // Broadcast cho những người khác
     char broadcast_msg[512];
     snprintf(broadcast_msg, sizeof(broadcast_msg),
-             "ITEM_SOLD|%d|%s|%s|da mua voi gia|%.0f",
-             item_id, item->item_name, client->username, item->buy_now_price);
+             "ITEM_SOLD|%d|%s|%.0f|Da duoc mua ngay",
+             item_id, client->username, item->buy_now_price);
     broadcast_to_room(client->current_room_id, broadcast_msg, -1);
     
     // Gửi thông báo hủy bid cho những người đã bid

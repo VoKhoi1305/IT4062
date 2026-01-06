@@ -329,15 +329,17 @@ gboolean update_countdown_timer(gpointer user_data) {
     while (valid) {
         int item_id;
         gchar *item_name = NULL;
+        gchar *item_status = NULL;
         gtk_tree_model_get(GTK_TREE_MODEL(g_room_detail_store), &iter, 
                           0, &item_id,
                           1, &item_name,
+                          3, &item_status,
                           -1);
         
         // Look up end_time for this item
         gpointer end_time_ptr = g_hash_table_lookup(g_item_timers, GINT_TO_POINTER(item_id));
         
-        if (end_time_ptr) {
+        if (end_time_ptr && item_status && strcmp(item_status, "ACTIVE") == 0) {
             time_t end_time = GPOINTER_TO_INT(end_time_ptr);
             time_t now = time(NULL);
             int remaining = (int)difftime(end_time, now);
@@ -372,6 +374,7 @@ gboolean update_countdown_timer(gpointer user_data) {
         }
 
         g_free(item_name);
+        g_free(item_status);
         
         valid = gtk_tree_model_iter_next(GTK_TREE_MODEL(g_room_detail_store), &iter);
     }
@@ -663,11 +666,11 @@ gboolean update_room_detail_ui(gpointer user_data) {
                 // Display all items (ACTIVE, PENDING, SOLD, CLOSED)
                 // No filtering - show complete history
                 
-                // Parse and store auction_end time (only for ACTIVE items)
-                if (strcmp(item_status, "ACTIVE") == 0 && strlen(auction_end) > 0 && strcmp(auction_end, "NULL") != 0) {
+                // Parse and store sched_end time (only for ACTIVE items)
+                if (strcmp(item_status, "ACTIVE") == 0 && strlen(sched_end) > 0 && strcmp(sched_end, "NULL") != 0) {
                     struct tm tm_info;
                     memset(&tm_info, 0, sizeof(tm_info));
-                    if (sscanf(auction_end, "%d-%d-%d %d:%d:%d",
+                    if (sscanf(sched_end, "%d-%d-%d %d:%d:%d",
                                &tm_info.tm_year, &tm_info.tm_mon, &tm_info.tm_mday,
                                &tm_info.tm_hour, &tm_info.tm_min, &tm_info.tm_sec) == 6) {
                         tm_info.tm_year -= 1900;
@@ -701,7 +704,7 @@ gboolean update_room_detail_ui(gpointer user_data) {
                 char countdown_str[50] = "--:--";
                 if (strcmp(item_status, "ACTIVE") == 0) {
                     // For ACTIVE items, show countdown
-                    if (strlen(auction_end) > 0 && strcmp(auction_end, "NULL") != 0) {
+                    if (strlen(sched_end) > 0 && strcmp(sched_end, "NULL") != 0) {
                         gpointer end_time_ptr = g_hash_table_lookup(g_item_timers, GINT_TO_POINTER(item_id));
                         if (end_time_ptr) {
                             format_countdown(GPOINTER_TO_INT(end_time_ptr), countdown_str, sizeof(countdown_str));
@@ -734,7 +737,7 @@ gboolean update_room_detail_ui(gpointer user_data) {
                                   6, (int)buy_now_price,
                                   7, countdown_str,
                                   8, auction_start,
-                                  9, auction_end,
+                                  9, sched_end,
                                   10, sched_start,
                                   11, duration,
                                   -1);
@@ -755,6 +758,95 @@ typedef struct {
 typedef struct {
     char data[BUFFER_SIZE];
 } SearchResultData;
+
+typedef struct {
+    GtkListStore *store;
+    char data[BUFFER_SIZE];
+} AuctionHistoryData;
+
+gboolean update_auction_history_ui(gpointer user_data) {
+    AuctionHistoryData *data = (AuctionHistoryData*)user_data;
+
+    if (!data || !data->store) {
+        if (data) free(data);
+        return FALSE;
+    }
+
+    gtk_list_store_clear(data->store);
+
+    // Parse: AUCTION_HISTORY|count|history_data;history_data;...
+    char *ptr = strchr(data->data, '|');
+    if (!ptr) {
+        g_object_unref(data->store);
+        free(data);
+        return FALSE;
+    }
+    ptr++;
+    (void)atoi(ptr); // count (optional)
+    ptr = strchr(ptr, '|');
+    if (!ptr) {
+        g_object_unref(data->store);
+        free(data);
+        return FALSE;
+    }
+    ptr++;
+
+    char payload[BUFFER_SIZE];
+    strncpy(payload, ptr, sizeof(payload) - 1);
+    payload[sizeof(payload) - 1] = '\0';
+
+    char *saveptr_hist = NULL;
+    char *hist = strtok_r(payload, ";", &saveptr_hist);
+    while (hist) {
+        if (hist[0] != '\0') {
+            // Expected fields:
+            // item_id|room_name|item_name|my_bid|final_price|winner_name|status|end_time
+            char entry_copy[512];
+            strncpy(entry_copy, hist, sizeof(entry_copy) - 1);
+            entry_copy[sizeof(entry_copy) - 1] = '\0';
+
+            int item_id = 0;
+            char room_name[100] = "";
+            char item_name[100] = "";
+            double my_bid = 0;
+            char result[20] = "";
+
+            int field = 0;
+            char *saveptr_field = NULL;
+            char *tok = strtok_r(entry_copy, "|", &saveptr_field);
+            while (tok) {
+                switch (field) {
+                    case 0: item_id = atoi(tok); break;
+                    case 1: strncpy(room_name, tok, sizeof(room_name) - 1); room_name[sizeof(room_name) - 1] = '\0'; break;
+                    case 2: strncpy(item_name, tok, sizeof(item_name) - 1); item_name[sizeof(item_name) - 1] = '\0'; break;
+                    case 3: my_bid = atof(tok); break;
+                    case 6: strncpy(result, tok, sizeof(result) - 1); result[sizeof(result) - 1] = '\0'; break;
+                    default: break;
+                }
+                field++;
+                tok = strtok_r(NULL, "|", &saveptr_field);
+            }
+
+            if (item_id > 0 && room_name[0] != '\0' && item_name[0] != '\0' && result[0] != '\0') {
+                GtkTreeIter iter;
+                gtk_list_store_append(data->store, &iter);
+                gtk_list_store_set(data->store, &iter,
+                                  0, item_id,
+                                  1, item_name,
+                                  2, room_name,
+                                  3, (int)my_bid,
+                                  4, result,
+                                  -1);
+            }
+        }
+
+        hist = strtok_r(NULL, ";", &saveptr_hist);
+    }
+
+    g_object_unref(data->store);
+    free(data);
+    return FALSE;
+}
 
 gboolean update_search_result_ui(gpointer user_data) {
     SearchResultData *data = (SearchResultData*)user_data;
@@ -892,30 +984,56 @@ void process_room_detail_response(char* response) {
     ptr++;
     
     RoomDetailData *data = malloc(sizeof(RoomDetailData));
-    
+
     // Parse: room_id|room_name|status|start|end|items
+    // NOTE: items contains many '|' separators, so we must NOT strtok() past the 5th delimiter.
     char temp[BUFFER_SIZE];
-    strncpy(temp, ptr, BUFFER_SIZE);
-    
-    char* token = strtok(temp, "|");
+    strncpy(temp, ptr, sizeof(temp) - 1);
+    temp[sizeof(temp) - 1] = '\0';
+
+    // Initialize fields
+    data->room_id = 0;
+    data->room_name[0] = '\0';
+    data->status[0] = '\0';
+    data->start_time[0] = '\0';
+    data->end_time[0] = '\0';
+    data->items_data[0] = '\0';
+
+    char *cursor = temp;
+    char *token = NULL;
+
+    token = get_token_preserve_empty(&cursor);
     if (token) data->room_id = atoi(token);
-    
-    token = strtok(NULL, "|");
-    if (token) strncpy(data->room_name, token, sizeof(data->room_name));
-    
-    token = strtok(NULL, "|");
-    if (token) strncpy(data->status, token, sizeof(data->status));
-    
-    token = strtok(NULL, "|");
-    if (token) strncpy(data->start_time, token, sizeof(data->start_time));
-    
-    token = strtok(NULL, "|");
-    if (token) strncpy(data->end_time, token, sizeof(data->end_time));
-    
-    // Get remaining data (items)
-    token = strtok(NULL, "");
-    if (token) strncpy(data->items_data, token, sizeof(data->items_data));
-    else data->items_data[0] = '\0';
+
+    token = get_token_preserve_empty(&cursor);
+    if (token) {
+        strncpy(data->room_name, token, sizeof(data->room_name) - 1);
+        data->room_name[sizeof(data->room_name) - 1] = '\0';
+    }
+
+    token = get_token_preserve_empty(&cursor);
+    if (token) {
+        strncpy(data->status, token, sizeof(data->status) - 1);
+        data->status[sizeof(data->status) - 1] = '\0';
+    }
+
+    token = get_token_preserve_empty(&cursor);
+    if (token) {
+        strncpy(data->start_time, token, sizeof(data->start_time) - 1);
+        data->start_time[sizeof(data->start_time) - 1] = '\0';
+    }
+
+    token = get_token_preserve_empty(&cursor);
+    if (token) {
+        strncpy(data->end_time, token, sizeof(data->end_time) - 1);
+        data->end_time[sizeof(data->end_time) - 1] = '\0';
+    }
+
+    // Remaining cursor (if any) is the full items payload
+    if (cursor) {
+        strncpy(data->items_data, cursor, sizeof(data->items_data) - 1);
+        data->items_data[sizeof(data->items_data) - 1] = '\0';
+    }
     
     // Schedule UI update in main thread
     g_idle_add(update_room_detail_ui, data);
@@ -1193,6 +1311,14 @@ void* receiver_thread_func(void* arg) {
                         data->type = GTK_MESSAGE_INFO;
                         g_idle_add(show_notification_ui, data);
                     }
+
+                    // Stop countdown updates for this item immediately
+                    if (g_item_timers) {
+                        g_hash_table_remove(g_item_timers, GINT_TO_POINTER(item_id));
+                    }
+                    if (g_warned_items) {
+                        g_hash_table_remove(g_warned_items, GINT_TO_POINTER(item_id));
+                    }
                     if (g_current_room_id > 0) refresh_room_detail();
                 }
                 else if (strncmp(line_start, "YOU_WON", 7) == 0) {
@@ -1358,8 +1484,14 @@ void* receiver_thread_func(void* arg) {
                     strncpy(data->message, "Xóa vật phẩm thành công!", sizeof(data->message));
                     data->type = GTK_MESSAGE_INFO;
                     g_idle_add(show_notification_ui, data);
-                    
-                    g_idle_add((GSourceFunc)append_activity_log, g_strdup("Bạn đã xóa vật phẩm"));
+
+                    // Prefer detailed message from server if available
+                    char *msg_ptr = strchr(line_start, '|');
+                    if (msg_ptr && *(msg_ptr + 1) != '\0') {
+                        g_idle_add((GSourceFunc)append_activity_log, g_strdup(msg_ptr + 1));
+                    } else {
+                        g_idle_add((GSourceFunc)append_activity_log, g_strdup("Bạn đã xóa vật phẩm"));
+                    }
                     
                     if (g_current_room_id > 0) refresh_room_detail();
                 }
@@ -1376,6 +1508,9 @@ void* receiver_thread_func(void* arg) {
                     strncpy(data->message, error_msg, sizeof(data->message));
                     data->type = GTK_MESSAGE_ERROR;
                     g_idle_add(show_notification_ui, data);
+
+                    // Also show in room activity log for the user who performed the action
+                    g_idle_add((GSourceFunc)append_activity_log, g_strdup(error_msg));
                 }
                 else if (strncmp(line_start, "USER_JOINED", 11) == 0) {
                     // Format: USER_JOINED|username|message
@@ -1391,6 +1526,25 @@ void* receiver_thread_func(void* arg) {
                         data->type = GTK_MESSAGE_INFO;
                         g_idle_add(show_notification_ui, data);
                     }
+                }
+                else if (strncmp(line_start, "ITEM_DELETED", 11) == 0) {
+                    // Format: ITEM_DELETED|item_id|item_name|message
+                    int item_id = 0;
+                    char item_name[200] = "";
+                    char extra_msg[256] = "";
+                    if (sscanf(line_start, "ITEM_DELETED|%d|%199[^|]|%255[^\n]", &item_id, item_name, extra_msg) >= 2) {
+                        char msg[512];
+                        if (extra_msg[0] != '\0') {
+                            snprintf(msg, sizeof(msg), "Vật phẩm '%s' (#%d): %s", item_name, item_id, extra_msg);
+                        } else {
+                            snprintf(msg, sizeof(msg), "Vật phẩm '%s' (#%d) đã bị xóa", item_name, item_id);
+                        }
+                        g_idle_add((GSourceFunc)append_activity_log, g_strdup(msg));
+                    } else {
+                        g_idle_add((GSourceFunc)append_activity_log, g_strdup("Một vật phẩm đã bị xóa"));
+                    }
+
+                    if (g_current_room_id > 0) refresh_room_detail();
                 }
                 else if (strncmp(line_start, "USER_LEFT", 9) == 0) {
                     // Format: USER_LEFT|username|message
@@ -1467,43 +1621,11 @@ void* receiver_thread_func(void* arg) {
                 else if (strncmp(line_start, "AUCTION_HISTORY", 15) == 0) {
                     // Format: AUCTION_HISTORY|count|history_data;...
                     if (g_history_store) {
-                        char* ptr = strchr(line_start, '|');
-                        if (ptr) {
-                            ptr++;
-                            int count = atoi(ptr);
-                            ptr = strchr(ptr, '|');
-                            if (ptr) {
-                                ptr++;
-                                char data_copy[BUFFER_SIZE];
-                                strncpy(data_copy, ptr, BUFFER_SIZE);
-                                
-                                g_idle_add((GSourceFunc)gtk_list_store_clear, g_history_store);
-                                
-                                char *saveptr_hist = NULL;
-                                char* hist = strtok_r(data_copy, ";", &saveptr_hist);
-                                while (hist) {
-                                    int item_id;
-                                    char item_name[100] = "", room_name[100] = "", winner_name[50] = "";
-                                    char result[20] = "", end_time[30] = "";
-                                    double my_bid, final_price;
-                                    // Format: item_id|room_name|item_name|my_bid|final_price|winner_name|status|end_time
-                                    if (sscanf(hist, "%d|%99[^|]|%99[^|]|%lf|%lf|%49[^|]|%19[^|]|%29s",
-                                              &item_id, room_name, item_name, &my_bid, &final_price,
-                                              winner_name, result, end_time) >= 7) {
-                                        GtkTreeIter iter;
-                                        gtk_list_store_append(g_history_store, &iter);
-                                        gtk_list_store_set(g_history_store, &iter,
-                                                          0, item_id,
-                                                          1, item_name,
-                                                          2, room_name,
-                                                          3, (int)my_bid,
-                                                          4, result,
-                                                          -1);
-                                    }
-                                    hist = strtok_r(NULL, ";", &saveptr_hist);
-                                }
-                            }
-                        }
+                        AuctionHistoryData *data = malloc(sizeof(AuctionHistoryData));
+                        data->store = (GtkListStore*)g_object_ref(g_history_store);
+                        strncpy(data->data, line_start, sizeof(data->data) - 1);
+                        data->data[sizeof(data->data) - 1] = '\0';
+                        g_idle_add(update_auction_history_ui, data);
                     }
                     NotificationData *data = malloc(sizeof(NotificationData));
                     snprintf(data->message, sizeof(data->message), "Đã tải lịch sử đấu giá");
@@ -1855,7 +1977,8 @@ void on_buy_now_clicked(GtkWidget *widget, gpointer data) {
     char *item_name;
     int buy_now_price;
     
-    gtk_tree_model_get(model, &iter, 0, &item_id, 1, &item_name, 5, &buy_now_price, -1);
+    // Columns: 0=ID, 1=Name, 6=Buy Now
+    gtk_tree_model_get(model, &iter, 0, &item_id, 1, &item_name, 6, &buy_now_price, -1);
     
     if (buy_now_price <= 0) {
         show_message_dialog(GTK_MESSAGE_WARNING, "Cảnh báo", "Vật phẩm này không có giá mua ngay!");
@@ -2625,6 +2748,11 @@ void on_item_selection_changed(GtkTreeSelection *selection, gpointer user_data) 
     }
     
     // Build detailed information display
+    char *item_name_esc = g_markup_escape_text(item_name ? item_name : "", -1);
+    char *item_desc_esc = g_markup_escape_text(
+        (item_description && strlen(item_description) > 0) ? item_description : "Không có mô tả",
+        -1);
+
     char detail_text[2048];
     char buy_now_display[32];
     if (buy_now_price > 0) {
@@ -2651,8 +2779,8 @@ void on_item_selection_changed(GtkTreeSelection *selection, gpointer user_data) 
              "<b>Thời gian lên lịch:</b> %s\n"
              "<b>Thời lượng đấu giá:</b> %s",
              item_id,
-             item_name,
-             (item_description && strlen(item_description) > 0) ? item_description : "Không có mô tả",
+             item_name_esc,
+             item_desc_esc,
              strcmp(item_status, "ACTIVE") == 0 ? "green" : 
                 (strcmp(item_status, "PENDING") == 0 ? "orange" : 
                  (strcmp(item_status, "SOLD") == 0 ? "red" : "gray")),
@@ -2664,6 +2792,9 @@ void on_item_selection_changed(GtkTreeSelection *selection, gpointer user_data) 
              end_display,
              sched_display,
              duration_display);
+
+    g_free(item_name_esc);
+    g_free(item_desc_esc);
     
     // Update detail label
     if (g_item_detail_label) {

@@ -665,8 +665,8 @@ void handle_create_item(Client* client, char* room_id_str, char* item_name,
     double buy_now_price = atof(buy_now_price_str);
     
     // Debug: Log parsed values
-    printf("[DEBUG] CREATE_ITEM parsed: room_id=%d, start_price=%.2f (str='%s'), duration=%d, buy_now=%.2f\n",
-           room_id, start_price, start_price_str, duration, buy_now_price);
+    DEBUG_LOG("[DEBUG] CREATE_ITEM parsed: room_id=%d, start_price=%.2f (str='%s'), duration=%d, buy_now=%.2f\n",
+              room_id, start_price, start_price_str, duration, buy_now_price);
     
     // Kiểm tra phòng tồn tại
     Room* room = get_room_by_id(room_id);
@@ -761,8 +761,8 @@ void handle_create_item(Client* client, char* room_id_str, char* item_name,
     // Format mới: item_id|room_id|item_name|description|start_price|current_price|
     //             buy_now_price|status|winner_id|final_price|auction_start|auction_end|
     //             extend_count|duration|created_at|scheduled_start|scheduled_end|bid_history
-    fprintf(file, "%d|%d|%s||%.0f|%.0f|%.0f|%s|0|0.0|||0|%d|%s|%s|%s|\n",
-            new_item_id, room_id, item_name, start_price, start_price,
+    fprintf(file, "%d|%d|%s|%s|%.0f|%.0f|%.0f|%s|0|0.0|||0|%d|%s|%s|%s|\n",
+            new_item_id, room_id, item_name, description ? description : "", start_price, start_price,
             buy_now_price, ITEM_STATUS_PENDING, duration, created_at,
             sched_start, sched_end);
     fclose(file);

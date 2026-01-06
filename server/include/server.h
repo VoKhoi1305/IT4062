@@ -35,4 +35,14 @@ typedef struct {
 extern Client* g_clients[MAX_CLIENTS];
 extern const char* DB_FILE;
 
+// =============================================================
+// Debug logging (disabled by default)
+// Enable by compiling with: -DENABLE_DEBUG_LOG
+// =============================================================
+#ifdef ENABLE_DEBUG_LOG
+#define DEBUG_LOG(...) do { printf(__VA_ARGS__); } while (0)
+#else
+#define DEBUG_LOG(...) do { } while (0)
+#endif
+
 #endif // SERVER_H

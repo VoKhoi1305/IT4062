@@ -162,7 +162,7 @@ void activate_next_item_in_room(int room_id) {
     
     time_t now = time(NULL);
     
-    printf("[DEBUG] activate_next_item_in_room: room_id=%d, checking at %ld\n", room_id, now);
+    DEBUG_LOG("[DEBUG] activate_next_item_in_room: room_id=%d, checking at %ld\n", room_id, now);
     
     // Tìm item PENDING có khung giờ phù hợp nhất
     // Ưu tiên: item có scheduled_start gần nhất và >= giờ hiện tại
@@ -193,7 +193,7 @@ void activate_next_item_in_room(int room_id) {
         
         if (item_room_id != room_id || strcmp(status, ITEM_STATUS_PENDING) != 0) continue;
         
-        printf("[DEBUG] Found PENDING item: id=%d, sched_start='%s', sched_end='%s'\n", 
+        DEBUG_LOG("[DEBUG] Found PENDING item: id=%d, sched_start='%s', sched_end='%s'\n", 
                item_id, sched_start, sched_end);
         
         // Nếu item có khung giờ (format: yyyy-mm-dd HH:MM:SS)
@@ -207,13 +207,13 @@ void activate_next_item_in_room(int room_id) {
                 time_t start_time = mktime(&start_tm);
                 time_t end_time = mktime(&end_tm);
                 
-                printf("[DEBUG] Item %d: start_time=%ld, end_time=%ld, now=%ld\n", 
+                  DEBUG_LOG("[DEBUG] Item %d: start_time=%ld, end_time=%ld, now=%ld\n", 
                        item_id, start_time, end_time, now);
                 
                 // Chỉ chọn nếu đã đến giờ (start_time <= now) 
                 // và chưa hết giờ (now < end_time)
                 if (start_time <= now && now < end_time) {
-                    printf("[DEBUG] Item %d is ELIGIBLE! start_time=%ld <= now=%ld < end_time=%ld\n",
+                          DEBUG_LOG("[DEBUG] Item %d is ELIGIBLE! start_time=%ld <= now=%ld < end_time=%ld\n",
                            item_id, start_time, now, end_time);
                     // Đã đến giờ và đang trong khung giờ - ưu tiên item có start_time sớm nhất
                     if (next_item_id == -1 || start_time < best_start_time) {
@@ -222,14 +222,14 @@ void activate_next_item_in_room(int room_id) {
                         next_item_duration = (duration > 0) ? duration : 60;
                         strncpy(next_scheduled_start, sched_start, sizeof(next_scheduled_start) - 1);
                         strncpy(next_scheduled_end, sched_end, sizeof(next_scheduled_end) - 1);
-                        printf("[DEBUG] Selected item %d as next to activate\n", item_id);
+                        DEBUG_LOG("[DEBUG] Selected item %d as next to activate\n", item_id);
                     }
                 } else {
-                    printf("[DEBUG] Item %d NOT eligible: start_time(%ld) > now(%ld) or now(%ld) >= end_time(%ld)\n",
+                    DEBUG_LOG("[DEBUG] Item %d NOT eligible: start_time(%ld) > now(%ld) or now(%ld) >= end_time(%ld)\n",
                            item_id, start_time, now, now, end_time);
                 }
             } else {
-                printf("[DEBUG] Failed to parse time for item %d\n", item_id);
+                DEBUG_LOG("[DEBUG] Failed to parse time for item %d\n", item_id);
             }
         } else {
             // Item không có khung giờ - fallback nếu không có item nào khác
@@ -243,7 +243,7 @@ void activate_next_item_in_room(int room_id) {
     }
     fclose(file);
     
-    printf("[DEBUG] Final selected item: %d\n", next_item_id);
+    DEBUG_LOG("[DEBUG] Final selected item: %d\n", next_item_id);
     
     if (next_item_id > 0) {
         Item* item = get_item_by_id(next_item_id);
